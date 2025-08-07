@@ -203,7 +203,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="max-w-sm ml-0 mr-auto px-0 pr-4 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+      <main id="main" className="max-w-sm mx-auto px-2 sm:max-w-7xl sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
