@@ -93,7 +93,7 @@ export default function UVEditor({ uploadedImage, onTextureGenerated }) {
 
   useEffect(() => {
     generateTexture();
-  }, [uploadedImage, printPosition, printScale]);
+  }, [uploadedImage, printPosition, printScale, generateTexture]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">

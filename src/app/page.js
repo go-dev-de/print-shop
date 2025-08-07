@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import ImageUploader from '../components/ImageUploader';
 import TshirtPreview from '../components/TshirtPreview';
 
@@ -411,9 +412,11 @@ export default function Home() {
                   {/* Фото клиента */}
                   <div className="flex-shrink-0">
                     <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200">
-                      <img 
+                      <Image 
                         src={reviews[currentReview].photo} 
                         alt={reviews[currentReview].name}
+                        width={128}
+                        height={128}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.src = `https://i.pravatar.cc/128?u=${reviews[currentReview].name}`;
@@ -426,7 +429,7 @@ export default function Home() {
                   <div className="flex-1">
                     <div className="space-y-4">
                       <p className="text-gray-800 text-lg leading-relaxed">
-                        "{reviews[currentReview].review}"
+                        &ldquo;{reviews[currentReview].review}&rdquo;
                       </p>
                       <p className="text-gray-800 text-lg leading-relaxed">
                         {reviews[currentReview].additionalText}
