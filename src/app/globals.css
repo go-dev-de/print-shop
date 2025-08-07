@@ -58,7 +58,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Мобильная оптимизация */
 @media (max-width: 640px) {
-  .max-w-xs {
-    max-width: calc(100vw - 32px) !important;
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
