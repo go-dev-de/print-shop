@@ -178,7 +178,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-8 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">PrintStyle</h1>
@@ -194,7 +194,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="max-w-7xl mx-auto px-8 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+      <main id="main" className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
@@ -204,12 +204,145 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12">
+        {/* Мобильная версия - одна колонка */}
+        <div className="block lg:hidden space-y-4">
+          {/* 1. Загрузка принта */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <h3 className="text-lg font-semibold mb-3 text-black">Загрузите ваш принт</h3>
+            <ImageUploader 
+              onImageUpload={handleImageUpload}
+              onImageRemove={handleImageRemove}
+            />
+          </div>
+
+          {/* 2. Выбор цвета */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <h3 className="text-lg font-semibold mb-3 text-black">Выберите цвет футболки</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {colors.map((color) => (
+                <button
+                  key={color.name}
+                  onClick={() => setSelectedColor(color.name)}
+                  className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
+                    selectedColor === color.name
+                      ? 'border-black bg-gray-100'
+                      : 'border-gray-400 hover:border-black'
+                  }`}
+                >
+                  <div
+                    className="w-8 h-8 rounded-full border-2 border-gray-300"
+                    style={{ backgroundColor: color.hex }}
+                  ></div>
+                  <span className="font-medium">{color.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Выбор размера */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
+            <div className="grid grid-cols-3 gap-3">
+              {sizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
+                    selectedSize === size
+                      ? 'border-black bg-gray-100'
+                      : 'border-gray-400 hover:border-black'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 4. Превью */}
+          <TshirtPreview
+            uploadedImage={uploadedImage}
+            selectedColor={selectedColor}
+            selectedSize={selectedSize}
+            onImagePositionChange={handleImagePositionChange}
+          />
+
+          {/* 5. Информация о заказе */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <h3 className="text-lg font-semibold mb-3 text-black">Информация о заказе</h3>
+            
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between">
+                <span className="text-black">Размер:</span>
+                <span className="font-medium text-black">{selectedSize}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-black">Цвет:</span>
+                <span className="font-medium text-black">
+                  {colors.find(c => c.name === selectedColor)?.label}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-black">Количество:</span>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold text-sm"
+                  >
+                    -
+                  </button>
+                  <span className="font-medium text-black w-8 text-center">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold text-sm"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-black">Принт:</span>
+                <span className="font-medium text-black">
+                  {uploadedImage ? 'Включен' : 'Не выбран'}
+                </span>
+              </div>
+              {uploadedImage && (
+                <div className="flex justify-between">
+                  <span className="text-black">Масштаб принта:</span>
+                  <span className="font-medium text-black">{Math.round(imagePosition.scale * 100)}%</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="border-t pt-4">
+              <div className="flex justify-between text-xl font-bold text-black">
+                <span>Итого:</span>
+                <span>{calculatePrice()} ₽</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Кнопка заказа */}
+          <button
+            onClick={handleOrder}
+            disabled={!uploadedImage}
+            className={`w-full py-3 px-4 rounded-lg text-base font-semibold transition-colors ${
+              uploadedImage
+                ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            Оформить заказ
+          </button>
+        </div>
+
+        {/* Десктопная версия - две колонки */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-12">
           {/* Левая колонка - Загрузка и настройки */}
-          <div className="space-y-4 lg:space-y-8 order-2 lg:order-1">
+          <div className="space-y-8">
             {/* Загрузка изображения */}
             <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Загрузите ваш дизайн</h3>
+                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Загрузите ваш принт</h3>
               <ImageUploader 
                 onImageUpload={handleImageUpload}
                 onImageRemove={handleImageRemove}
@@ -282,7 +415,7 @@ export default function Home() {
           </div>
 
           {/* Правая колонка - Превью и заказ */}
-          <div className="space-y-4 lg:space-y-8 order-1 lg:order-2">
+          <div className="space-y-8">
             {/* Превью футболки */}
             <TshirtPreview
               uploadedImage={uploadedImage}
@@ -406,7 +539,7 @@ export default function Home() {
             </button>
 
             {/* Контейнер отзывов */}
-            <div className="px-8 lg:px-16">
+            <div className="px-5 lg:px-16">
               <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* Фото клиента */}
@@ -458,7 +591,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white mt-16">
-        <div className="max-w-7xl mx-auto px-8 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 !text-white">PrintStyle</h3>
