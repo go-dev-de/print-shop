@@ -61,5 +61,23 @@ h1, h2, h3, h4, h5, h6 {
   main {
     width: 100% !important;
     max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  .bg-white {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  /* Адаптивная grid для внутреннего контента */
+  .grid-cols-2 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 6px !important;
   }
 }

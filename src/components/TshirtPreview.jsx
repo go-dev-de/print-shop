@@ -194,12 +194,12 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
           </div>
         <div 
           ref={previewRef}
-          className="relative w-full h-64 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
+          className="relative w-full h-80 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
         >
           {uploadedImage ? (
               <div 
                 ref={tshirtRef} 
-                className="relative w-60 h-72 lg:w-80 lg:h-96 overflow-hidden" 
+                className="relative w-60 h-80 lg:w-80 lg:h-96 overflow-hidden" 
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -274,7 +274,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
               </div>
             ) : (
               <div className="text-center text-gray-500">
-                <div className="w-60 h-72 lg:w-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                <div className="w-60 h-80 lg:w-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                   <div>
                     <p className="text-base lg:text-lg font-medium mb-2">Загрузите изображение</p>
                     <p className="text-xs lg:text-sm">чтобы увидеть превью на футболке</p>

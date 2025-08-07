@@ -203,7 +203,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="w-full px-4 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+      <main id="main" className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
@@ -216,7 +216,7 @@ export default function Home() {
         {/* Мобильная версия - одна колонка */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4 sm:gap-6">
           {/* 1. Загрузка принта */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5">
+          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Загрузите ваш принт</h3>
             <ImageUploader 
               onImageUpload={handleImageUpload}
@@ -225,7 +225,7 @@ export default function Home() {
           </div>
 
           {/* 2. Выбор цвета */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5">
+          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Выберите цвет футболки</h3>
             <div className="grid grid-cols-2 gap-4">
               {colors.map((color) => (
@@ -249,7 +249,7 @@ export default function Home() {
           </div>
 
           {/* 3. Выбор размера */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5">
+          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
             <div className="grid grid-cols-3 gap-3">
               {sizes.map((size) => (
@@ -270,7 +270,7 @@ export default function Home() {
 
           {/* 4. Размер принта */}
           {uploadedImage && (
-            <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5">
+            <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
               <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
               <div className="grid grid-cols-2 gap-3">
                 {printSizes.map((size, index) => (
@@ -301,7 +301,7 @@ export default function Home() {
           />
 
           {/* 6. Информация о заказе */}
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5">
+          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Информация о заказе</h3>
             
             <div className="space-y-3 mb-6">
