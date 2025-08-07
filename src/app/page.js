@@ -539,7 +539,7 @@ export default function Home() {
             </button>
 
             {/* Контейнер отзывов */}
-            <div className="pl-0 pr-6 lg:px-16">
+            <div className="px-6 lg:px-16">
               <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* Фото клиента */}
@@ -591,7 +591,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white mt-16">
-        <div className="max-w-7xl mx-auto pl-0 pr-6 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 !text-white">PrintStyle</h3>
