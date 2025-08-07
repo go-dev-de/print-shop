@@ -2,9 +2,9 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 
-export default function TshirtPreview({ uploadedImage, selectedColor }) {
+export default function TshirtPreview({ uploadedImage, selectedColor, printSize = { scale: 1, label: '21×30 см' } }) {
   const [printPosition, setPrintPosition] = useState({ x: 50, y: 50 });
-  const [printScale, setPrintScale] = useState(1);
+
   const [printRotation, setPrintRotation] = useState(0); // Новое состояние для поворота
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -182,8 +182,8 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
                 <div 
                   className="relative"
                   style={{
-                      width: `${80 * printScale}px`, 
-                      height: `${80 * printScale}px`,
+                      width: `${80 * printSize.scale}px`, 
+                      height: `${80 * printSize.scale}px`,
                       transform: `rotate(${printRotation}deg)`
                   }}
                 >
@@ -220,27 +220,18 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
       {uploadedImage && (
             <div className="mt-6 p-4 rounded-lg bg-gray-50 border border-gray-200">
                      <h4 className="font-semibold mb-3 text-black">Настройки принта</h4>
-              <div className="space-y-4">
-                {/* Масштаб */}
+                            <div className="space-y-4">
+                {/* Размер принта */}
             <div>
               <label className="block text-sm font-medium text-gray-800 mb-1">
-                    Масштаб: {Math.round(printScale * 100)}%
+                    Размер принта: {printSize.label}
               </label>
-              <input
-                type="range"
-                min="0.3"
-                max="2"
-                step="0.1"
-                    value={printScale} 
-                    onChange={(e) => setPrintScale(parseFloat(e.target.value))} 
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
+                </div>
                 {/* Поворот */}
                 <div className="flex items-center space-x-4">
                   <label className="text-sm text-gray-700 font-medium">Поворот</label>
-                  <input
-                    type="range"
+              <input
+                type="range"
                     min={-180}
                     max={180}
                     step={1}
@@ -249,24 +240,17 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
                     className="w-64 accent-blue-500"
                   />
                   <span className="text-xs text-gray-600">{printRotation}&deg;</span>
-                </div>
-                {/* Кнопки сброса */}
-                <div className="grid grid-cols-2 gap-3 pt-2">
+            </div>
+                {/* Кнопка сброса */}
+                <div className="pt-2">
                              <button
                  onClick={() => {
                       setPrintPosition({ x: 50, y: 50 }); 
-                      setPrintScale(1); 
                       setPrintRotation(0);
                  }}
                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-black text-black"
                >
-                    Сбросить позицию и масштаб
-               </button>
-               <button
-                    onClick={() => setPrintScale(1)} 
-                 className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-black text-black"
-               >
-                 Сбросить масштаб
+                    Сбросить позицию и поворот
                </button>
             </div>
           </div>

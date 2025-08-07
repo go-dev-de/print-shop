@@ -12,6 +12,7 @@ export default function Home() {
   const [quantity, setQuantity] = useState(1);
   const [imagePosition, setImagePosition] = useState({ x: 50, y: 50, scale: 1 });
   const [currentReview, setCurrentReview] = useState(0);
+  const [printSize, setPrintSize] = useState(0); // Индекс выбранного размера принта
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = [
@@ -19,6 +20,14 @@ export default function Home() {
     { name: 'black', hex: '#000000', label: 'Черный' },
     { name: 'navy', hex: '#d3d3d3', label: 'Светло-серый' },
     { name: 'gray', hex: '#6b7280', label: 'Серый' },
+  ];
+
+  // Размеры принта с ценами
+  const printSizes = [
+    { label: '10×15 см', width: 10, height: 15, price: 390, scale: 0.6 },
+    { label: '15×21 см', width: 15, height: 21, price: 590, scale: 0.8 },
+    { label: '21×30 см', width: 21, height: 30, price: 740, scale: 1.0 },
+    { label: '30×42 см', width: 30, height: 42, price: 940, scale: 1.3 },
   ];
 
   // Массив с 15 отзывами
@@ -148,7 +157,7 @@ export default function Home() {
 
   const calculatePrice = () => {
     const basePrice = 1500; // Базовая цена за футболку
-    const printPrice = uploadedImage ? 500 : 0; // Цена за принт
+    const printPrice = uploadedImage ? printSizes[printSize].price : 0; // Цена за принт зависит от размера
     return (basePrice + printPrice) * quantity;
   };
 
@@ -259,15 +268,39 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 4. Превью */}
+          {/* 4. Размер принта */}
+          {uploadedImage && (
+            <div className="bg-white rounded-lg shadow-lg p-4">
+              <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {printSizes.map((size, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setPrintSize(index)}
+                    className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                      printSize === index
+                        ? 'border-black bg-gray-100'
+                        : 'border-gray-400 hover:border-black'
+                    }`}
+                  >
+                    <div className="text-sm font-medium">{size.label}</div>
+                    <div className="text-xs text-gray-600">+{size.price}₽</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 5. Превью */}
           <TshirtPreview
             uploadedImage={uploadedImage}
             selectedColor={selectedColor}
             selectedSize={selectedSize}
+            printSize={printSizes[printSize]}
             onImagePositionChange={handleImagePositionChange}
           />
 
-          {/* 5. Информация о заказе */}
+          {/* 6. Информация о заказе */}
           <div className="bg-white rounded-lg shadow-lg p-4">
             <h3 className="text-lg font-semibold mb-3 text-black">Информация о заказе</h3>
             
@@ -306,6 +339,12 @@ export default function Home() {
                   {uploadedImage ? 'Включен' : 'Не выбран'}
                 </span>
               </div>
+              {uploadedImage && (
+                <div className="flex justify-between">
+                  <span className="text-black">Размер принта:</span>
+                  <span className="font-medium text-black">{printSizes[printSize].label}</span>
+                </div>
+              )}
               {uploadedImage && (
                 <div className="flex justify-between">
                   <span className="text-black">Масштаб принта:</span>
@@ -393,6 +432,29 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Размер принта */}
+            {uploadedImage && (
+              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Размер принта</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {printSizes.map((size, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setPrintSize(index)}
+                      className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                        printSize === index
+                          ? 'border-black bg-gray-100'
+                          : 'border-gray-400 hover:border-black'
+                      }`}
+                    >
+                      <div className="text-sm font-medium">{size.label}</div>
+                      <div className="text-xs text-gray-600">+{size.price}₽</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Количество */}
                          <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
                               <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Количество</h3>
@@ -421,6 +483,7 @@ export default function Home() {
               uploadedImage={uploadedImage}
               selectedColor={selectedColor}
               selectedSize={selectedSize}
+              printSize={printSizes[printSize]}
               onImagePositionChange={handleImagePositionChange}
             />
 
