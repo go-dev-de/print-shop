@@ -194,22 +194,22 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 scroll-smooth">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+      <main id="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+        <div className="text-center mb-8 lg:mb-12">
+          <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
           </h2>
-          <p className="text-xl text-gray-800 max-w-2xl mx-auto">
+          <p className="text-base lg:text-xl text-gray-800 max-w-2xl mx-auto px-4">
             Загрузите свой дизайн и получите качественную футболку с принтом
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12">
           {/* Левая колонка - Загрузка и настройки */}
-          <div className="space-y-8">
+          <div className="space-y-4 lg:space-y-8 order-2 lg:order-1">
             {/* Загрузка изображения */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h3 className="text-xl font-semibold mb-4 text-black">Загрузите ваш дизайн</h3>
+            <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Загрузите ваш дизайн</h3>
               <ImageUploader 
                 onImageUpload={handleImageUpload}
                 onImageRemove={handleImageRemove}
@@ -217,8 +217,8 @@ export default function Home() {
             </div>
 
             {/* Выбор размера */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h3 className="text-xl font-semibold mb-4 text-black">Выберите размер</h3>
+                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Выберите размер</h3>
               <div className="grid grid-cols-3 gap-3">
                 {sizes.map((size) => (
                                      <button
@@ -237,8 +237,8 @@ export default function Home() {
             </div>
 
             {/* Выбор цвета */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h3 className="text-xl font-semibold mb-4 text-black">Выберите цвет футболки</h3>
+                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Выберите цвет футболки</h3>
               <div className="grid grid-cols-2 gap-4">
                 {colors.map((color) => (
                                      <button
@@ -261,8 +261,8 @@ export default function Home() {
             </div>
 
             {/* Количество */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h3 className="text-xl font-semibold mb-4 text-black">Количество</h3>
+                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Количество</h3>
               <div className="flex items-center space-x-4">
                                  <button
                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -282,7 +282,7 @@ export default function Home() {
           </div>
 
           {/* Правая колонка - Превью и заказ */}
-          <div className="space-y-8">
+          <div className="space-y-4 lg:space-y-8 order-1 lg:order-2">
             {/* Превью футболки */}
             <TshirtPreview
               uploadedImage={uploadedImage}
@@ -292,8 +292,8 @@ export default function Home() {
             />
 
             {/* Информация о заказе */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h3 className="text-xl font-semibold mb-4 text-black">Информация о заказе</h3>
+            <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Информация о заказе</h3>
               
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
@@ -336,7 +336,7 @@ export default function Home() {
             <button
               onClick={handleOrder}
               disabled={!uploadedImage}
-              className={`w-full py-4 px-6 rounded-lg text-lg font-semibold transition-colors ${
+              className={`w-full py-3 lg:py-4 px-4 lg:px-6 rounded-lg text-base lg:text-lg font-semibold transition-colors ${
                 uploadedImage
                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -381,14 +381,14 @@ export default function Home() {
         </div>
 
         {/* Секция отзывов */}
-        <section id="reviews" className="mt-16 mb-0">
-          <h3 className="text-2xl font-bold text-center mb-8 text-gray-900">ОТЗЫВЫ КЛИЕНТОВ</h3>
+        <section id="reviews" className="mt-8 lg:mt-16 mb-0">
+          <h3 className="text-xl lg:text-2xl font-bold text-center mb-6 lg:mb-8 text-gray-900">ОТЗЫВЫ КЛИЕНТОВ</h3>
           
           <div className="relative max-w-4xl mx-auto">
             {/* Стрелка влево */}
             <button 
               onClick={goToPrevReview}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+              className="absolute left-2 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
             >
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -398,7 +398,7 @@ export default function Home() {
             {/* Стрелка вправо */}
             <button 
               onClick={goToNextReview}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+              className="absolute right-2 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
             >
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -406,12 +406,12 @@ export default function Home() {
             </button>
 
             {/* Контейнер отзывов */}
-            <div className="px-16">
-              <div className="bg-white rounded-lg shadow-lg p-8">
-                <div className="flex items-start space-x-8">
+            <div className="px-4 lg:px-16">
+              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* Фото клиента */}
                   <div className="flex-shrink-0">
-                    <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200">
+                    <div className="w-20 h-20 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-200">
                       <Image 
                         src={reviews[currentReview].photo} 
                         alt={reviews[currentReview].name}
@@ -426,12 +426,12 @@ export default function Home() {
                   </div>
 
                   {/* Текст отзыва */}
-                  <div className="flex-1">
-                    <div className="space-y-4">
-                      <p className="text-gray-800 text-lg leading-relaxed">
+                  <div className="flex-1 text-center lg:text-left">
+                    <div className="space-y-3 lg:space-y-4">
+                      <p className="text-gray-800 text-sm lg:text-lg leading-relaxed">
                         &ldquo;{reviews[currentReview].review}&rdquo;
                       </p>
-                      <p className="text-gray-800 text-lg leading-relaxed">
+                      <p className="text-gray-800 text-sm lg:text-lg leading-relaxed">
                         {reviews[currentReview].additionalText}
                       </p>
                     </div>

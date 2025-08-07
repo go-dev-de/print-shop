@@ -102,14 +102,14 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+      <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6 flex flex-col">
         {/* Превью и управление поворотом */}
         <div className="flex-1">
-          <h3 className="text-xl font-semibold mb-4 text-black">2D-превью вашей футболки</h3>
-          <div className="flex space-x-2 mb-4">
+          <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">2D-превью вашей футболки</h3>
+          <div className="flex space-x-2 mb-3 lg:mb-4">
             <button 
               onClick={() => setActiveView('front')} 
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'front' 
                   ? 'bg-blue-500 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -119,7 +119,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
             </button>
             <button 
               onClick={() => setActiveView('back')} 
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'back' 
                   ? 'bg-blue-500 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -130,12 +130,12 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
           </div>
         <div 
           ref={previewRef}
-          className="relative w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
+          className="relative w-full h-64 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
         >
           {uploadedImage ? (
               <div 
                 ref={tshirtRef} 
-                className="relative w-80 h-96 overflow-hidden" 
+                className="relative w-60 h-72 lg:w-80 lg:h-96 overflow-hidden" 
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -206,10 +206,10 @@ export default function TshirtPreview({ uploadedImage, selectedColor }) {
               </div>
             ) : (
               <div className="text-center text-gray-500">
-                <div className="w-80 h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                <div className="w-60 h-72 lg:w-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                   <div>
-                    <p className="text-lg font-medium mb-2">Загрузите изображение</p>
-                    <p className="text-sm">чтобы увидеть превью на футболке</p>
+                    <p className="text-base lg:text-lg font-medium mb-2">Загрузите изображение</p>
+                    <p className="text-xs lg:text-sm">чтобы увидеть превью на футболке</p>
               </div>
             </div>
             </div>
