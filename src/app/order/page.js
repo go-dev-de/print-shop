@@ -102,7 +102,7 @@ function OrderPageContent() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <button
@@ -117,12 +117,12 @@ function OrderPageContent() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <main className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {/* Левая колонка - Форма заказа */}
           <div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h2 className="text-xl font-semibold mb-6 text-black">Контактная информация</h2>
+                        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-5">
+              <h2 className="text-lg font-semibold mb-3 text-black">Контактная информация</h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,7 +136,7 @@ function OrderPageContent() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                     />
                   </div>
                   
@@ -150,7 +150,7 @@ function OrderPageContent() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                     />
                   </div>
                 </div>
@@ -165,7 +165,7 @@ function OrderPageContent() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                   />
                 </div>
 
@@ -179,7 +179,7 @@ function OrderPageContent() {
                     value={formData.address}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                   />
                 </div>
 
@@ -194,7 +194,7 @@ function OrderPageContent() {
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                     />
                   </div>
                   
@@ -207,7 +207,7 @@ function OrderPageContent() {
                       name="postalCode"
                       value={formData.postalCode}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                     />
                   </div>
                 </div>
@@ -221,7 +221,7 @@ function OrderPageContent() {
                     value={formData.notes}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
                     placeholder="Особые требования к доставке или другие пожелания..."
                   ></textarea>
                 </div>
@@ -243,8 +243,8 @@ function OrderPageContent() {
 
           {/* Правая колонка - Детали заказа */}
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                             <h2 className="text-xl font-semibold mb-4 text-black">Детали заказа</h2>
+                        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-5">
+              <h2 className="text-lg font-semibold mb-3 text-black">Детали заказа</h2>
               
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
