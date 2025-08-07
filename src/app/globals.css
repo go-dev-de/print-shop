@@ -57,10 +57,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Мобильная оптимизация */
-@media (max-width: 768px) {
-  .max-w-7xl {
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+@media (max-width: 640px) {
+  .max-w-sm {
+    max-width: calc(100vw - 32px) !important;
   }
 }
