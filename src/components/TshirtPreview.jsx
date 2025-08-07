@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 export default function TshirtPreview({ uploadedImage, selectedColor, printSize = { scale: 1, label: '21×30 см' } }) {
@@ -100,6 +100,70 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     setIsDragging(false);
   };
 
+  // Touch события для мобильных устройств
+  const handleTouchStart = (e) => {
+    if (!uploadedImage) return;
+    if (!tshirtRef.current) return;
+    e.preventDefault(); // Предотвращаем скролл
+    const touch = e.touches[0];
+    const rect = tshirtRef.current.getBoundingClientRect();
+    // Центр принта в px относительно tshirtRef
+    const printCenterX = (printPosition.x / 100) * rect.width;
+    const printCenterY = (printPosition.y / 100) * rect.height;
+    setIsDragging(true);
+    setDragOffset({
+      x: touch.clientX - rect.left - printCenterX,
+      y: touch.clientY - rect.top - printCenterY
+    });
+  };
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging || !uploadedImage) return;
+    if (!tshirtRef.current) return;
+    e.preventDefault(); // Предотвращаем скролл
+    const touch = e.touches[0];
+    const rect = tshirtRef.current.getBoundingClientRect();
+    // Новая позиция центра принта в px относительно tshirtRef
+    const newCenterX = touch.clientX - rect.left - dragOffset.x;
+    const newCenterY = touch.clientY - rect.top - dragOffset.y;
+    // Пересчет в проценты относительно tshirtRef
+    const x = (newCenterX / rect.width) * 100;
+    const y = (newCenterY / rect.height) * 100;
+    setPrintPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y))
+    });
+  }, [isDragging, uploadedImage, dragOffset.x, dragOffset.y]);
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Добавляем глобальные обработчики для touch событий
+  useEffect(() => {
+    const handleGlobalTouchMove = (e) => {
+      if (isDragging) {
+        handleTouchMove(e);
+      }
+    };
+
+    const handleGlobalTouchEnd = () => {
+      if (isDragging) {
+        setIsDragging(false);
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
+      document.addEventListener('touchend', handleGlobalTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+      document.removeEventListener('touchend', handleGlobalTouchEnd);
+    };
+  }, [isDragging, handleTouchMove]);
+
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6 flex flex-col">
@@ -140,7 +204,10 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-                style={{ userSelect: 'none' }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                style={{ userSelect: 'none', touchAction: 'none' }}
               >
                 {/* Фоновая футболка - показываем только нужную часть с изменением цвета */}
                 <div className="absolute inset-0 overflow-hidden">
@@ -201,7 +268,8 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                   {activeView === 'front' ? 'Перед' : 'Зад'}
                 </div>
                 <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white px-3 py-1 rounded text-xs">
-                  Перетащите принт
+                  <span className="hidden lg:inline">Перетащите принт</span>
+                  <span className="lg:hidden">Коснитесь и перетащите</span>
                 </div>
               </div>
             ) : (
