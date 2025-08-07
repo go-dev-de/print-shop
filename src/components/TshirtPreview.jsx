@@ -1,0 +1,279 @@
+"use client";
+import { useState, useRef } from "react";
+import Image from "next/image";
+
+export default function TshirtPreview({ uploadedImage, selectedColor }) {
+  const [printPosition, setPrintPosition] = useState({ x: 50, y: 50 });
+  const [printScale, setPrintScale] = useState(1);
+  const [printRotation, setPrintRotation] = useState(0); // Новое состояние для поворота
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [activeView, setActiveView] = useState('front');
+  const previewRef = useRef(null);
+  const tshirtRef = useRef(null); // Новый ref для области футболки
+
+  const colors = {
+    white: '#ffffff',
+    black: '#000000',
+    gray: '#808080',
+    navy: '#000080',
+    red: '#ff0000',
+    blue: '#0000ff',
+    green: '#008000',
+    yellow: '#ffff00',
+    pink: '#ffc0cb',
+    purple: '#800080'
+  };
+
+  // Функция для получения CSS фильтров для изменения цвета
+  const getColorFilter = (colorName) => {
+    switch (colorName) {
+      case 'white':
+        return 'none'; // Без изменений
+      case 'black':
+        return 'brightness(0) saturate(100%)'; // Делаем черным
+      case 'gray':
+        return 'brightness(0.4) saturate(0%) contrast(1.8)'; // Делаем серым #272727
+      case 'navy':
+        return 'brightness(0.6) saturate(400%) hue-rotate(240deg) contrast(1.2)'; // Делаем ярко-синим #0000fe
+      default:
+        return 'none';
+    }
+  };
+
+  // Функция для получения дополнительных стилей в зависимости от цвета
+  const getColorStyles = (colorName) => {
+    switch (colorName) {
+      case 'white':
+        return { filter: 'none' };
+      case 'black':
+        return { filter: 'brightness(0) saturate(100%)' };
+      case 'gray':
+        return { 
+          filter: 'brightness(0.4) saturate(0%) contrast(1.8)',
+          mixBlendMode: 'multiply'
+        };
+      case 'navy':
+        return { 
+          filter: 'brightness(0.6) saturate(400%) hue-rotate(240deg) contrast(1.2)',
+          mixBlendMode: 'multiply'
+        };
+      default:
+        return { filter: 'none' };
+    }
+  };
+
+  // Размер принта в px (тот же, что в style)
+  const PRINT_SIZE = 80;
+
+  const handleMouseDown = (e) => {
+    if (!uploadedImage) return;
+    if (!tshirtRef.current) return;
+    const rect = tshirtRef.current.getBoundingClientRect();
+    // Центр принта в px относительно tshirtRef
+    const printCenterX = (printPosition.x / 100) * rect.width;
+    const printCenterY = (printPosition.y / 100) * rect.height;
+    setIsDragging(true);
+    setDragOffset({
+      x: e.clientX - rect.left - printCenterX,
+      y: e.clientY - rect.top - printCenterY
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !uploadedImage) return;
+    if (!tshirtRef.current) return;
+    const rect = tshirtRef.current.getBoundingClientRect();
+    // Новая позиция центра принта в px относительно tshirtRef
+    const newCenterX = e.clientX - rect.left - dragOffset.x;
+    const newCenterY = e.clientY - rect.top - dragOffset.y;
+    // Пересчет в проценты относительно tshirtRef
+    const x = (newCenterX / rect.width) * 100;
+    const y = (newCenterY / rect.height) * 100;
+    setPrintPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y))
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+        {/* Превью и управление поворотом */}
+        <div className="flex-1">
+          <h3 className="text-xl font-semibold mb-4 text-black">2D-превью вашей футболки</h3>
+          <div className="flex space-x-2 mb-4">
+            <button 
+              onClick={() => setActiveView('front')} 
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeView === 'front' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Перед
+            </button>
+            <button 
+              onClick={() => setActiveView('back')} 
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeView === 'back' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Зад
+            </button>
+          </div>
+        <div 
+          ref={previewRef}
+          className="relative w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
+        >
+          {uploadedImage ? (
+              <div 
+                ref={tshirtRef} 
+                className="relative w-80 h-96 overflow-hidden" 
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                style={{ userSelect: 'none' }}
+              >
+                {/* Фоновая футболка - показываем только нужную часть с изменением цвета */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div 
+                    className="relative w-full h-full"
+                    style={{
+                      width: '200%', // Увеличиваем ширину в 2 раза
+                      transform: activeView === 'front' 
+                        ? 'translateX(0%)' 
+                        : 'translateX(-50%)', // Сдвигаем влево для показа правой части
+                      transition: 'transform 0.3s ease'
+                    }}
+                  >
+                    <Image 
+                      src="/futbolka-muzhskaya-basic.png" 
+                      alt="T-shirt template" 
+                      fill 
+                      className="object-contain"
+                      draggable={false}
+                      style={{
+                        ...getColorStyles(selectedColor),
+                        transition: 'all 0.3s ease'
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* Принт */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                style={{
+                    left: `${printPosition.x}%`,
+                    top: `${printPosition.y}%`,
+                    width: '100%',
+                  transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'none',
+                    zIndex: 2
+                }}
+              >
+                <div 
+                  className="relative"
+                  style={{
+                      width: `${80 * printScale}px`, 
+                      height: `${80 * printScale}px`,
+                      transform: `rotate(${printRotation}deg)`
+                  }}
+                >
+                  <Image
+                    src={uploadedImage}
+                    alt="Design preview"
+                    fill
+                    className="object-contain"
+                    draggable={false}
+                  />
+                </div>
+              </div>
+                {/* Индикаторы */}
+                <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white px-3 py-1 rounded text-xs">
+                  {activeView === 'front' ? 'Перед' : 'Зад'}
+                </div>
+                <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white px-3 py-1 rounded text-xs">
+                  Перетащите принт
+                </div>
+              </div>
+            ) : (
+              <div className="text-center text-gray-500">
+                <div className="w-80 h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                  <div>
+                    <p className="text-lg font-medium mb-2">Загрузите изображение</p>
+                    <p className="text-sm">чтобы увидеть превью на футболке</p>
+              </div>
+            </div>
+            </div>
+          )}
+      </div>
+
+          {/* Настройки принта объединены здесь */}
+      {uploadedImage && (
+            <div className="mt-6 p-4 rounded-lg bg-gray-50 border border-gray-200">
+                     <h4 className="font-semibold mb-3 text-black">Настройки принта</h4>
+              <div className="space-y-4">
+                {/* Масштаб */}
+            <div>
+              <label className="block text-sm font-medium text-gray-800 mb-1">
+                    Масштаб: {Math.round(printScale * 100)}%
+              </label>
+              <input
+                type="range"
+                min="0.3"
+                max="2"
+                step="0.1"
+                    value={printScale} 
+                    onChange={(e) => setPrintScale(parseFloat(e.target.value))} 
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+                {/* Поворот */}
+                <div className="flex items-center space-x-4">
+                  <label className="text-sm text-gray-700 font-medium">Поворот</label>
+                  <input
+                    type="range"
+                    min={-180}
+                    max={180}
+                    step={1}
+                    value={printRotation}
+                    onChange={e => setPrintRotation(Number(e.target.value))}
+                    className="w-64 accent-blue-500"
+                  />
+                  <span className="text-xs text-gray-600">{printRotation}&deg;</span>
+                </div>
+                {/* Кнопки сброса */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                             <button
+                 onClick={() => {
+                      setPrintPosition({ x: 50, y: 50 }); 
+                      setPrintScale(1); 
+                      setPrintRotation(0);
+                 }}
+                 className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-black text-black"
+               >
+                    Сбросить позицию и масштаб
+               </button>
+               <button
+                    onClick={() => setPrintScale(1)} 
+                 className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-black text-black"
+               >
+                 Сбросить масштаб
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
+        </div>
+      </div>
+    </div>
+  );
+} 
