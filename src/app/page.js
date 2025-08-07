@@ -178,7 +178,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">PrintStyle</h1>
@@ -194,12 +194,12 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+      <main id="main" className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
           </h2>
-          <p className="text-base lg:text-xl text-gray-800 max-w-2xl mx-auto px-4">
+          <p className="text-base lg:text-xl text-gray-800 max-w-2xl mx-auto">
             Загрузите свой дизайн и получите качественную футболку с принтом
           </p>
         </div>
@@ -388,7 +388,7 @@ export default function Home() {
             {/* Стрелка влево */}
             <button 
               onClick={goToPrevReview}
-              className="absolute left-2 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+              className="absolute left-1 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
             >
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -398,7 +398,7 @@ export default function Home() {
             {/* Стрелка вправо */}
             <button 
               onClick={goToNextReview}
-              className="absolute right-2 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+              className="absolute right-1 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
             >
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -406,7 +406,7 @@ export default function Home() {
             </button>
 
             {/* Контейнер отзывов */}
-            <div className="px-4 lg:px-16">
+            <div className="px-6 lg:px-16">
               <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* Фото клиента */}
@@ -458,7 +458,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 !text-white">PrintStyle</h3>
