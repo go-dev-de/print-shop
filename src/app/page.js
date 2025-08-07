@@ -184,10 +184,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Header */}
       <header className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">PrintStyle</h1>
@@ -203,7 +203,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
+      <main id="main" className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
         <div className="text-center mb-8 lg:mb-12">
           <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
             Создайте свою уникальную футболку
@@ -214,9 +214,9 @@ export default function Home() {
         </div>
 
         {/* Мобильная версия - одна колонка */}
-        <div className="block lg:hidden space-y-4">
+        <div className="block lg:hidden space-y-6">
           {/* 1. Загрузка принта */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Загрузите ваш принт</h3>
             <ImageUploader 
               onImageUpload={handleImageUpload}
@@ -225,7 +225,7 @@ export default function Home() {
           </div>
 
           {/* 2. Выбор цвета */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Выберите цвет футболки</h3>
             <div className="grid grid-cols-2 gap-4">
               {colors.map((color) => (
@@ -249,7 +249,7 @@ export default function Home() {
           </div>
 
           {/* 3. Выбор размера */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
             <div className="grid grid-cols-3 gap-3">
               {sizes.map((size) => (
@@ -270,7 +270,7 @@ export default function Home() {
 
           {/* 4. Размер принта */}
           {uploadedImage && (
-            <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="bg-white rounded-lg shadow-lg p-5">
               <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
               <div className="grid grid-cols-2 gap-3">
                 {printSizes.map((size, index) => (
@@ -301,7 +301,7 @@ export default function Home() {
           />
 
           {/* 6. Информация о заказе */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-5">
             <h3 className="text-lg font-semibold mb-3 text-black">Информация о заказе</h3>
             
             <div className="space-y-3 mb-6">
@@ -602,7 +602,7 @@ export default function Home() {
             </button>
 
             {/* Контейнер отзывов */}
-            <div className="px-4 lg:px-16">
+            <div className="px-6 lg:px-16">
               <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* Фото клиента */}
@@ -654,7 +654,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 !text-white">PrintStyle</h3>
