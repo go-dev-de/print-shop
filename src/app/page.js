@@ -384,7 +384,9 @@ export default function Home() {
 
           {/* Кнопка заказа */}
           <button
+            type="button"
             onClick={handleOrder}
+            onTouchEnd={handleOrder}
             disabled={!uploadedImage}
             className={`relative z-20 pointer-events-auto w-full py-3 px-4 rounded-lg text-base font-semibold transition-colors ${
               uploadedImage
@@ -552,7 +554,9 @@ export default function Home() {
 
             {/* Кнопка заказа */}
             <button
+              type="button"
               onClick={handleOrder}
+              onTouchEnd={handleOrder}
               disabled={!uploadedImage}
               className={`relative z-20 pointer-events-auto w-full py-3 lg:py-4 px-4 lg:px-6 rounded-lg text-base lg:text-lg font-semibold transition-colors ${
                 uploadedImage
