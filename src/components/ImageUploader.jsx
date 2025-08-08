@@ -16,14 +16,15 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       return;
     }
 
-    // Проверяем размер файла (максимум 15MB)
-    if (file.size > 15 * 1024 * 1024) {
-      setImageError('Размер файла не должен превышать 15MB');
+    // Разрешаем до 20MB (iPhone фото часто большие)
+    if (file.size > 20 * 1024 * 1024) {
+      setImageError('Размер файла не должен превышать 20MB');
       return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
+      const src = e.target.result;
       const img = new window.Image();
       img.onload = () => {
         // Проверяем минимальные размеры
@@ -32,14 +33,34 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
           return;
         }
 
-        setUploadedImage(e.target.result);
-        setImageError('');
-        onImageUpload(e.target.result, file);
+        // Если сверхбольшое изображение — уменьшаем до 4032 по большей стороне
+        const maxDim = 4032;
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        const needDownscale = Math.max(w, h) > maxDim;
+
+        if (needDownscale || file.type === 'image/heic' || file.type === 'image/heif') {
+          const canvas = document.createElement('canvas');
+          const scale = needDownscale ? Math.min(1, maxDim / Math.max(w, h)) : 1;
+          canvas.width = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          // Транскодируем в JPEG для совместимости
+          const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+          setUploadedImage(jpegDataUrl);
+          setImageError('');
+          onImageUpload(jpegDataUrl, file);
+        } else {
+          setUploadedImage(src);
+          setImageError('');
+          onImageUpload(src, file);
+        }
       };
       img.onerror = () => {
         setImageError('Ошибка загрузки изображения');
       };
-      img.src = e.target.result;
+      img.src = src;
     };
     reader.readAsDataURL(file);
   }, [onImageUpload]);
@@ -144,10 +165,10 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
               Перетащите изображение сюда или кликните для выбора
             </p>
             <p className="text-sm text-gray-600">
-              Поддерживаются форматы: JPG, PNG, SVG, WebP
+              Поддерживаются форматы: JPG, PNG, SVG, WebP (HEIC/HEIF конвертируются автоматически)
             </p>
             <p className="text-sm text-gray-600">
-              Максимальный размер: 15MB
+              Максимальный размер: 20MB
             </p>
           </div>
         )}

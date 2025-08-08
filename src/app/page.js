@@ -156,6 +156,41 @@ export default function Home() {
     setImagePosition(position);
   };
 
+  // Оценка размера dataURL в байтах
+  const estimateDataUrlBytes = (dataUrl) => {
+    if (!dataUrl || typeof dataUrl !== 'string') return 0;
+    const commaIdx = dataUrl.indexOf(',');
+    const base64 = commaIdx >= 0 ? dataUrl.slice(commaIdx + 1) : dataUrl;
+    // 4 символа base64 ~ 3 байта
+    return Math.floor((base64.length * 3) / 4);
+  };
+
+  // Сжатие изображения в JPEG с ограничением по максимальной стороне
+  const compressDataUrlToJpeg = async (dataUrl, maxDim = 3000, quality = 0.85) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const { naturalWidth: w, naturalHeight: h } = img;
+        const scale = Math.min(1, maxDim / Math.max(w, h));
+        const targetW = Math.max(1, Math.round(w * scale));
+        const targetH = Math.max(1, Math.round(h * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, targetW, targetH);
+        try {
+          const jpeg = canvas.toDataURL('image/jpeg', quality);
+          resolve(jpeg);
+        } catch (e) {
+          reject(e);
+        }
+      };
+      img.onerror = reject;
+      img.src = dataUrl;
+    });
+  };
+
   const calculatePrice = () => {
     const basePrice = 1500; // Базовая цена за футболку
     const printPrice = uploadedImage ? printSizes[printSize].price : 0; // Цена за принт зависит от размера
@@ -181,8 +216,19 @@ export default function Home() {
       console.warn('Не удалось создать изображение превью:', e);
     }
     
+    // Сжимать исходник, если он слишком большой для передачи на бэкенд
+    const MAX_REQUEST_BYTES = 4.5 * 1024 * 1024; // приблизительный лимит на полезную нагрузку
+    let imageForOrder = uploadedImage;
+    try {
+      if (estimateDataUrlBytes(imageForOrder) > MAX_REQUEST_BYTES) {
+        imageForOrder = await compressDataUrlToJpeg(imageForOrder, 3000, 0.85);
+      }
+    } catch (e) {
+      console.warn('Не удалось сжать изображение перед отправкой:', e);
+    }
+
     const orderData = {
-      image: uploadedImage,
+      image: imageForOrder,
       imagePosition: imagePosition,
       imageSide: activeView,
       size: selectedSize,
