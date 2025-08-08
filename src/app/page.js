@@ -36,8 +36,8 @@ export default function Home() {
     {
       name: "Иван Петров",
       photo: "https://i.pravatar.cc/128?u=ivan",
-      review: "Нашли подходящий автомобиль за 2 дня, все оформили, украсили и подвезли к назначенному месту. Очень благодарен!",
-      additionalText: "Я деловой человек, и времени на поиск и оформление машины у меня нет. Хотел сделать сюрприз девушке. Был бюджет и предпочтения. Нашли подходящий автомобиль за 2 дня, все оформили, украсили и подвезли к назначенному месту. Очень благодарен."
+      review: "Качество отличное, быстро и удобно.",
+      additionalText: "Заказал футболку с принтом, все сделали быстро и качественно. Принт держится отлично, футболка удобная и красивая. Рекомендую всем."
     },
     {
       name: "Мария Смирнова",
@@ -387,12 +387,14 @@ export default function Home() {
             type="button"
             onClick={handleOrder}
             onTouchEnd={handleOrder}
-            disabled={!uploadedImage}
-            className={`relative z-20 pointer-events-auto w-full py-3 px-4 rounded-lg text-base font-semibold transition-colors ${
+            onPointerUp={handleOrder}
+            aria-disabled={!uploadedImage}
+            className={`relative z-50 pointer-events-auto w-full py-3 px-4 rounded-lg text-base font-semibold transition-colors ${
               uploadedImage
                 ? 'bg-blue-600 hover:bg-blue-700 text-white'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
+            style={{ touchAction: 'manipulation' }}
           >
             Оформить заказ
           </button>
@@ -557,12 +559,14 @@ export default function Home() {
               type="button"
               onClick={handleOrder}
               onTouchEnd={handleOrder}
-              disabled={!uploadedImage}
-              className={`relative z-20 pointer-events-auto w-full py-3 lg:py-4 px-4 lg:px-6 rounded-lg text-base lg:text-lg font-semibold transition-colors ${
+              onPointerUp={handleOrder}
+              aria-disabled={!uploadedImage}
+              className={`relative z-50 pointer-events-auto w-full py-3 lg:py-4 px-4 lg:px-6 rounded-lg text-base lg:text-lg font-semibold transition-colors ${
                 uploadedImage
                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
+              style={{ touchAction: 'manipulation' }}
             >
               Оформить заказ
             </button>

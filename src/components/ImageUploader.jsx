@@ -16,9 +16,9 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       return;
     }
 
-    // Проверяем размер файла (максимум 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setImageError('Размер файла не должен превышать 5MB');
+    // Проверяем размер файла (максимум 15MB)
+    if (file.size > 15 * 1024 * 1024) {
+      setImageError('Размер файла не должен превышать 15MB');
       return;
     }
 
@@ -147,7 +147,7 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
               Поддерживаются форматы: JPG, PNG, SVG, WebP
             </p>
             <p className="text-sm text-gray-600">
-              Максимальный размер: 5MB
+              Максимальный размер: 15MB
             </p>
           </div>
         )}
