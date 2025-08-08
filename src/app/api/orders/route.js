@@ -16,7 +16,7 @@ export async function POST(request) {
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: null };
+    let telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: null };
     if (BOT_TOKEN && CHAT_ID) {
       const caption = [
         `Новый заказ`,
@@ -113,7 +113,7 @@ export async function POST(request) {
       }
     } else {
       console.warn('TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID не настроены. Уведомление не отправлено.');
-      var telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: 'Missing TELEGRAM env vars' };
+      telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: 'Missing TELEGRAM env vars' };
     }
 
     // Имитация обработки заказа
