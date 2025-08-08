@@ -217,12 +217,19 @@ async function composeTshirtImage(orderData) {
   const printWidth = Math.max(8, Math.round(regionWidth * widthRatio));
   const printHeight = printWidth; // квадрат, как в превью
 
-  // Ресайзим и поворачиваем принт
-  let processedDesign = sharp(designBuffer).resize({ width: printWidth, height: printHeight, fit: 'contain' });
+  // Ресайзим и поворачиваем принт (с учетом EXIF и прозрачного фона при вписывании/повороте)
+  let processedDesign = sharp(designBuffer)
+    .rotate() // автоориентация по EXIF
+    .resize({
+      width: printWidth,
+      height: printHeight,
+      fit: 'contain',
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    });
   if (rotation) {
     processedDesign = processedDesign.rotate(rotation, { background: { r: 0, g: 0, b: 0, alpha: 0 } });
   }
-  const processedBuffer = await processedDesign.toBuffer();
+  const processedBuffer = await processedDesign.png().toBuffer();
   const processedMeta = await sharp(processedBuffer).metadata();
 
   // Переводим проценты позиции в пиксели относительно шаблона

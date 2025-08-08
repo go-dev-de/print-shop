@@ -505,7 +505,8 @@ export default function Home() {
               selectedColor={selectedColor}
               selectedSize={selectedSize}
               printSize={printSizes[printSize]}
-            onImagePositionChange={handleImagePositionChange}
+              onImagePositionChange={handleImagePositionChange}
+              onViewChange={setActiveView}
             />
 
             {/* Информация о заказе */}
