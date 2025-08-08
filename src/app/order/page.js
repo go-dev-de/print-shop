@@ -19,6 +19,15 @@ function OrderPageContent() {
   const [orderData, setOrderData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Константы цен
+  const BASE_TSHIRT_PRICE = 700
+  const PRINT_SIZES = [
+    { label: '10×15 см', price: 390 },
+    { label: '15×21 см', price: 590 },
+    { label: '21×30 см', price: 740 },
+    { label: '30×42 см', price: 940 },
+  ];
+
   useEffect(() => {
     // Получаем данные заказа из localStorage или URL параметров
     const savedOrder = localStorage.getItem('printShopOrder');
@@ -43,10 +52,22 @@ function OrderPageContent() {
     setIsSubmitting(true);
 
     try {
+      const merchandiseSubtotal = calculateMerchSubtotal();
+      const shippingCost = calculateShipping(merchandiseSubtotal);
+      const orderTotal = merchandiseSubtotal + shippingCost;
+
       const completeOrder = {
         ...orderData,
         customerInfo: formData,
         orderDate: new Date().toISOString(),
+        pricing: {
+          baseTshirtPrice: BASE_TSHIRT_PRICE,
+          printPricePerUnit: getPrintPricePerUnit(),
+          quantity: orderData.quantity,
+          merchandiseSubtotal,
+          shippingCost,
+          orderTotal,
+        },
       };
 
       // Отправляем заказ на сервер
@@ -80,11 +101,30 @@ function OrderPageContent() {
     }
   };
 
-  const calculatePrice = () => {
+  const getPrintPricePerUnit = () => {
+    if (!orderData?.image) return 0;
+    if (orderData?.printSizeIndex != null && PRINT_SIZES[orderData.printSizeIndex]) {
+      return PRINT_SIZES[orderData.printSizeIndex].price;
+    }
+    if (typeof orderData?.printPricePerUnit === 'number') {
+      return orderData.printPricePerUnit;
+    }
+    return 0;
+  };
+
+  const calculateMerchSubtotal = () => {
     if (!orderData) return 0;
-    const basePrice = 1500;
-    const printPrice = orderData.image ? 500 : 0;
-    return (basePrice + printPrice) * orderData.quantity;
+    const printPrice = getPrintPricePerUnit();
+    return (BASE_TSHIRT_PRICE + printPrice) * orderData.quantity;
+  };
+
+  const calculateShipping = (subtotal) => {
+    return subtotal >= 3000 ? 0 : 500;
+  };
+
+  const calculateTotal = () => {
+    const subtotal = calculateMerchSubtotal();
+    return subtotal + calculateShipping(subtotal);
   };
 
   if (!orderData) {
@@ -98,11 +138,15 @@ function OrderPageContent() {
     );
   }
 
+  // Предварительные вычисления для отображения
+  const merchandiseSubtotal = calculateMerchSubtotal();
+  const shippingCost = calculateShipping(merchandiseSubtotal);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <button
@@ -117,7 +161,7 @@ function OrderPageContent() {
         </div>
       </header>
 
-      <main className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12">
+      <main className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8 py-6 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {/* Левая колонка - Форма заказа */}
           <div>
@@ -271,23 +315,23 @@ function OrderPageContent() {
 
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-800">Футболка:</span>
-                    <span>1500 ₽ × {orderData.quantity}</span>
+                    <span className="text-black">Футболка:</span>
+                    <span className="text-black">{BASE_TSHIRT_PRICE} ₽ × {orderData.quantity}</span>
                   </div>
                   {orderData.image && (
                     <div className="flex justify-between">
-                      <span className="text-gray-800">Принт:</span>
-                      <span>500 ₽ × {orderData.quantity}</span>
+                      <span className="text-black">Принт:</span>
+                      <span className="text-black">{getPrintPricePerUnit()} ₽ × {orderData.quantity}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-800">Доставка:</span>
-                    <span>Бесплатно</span>
+                    <span className="text-black">Доставка:</span>
+                    <span className="text-black">{shippingCost === 0 ? 'Бесплатно' : `${shippingCost} ₽`}</span>
                   </div>
                   <div className="border-t pt-2">
-                                         <div className="flex justify-between text-lg font-bold text-black">
+                    <div className="flex justify-between text-lg font-bold text-black">
                        <span>Итого:</span>
-                       <span>{calculatePrice()} ₽</span>
+                       <span>{calculateTotal()} ₽</span>
                      </div>
                   </div>
                 </div>

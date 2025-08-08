@@ -13,12 +13,13 @@ export default function Home() {
   const [imagePosition, setImagePosition] = useState({ x: 50, y: 50, scale: 1 });
   const [currentReview, setCurrentReview] = useState(0);
   const [printSize, setPrintSize] = useState(0); // Индекс выбранного размера принта
+  const [activeView, setActiveView] = useState('front');
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = [
     { name: 'white', hex: '#ffffff', label: 'Белый' },
     { name: 'black', hex: '#000000', label: 'Черный' },
-    { name: 'navy', hex: '#d3d3d3', label: 'Светло-серый' },
+    { name: 'light-gray', hex: '#d3d3d3', label: 'Светло-серый' },
     { name: 'gray', hex: '#6b7280', label: 'Серый' },
   ];
 
@@ -161,18 +162,37 @@ export default function Home() {
     return (basePrice + printPrice) * quantity;
   };
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (!uploadedImage) {
       alert('Пожалуйста, загрузите изображение для принта');
       return;
     }
     
+    // Пытаемся сделать скриншот превью с принтом
+    let previewImageDataUrl = null;
+    try {
+      const { toJpeg } = await import('html-to-image');
+      const previewElement = document.querySelector('.tshirt-preview-root');
+      if (previewElement) {
+        // JPEG меньше весит, что повышает шанс успешной отправки в Telegram
+        previewImageDataUrl = await toJpeg(previewElement, { cacheBust: true, pixelRatio: 1.5, quality: 0.85 });
+      }
+    } catch (e) {
+      console.warn('Не удалось создать изображение превью:', e);
+    }
+    
     const orderData = {
       image: uploadedImage,
       imagePosition: imagePosition,
+      imageSide: activeView,
       size: selectedSize,
       color: selectedColor,
       quantity: quantity,
+      // Сохраняем выбор размера принта и цену за единицу для страницы заказа
+      printSizeIndex: printSize,
+      printSizeLabel: uploadedImage ? printSizes[printSize].label : null,
+      printPricePerUnit: uploadedImage ? printSizes[printSize].price : 0,
+      previewImage: previewImageDataUrl,
       totalPrice: calculatePrice(),
     };
     
@@ -298,6 +318,7 @@ export default function Home() {
             selectedSize={selectedSize}
             printSize={printSizes[printSize]}
             onImagePositionChange={handleImagePositionChange}
+            onViewChange={setActiveView}
           />
 
           {/* 6. Информация о заказе */}

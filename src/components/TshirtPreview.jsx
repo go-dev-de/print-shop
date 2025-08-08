@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
-export default function TshirtPreview({ uploadedImage, selectedColor, printSize = { scale: 1, label: '21×30 см' } }) {
+export default function TshirtPreview({ uploadedImage, selectedColor, printSize = { scale: 1, label: '21×30 см' }, onImagePositionChange, onViewChange }) {
   const [printPosition, setPrintPosition] = useState({ x: 50, y: 50 });
 
   const [printRotation, setPrintRotation] = useState(0); // Новое состояние для поворота
@@ -90,10 +90,14 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     // Пересчет в проценты относительно tshirtRef
     const x = (newCenterX / rect.width) * 100;
     const y = (newCenterY / rect.height) * 100;
-    setPrintPosition({
+    const newPos = {
       x: Math.max(0, Math.min(100, x)),
-      y: Math.max(0, Math.min(100, y))
-    });
+      y: Math.max(0, Math.min(100, y)),
+      scale: printSize?.scale ?? 1,
+      rotation: printRotation,
+    };
+    setPrintPosition(newPos);
+    onImagePositionChange?.(newPos);
   };
 
   const handleMouseUp = () => {
@@ -129,10 +133,14 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     // Пересчет в проценты относительно tshirtRef
     const x = (newCenterX / rect.width) * 100;
     const y = (newCenterY / rect.height) * 100;
-    setPrintPosition({
+    const newPos = {
       x: Math.max(0, Math.min(100, x)),
-      y: Math.max(0, Math.min(100, y))
-    });
+      y: Math.max(0, Math.min(100, y)),
+      scale: printSize?.scale ?? 1,
+      rotation: printRotation,
+    };
+    setPrintPosition(newPos);
+    onImagePositionChange?.(newPos);
   }, [isDragging, uploadedImage, dragOffset.x, dragOffset.y]);
 
   const handleTouchEnd = () => {
@@ -172,7 +180,10 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
           <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">2D-превью вашей футболки</h3>
           <div className="flex space-x-2 mb-3 lg:mb-4">
             <button 
-              onClick={() => setActiveView('front')} 
+              onClick={() => {
+                setActiveView('front');
+                onViewChange?.('front');
+              }} 
               className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'front' 
                   ? 'bg-blue-500 text-white' 
@@ -182,7 +193,10 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
               Перед
             </button>
             <button 
-              onClick={() => setActiveView('back')} 
+              onClick={() => {
+                setActiveView('back');
+                onViewChange?.('back');
+              }} 
               className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'back' 
                   ? 'bg-blue-500 text-white' 
@@ -194,7 +208,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
           </div>
         <div 
           ref={previewRef}
-          className="relative w-full h-80 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair"
+          className="relative w-full h-80 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair tshirt-preview-root"
         >
           {uploadedImage ? (
               <div 
@@ -237,32 +251,37 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                 {/* Принт */}
                 <div
                   className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{
+                  style={{
                     left: `${printPosition.x}%`,
                     top: `${printPosition.y}%`,
                     width: '100%',
-                  transform: 'translate(-50%, -50%)',
+                    transform: 'translate(-50%, -50%)',
                     pointerEvents: 'none',
                     zIndex: 2
-                }}
-              >
-                <div 
-                  className="relative"
-                  style={{
+                  }}
+                >
+                  <div 
+                    className="relative"
+                    style={{
                       width: `${80 * printSize.scale}px`, 
                       height: `${80 * printSize.scale}px`,
                       transform: `rotate(${printRotation}deg)`
-                  }}
-                >
-                  <Image
-                    src={uploadedImage}
-                    alt="Design preview"
-                    fill
-                    className="object-contain"
-                    draggable={false}
-                  />
+                    }}
+                  >
+                    {/* Рамка вокруг области принта */}
+                    <div className="absolute inset-0 border-2 border-blue-500 border-dashed rounded-md pointer-events-none" />
+                    {/* Метка центра */}
+                    <div className="absolute left-1/2 top-1/2 w-2.5 h-2.5 -ml-1.5 -mt-1.5 rounded-full bg-blue-500/80 shadow pointer-events-none" />
+                    {/* Сам принт */}
+                    <Image
+                      src={uploadedImage}
+                      alt="Design preview"
+                      fill
+                      className="object-contain"
+                      draggable={false}
+                    />
+                  </div>
                 </div>
-              </div>
                 {/* Индикаторы */}
                 <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white px-3 py-1 rounded text-xs">
                   {activeView === 'front' ? 'Перед' : 'Зад'}
@@ -304,7 +323,13 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                     max={180}
                     step={1}
                     value={printRotation}
-                    onChange={e => setPrintRotation(Number(e.target.value))}
+                    onChange={e => {
+                      const value = Number(e.target.value);
+                      setPrintRotation(value);
+                      const newPos = { ...printPosition, scale: printSize?.scale ?? 1, rotation: value };
+                      setPrintPosition(newPos);
+                      onImagePositionChange?.(newPos);
+                    }}
                     className="w-64 accent-blue-500"
                   />
                   <span className="text-xs text-gray-600">{printRotation}&deg;</span>
