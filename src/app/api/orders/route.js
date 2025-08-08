@@ -16,6 +16,7 @@ export async function POST(request) {
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
+    const telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: null };
     if (BOT_TOKEN && CHAT_ID) {
       const caption = [
         `Новый заказ`,
@@ -45,32 +46,49 @@ export async function POST(request) {
       // Если собрали композит — отправляем его, иначе используем превью из клиента
       if (composedBuffer) {
         try {
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
             method: 'POST',
             body: createFormDataForTelegramBuffer(CHAT_ID, composedBuffer, 'composite.jpg', caption)
           });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(`sendPhoto failed: ${res.status} ${txt}`);
+          }
+          telegramInfo.sentPhoto = true;
         } catch (e) {
           console.error('Ошибка отправки серверного композита в Telegram:', e);
+          telegramInfo.error = String(e.message || e);
         }
       } else if (orderData?.previewImage?.startsWith('data:image')) {
         try {
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
             method: 'POST',
             body: createFormDataForTelegramImage(CHAT_ID, orderData.previewImage, 'preview.jpg', caption)
           });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(`sendPhoto preview failed: ${res.status} ${txt}`);
+          }
+          telegramInfo.sentPreview = true;
         } catch (e) {
           console.error('Ошибка отправки изображения в Telegram:', e);
+          telegramInfo.error = String(e.message || e);
         }
       } else {
         // Иначе отправляем текст
         try {
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: CHAT_ID, text: caption, parse_mode: 'HTML' })
           });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(`sendMessage failed: ${res.status} ${txt}`);
+          }
         } catch (e) {
           console.error('Ошибка отправки текста в Telegram:', e);
+          telegramInfo.error = String(e.message || e);
         }
       }
 
@@ -79,16 +97,23 @@ export async function POST(request) {
         try {
           const { buffer: originalBuffer, extension, mime } = await dataURLtoBufferAndExt(orderData.image);
           const filename = `print.${extension || 'png'}`;
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
             method: 'POST',
             body: createFormDataForTelegramBufferWithMime(CHAT_ID, originalBuffer, filename, 'Исходный принт (оригинальное разрешение)', mime)
           });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(`sendDocument failed: ${res.status} ${txt}`);
+          }
+          telegramInfo.sentDocument = true;
         } catch (e) {
           console.error('Ошибка отправки исходного принта в Telegram:', e);
+          telegramInfo.error = String(e.message || e);
         }
       }
     } else {
       console.warn('TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID не настроены. Уведомление не отправлено.');
+      var telegramInfo = { sentPhoto: false, sentPreview: false, sentDocument: false, error: 'Missing TELEGRAM env vars' };
     }
 
     // Имитация обработки заказа
@@ -103,7 +128,8 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       orderId: orderId,
-      message: 'Заказ успешно создан'
+      message: 'Заказ успешно создан',
+      telegram: telegramInfo
     });
     
   } catch (error) {

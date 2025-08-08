@@ -171,12 +171,14 @@ function OrderPageContent() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="customer-name" className="block text-sm font-medium text-gray-700 mb-1">
                       Имя *
                     </label>
                     <input
                       type="text"
+                      id="customer-name"
                       name="name"
+                      autoComplete="name"
                       value={formData.name}
                       onChange={handleInputChange}
                       required
@@ -185,12 +187,14 @@ function OrderPageContent() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="customer-email" className="block text-sm font-medium text-gray-700 mb-1">
                       Email *
                     </label>
                     <input
                       type="email"
+                      id="customer-email"
                       name="email"
+                      autoComplete="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
@@ -200,12 +204,14 @@ function OrderPageContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="customer-phone" className="block text-sm font-medium text-gray-700 mb-1">
                     Телефон *
                   </label>
                   <input
                     type="tel"
+                    id="customer-phone"
                     name="phone"
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
@@ -214,12 +220,14 @@ function OrderPageContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="customer-address" className="block text-sm font-medium text-gray-700 mb-1">
                     Адрес доставки *
                   </label>
                   <input
                     type="text"
+                    id="customer-address"
                     name="address"
+                    autoComplete="street-address"
                     value={formData.address}
                     onChange={handleInputChange}
                     required
@@ -229,12 +237,14 @@ function OrderPageContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="customer-city" className="block text-sm font-medium text-gray-700 mb-1">
                       Город *
                     </label>
                     <input
                       type="text"
+                      id="customer-city"
                       name="city"
+                      autoComplete="address-level2"
                       value={formData.city}
                       onChange={handleInputChange}
                       required
@@ -243,12 +253,14 @@ function OrderPageContent() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="customer-postal" className="block text-sm font-medium text-gray-700 mb-1">
                       Индекс
                     </label>
                     <input
                       type="text"
+                      id="customer-postal"
                       name="postalCode"
+                      autoComplete="postal-code"
                       value={formData.postalCode}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-gray-500"
@@ -257,11 +269,13 @@ function OrderPageContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="customer-notes" className="block text-sm font-medium text-gray-700 mb-1">
                     Дополнительные пожелания
                   </label>
                   <textarea
+                    id="customer-notes"
                     name="notes"
+                    autoComplete="off"
                     value={formData.notes}
                     onChange={handleInputChange}
                     rows="3"

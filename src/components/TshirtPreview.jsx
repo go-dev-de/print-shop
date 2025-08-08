@@ -108,7 +108,6 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
   const handleTouchStart = (e) => {
     if (!uploadedImage) return;
     if (!tshirtRef.current) return;
-    e.preventDefault(); // Предотвращаем скролл
     const touch = e.touches[0];
     const rect = tshirtRef.current.getBoundingClientRect();
     // Центр принта в px относительно tshirtRef
@@ -124,7 +123,6 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
   const handleTouchMove = useCallback((e) => {
     if (!isDragging || !uploadedImage) return;
     if (!tshirtRef.current) return;
-    e.preventDefault(); // Предотвращаем скролл
     const touch = e.touches[0];
     const rect = tshirtRef.current.getBoundingClientRect();
     // Новая позиция центра принта в px относительно tshirtRef
@@ -147,7 +145,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     setIsDragging(false);
   };
 
-  // Добавляем глобальные обработчики для touch событий
+  // Добавляем глобальные обработчики для touch событий (без preventDefault в слушателе)
   useEffect(() => {
     const handleGlobalTouchMove = (e) => {
       if (isDragging) {
@@ -162,8 +160,8 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     };
 
     if (isDragging) {
-      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
-      document.addEventListener('touchend', handleGlobalTouchEnd);
+      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+      document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
     }
 
     return () => {
@@ -239,6 +237,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                       src="/futbolka-muzhskaya-basic.png" 
                       alt="T-shirt template" 
                       fill 
+                      sizes="100vw"
                       className="object-contain"
                       draggable={false}
                       style={{
@@ -268,15 +267,11 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                       transform: `rotate(${printRotation}deg)`
                     }}
                   >
-                    {/* Рамка вокруг области принта */}
-                    <div className="absolute inset-0 border-2 border-blue-500 border-dashed rounded-md pointer-events-none" />
-                    {/* Метка центра */}
-                    <div className="absolute left-1/2 top-1/2 w-2.5 h-2.5 -ml-1.5 -mt-1.5 rounded-full bg-blue-500/80 shadow pointer-events-none" />
-                    {/* Сам принт */}
                     <Image
                       src={uploadedImage}
                       alt="Design preview"
                       fill
+                      sizes="100vw"
                       className="object-contain"
                       draggable={false}
                     />
@@ -316,9 +311,10 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                 </div>
                 {/* Поворот */}
                 <div className="flex items-center space-x-4">
-                  <label className="text-sm text-gray-700 font-medium">Поворот</label>
+                  <label htmlFor="print-rotation" className="text-sm text-gray-700 font-medium">Поворот</label>
               <input
                 type="range"
+                    id="print-rotation"
                     min={-180}
                     max={180}
                     step={1}
