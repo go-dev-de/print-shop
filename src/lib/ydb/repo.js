@@ -1,7 +1,6 @@
 import crypto from 'node:crypto';
 import { getYdbDriver } from './client';
-import ydb from 'ydb-sdk';
-const { TypedValues } = ydb;
+import { TypedValues } from 'ydb-sdk';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
