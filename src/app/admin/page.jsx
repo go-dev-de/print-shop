@@ -12,19 +12,32 @@ export default function AdminPage() {
   useEffect(() => {
     async function checkAuth() {
       try {
+        console.log('🔍 Checking admin auth...');
         const response = await fetch('/api/auth/me', {
           credentials: 'include'
         });
-        const data = await response.json();
+        console.log('📡 Auth response status:', response.status);
         
-        if (!response.ok || !data.user || data.user.role !== 'admin') {
+        const data = await response.json();
+        console.log('👤 Auth data:', data);
+        
+        if (!response.ok || !data.user) {
+          console.log('❌ No user found, redirecting to login');
           router.push('/login?returnTo=/admin');
           return;
         }
         
+        if (data.user.role !== 'admin') {
+          console.log('❌ User role is not admin:', data.user.role);
+          alert(`Access denied. Your role: ${data.user.role}. Required: admin`);
+          router.push('/login?returnTo=/admin');
+          return;
+        }
+        
+        console.log('✅ Admin access granted');
         setUser(data.user);
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error('❌ Auth check failed:', error);
         router.push('/login?returnTo=/admin');
       } finally {
         setLoading(false);
