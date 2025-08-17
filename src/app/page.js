@@ -4,6 +4,200 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ImageUploader from '../components/ImageUploader';
 import TshirtPreview from '../components/TshirtPreview';
+import AuthNav from '@/components/AuthNav';
+import DiscountPopup from '@/components/DiscountPopup';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import MobileMenu from '@/components/MobileMenu';
+import CartDropdown from '@/components/CartDropdown';
+import CartNotification from '@/components/CartNotification';
+
+// Компонент карусели отзывов для главной страницы
+function ReviewsCarousel() {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const response = await fetch('/api/reviews?status=approved&limit=6');
+        if (response.ok) {
+          const data = await response.json();
+          setReviews(data.reviews || []);
+        }
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadReviews();
+  }, []);
+
+  const nextReview = () => {
+    setCurrentReviewIndex((prev) => (prev + 1) % reviews.length);
+  };
+
+  const prevReview = () => {
+    setCurrentReviewIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
+  const formatDate = (timestamp) => {
+    return new Date(timestamp).toLocaleDateString('ru-RU', {
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const StarRating = ({ rating }) => {
+    return (
+      <div className="flex items-center space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <svg
+            key={star}
+            className={`w-4 h-4 ${star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ))}
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <section className="mt-16 mb-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Загружаем отзывы...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <section className="mt-16 mb-8">
+        <div className="text-center">
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Отзывы наших клиентов</h2>
+          <p className="text-gray-600 mb-8">Пока нет отзывов, но вы можете стать первым!</p>
+          <a 
+            href="/reviews" 
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Оставить отзыв
+          </a>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mt-16 mb-8">
+      <div className="text-center mb-12">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Отзывы наших клиентов</h2>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Узнайте, что думают о нас наши клиенты, и убедитесь в качестве наших услуг
+        </p>
+      </div>
+
+      <div className="relative">
+        {/* Navigation buttons */}
+        {reviews.length > 1 && (
+          <>
+            <button 
+              onClick={prevReview}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <button 
+              onClick={nextReview}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Review Content */}
+        <div className="px-12">
+          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
+            <div className="text-center mb-6">
+              <StarRating rating={reviews[currentReviewIndex]?.rating || 5} />
+              <div className="flex items-center justify-center space-x-4 mt-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {reviews[currentReviewIndex]?.authorName || 'Анонимный'}
+                </h3>
+                <span className="text-gray-500">
+                  {formatDate(reviews[currentReviewIndex]?.createdAt)}
+                </span>
+              </div>
+            </div>
+
+            {reviews[currentReviewIndex]?.title && (
+              <h4 className="text-xl font-bold text-gray-900 mb-4 text-center">
+                {reviews[currentReviewIndex].title}
+              </h4>
+            )}
+
+            <p className="text-gray-700 text-center leading-relaxed text-lg">
+              "{reviews[currentReviewIndex]?.content || 'Отличный сервис!'}"
+            </p>
+
+            {/* Media content if available */}
+            {reviews[currentReviewIndex]?.mediaUrls && reviews[currentReviewIndex].mediaUrls.length > 0 && (
+              <div className="mt-6 flex justify-center">
+                <div className="w-48 h-32 bg-gray-100 rounded-lg overflow-hidden">
+                  <img 
+                    src={reviews[currentReviewIndex].mediaUrls[0]} 
+                    alt="Отзыв с фото"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Dots Navigation */}
+        {reviews.length > 1 && (
+          <div className="flex justify-center mt-8 space-x-2">
+            {reviews.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentReviewIndex(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentReviewIndex ? 'bg-blue-600' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Link to all reviews */}
+      <div className="text-center mt-8">
+        <a 
+          href="/reviews" 
+          className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Все отзывы
+          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -11,9 +205,10 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState('white');
   const [quantity, setQuantity] = useState(1);
   const [imagePosition, setImagePosition] = useState({ x: 50, y: 50, scale: 1 });
-  const [currentReview, setCurrentReview] = useState(0);
+
   const [printSize, setPrintSize] = useState(0); // Индекс выбранного размера принта
   const [activeView, setActiveView] = useState('front');
+  const [selectedProductPrice, setSelectedProductPrice] = useState(null); // Цена выбранного товара
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = [
@@ -31,117 +226,7 @@ export default function Home() {
     { label: '30×42 см', width: 30, height: 42, price: 940, scale: 1.3 },
   ];
 
-  // Массив с 15 отзывами
-  const reviews = [
-    {
-      name: "Иван Петров",
-      photo: "https://i.pravatar.cc/128?u=ivan",
-      review: "Качество отличное, быстро и удобно.",
-      additionalText: "Заказал футболку с принтом, все сделали быстро и качественно. Принт держится отлично, футболка удобная и красивая. Рекомендую всем."
-    },
-    {
-      name: "Мария Смирнова",
-      photo: "https://i.pravatar.cc/128?u=maria",
-      review: "Очень доволен качеством печати! Футболка после стирки как новая.",
-      additionalText: "Заказывала футболки для всей семьи с нашими фотографиями. Качество печати превзошло все ожидания. Принт не выцветает даже после множественных стирок."
-    },
-    {
-      name: "Алексей Кузнецов",
-      photo: "https://i.pravatar.cc/128?u=alex",
-      review: "Принт яркий, футболка удобная. Спасибо за индивидуальный подход!",
-      additionalText: "Нужна была футболка с логотипом компании для корпоративного мероприятия. Сделали быстро и качественно. Все сотрудники остались довольны."
-    },
-    {
-      name: "Елена Воробьева",
-      photo: "https://i.pravatar.cc/128?u=elena",
-      review: "Быстрое изготовление и отличное качество! Рекомендую всем.",
-      additionalText: "Заказывала футболки для спортивной команды. Сделали за 3 дня, как и обещали. Материал приятный к телу, принт держится отлично."
-    },
-    {
-      name: "Дмитрий Соколов",
-      photo: "https://i.pravatar.cc/128?u=dmitry",
-      review: "Профессиональный подход к каждому клиенту. Очень доволен результатом.",
-      additionalText: "Нужен был сложный дизайн с множеством цветов. Мастера справились на отлично! Футболка выглядит именно так, как я и представлял."
-    },
-    {
-      name: "Анна Морозова",
-      photo: "https://i.pravatar.cc/128?u=anna",
-      review: "Заказывала футболки для детского сада. Все дети в восторге!",
-      additionalText: "Сделали яркие футболки с героями мультфильмов для выпускного. Родители и дети остались довольны. Качество на высоте!"
-    },
-    {
-      name: "Сергей Новиков",
-      photo: "https://i.pravatar.cc/128?u=sergey",
-      review: "Отличный сервис! Помогли с выбором материала и дизайном.",
-      additionalText: "Хотел сделать подарок другу на день рождения. Консультант помог выбрать лучший вариант. Друг был в восторге от подарка!"
-    },
-    {
-      name: "Ольга Козлова",
-      photo: "https://i.pravatar.cc/128?u=olga",
-      review: "Быстрая доставка и качественная работа. Спасибо!",
-      additionalText: "Заказывала футболки для фитнес-клуба. Сделали быстро, доставили вовремя. Принт яркий и стойкий к поту."
-    },
-    {
-      name: "Михаил Лебедев",
-      photo: "https://i.pravatar.cc/128?u=mikhail",
-      review: "Профессиональная команда! Все сделали в срок и качественно.",
-      additionalText: "Нужны были футболки для турнира по волейболу. Сделали за 2 дня, все команды получили свои футболки вовремя."
-    },
-    {
-      name: "Татьяна Семенова",
-      photo: "https://i.pravatar.cc/128?u=tatiana",
-      review: "Заказывала футболки для школьного класса. Все получилось идеально!",
-      additionalText: "Сделали футболки с номером класса и именами учеников. Дети были в восторге! Качество печати отличное."
-    },
-    {
-      name: "Андрей Волков",
-      photo: "https://i.pravatar.cc/128?u=andrey",
-      review: "Отличное качество и быстрая работа. Рекомендую!",
-      additionalText: "Заказывал футболки для команды по футболу. Сделали быстро, принт не выцветает. Играем уже полгода - все отлично!"
-    },
-    {
-      name: "Наталья Петрова",
-      photo: "https://i.pravatar.cc/128?u=natalia",
-      review: "Очень довольна качеством! Футболка удобная и красивая.",
-      additionalText: "Заказывала футболку с собственным дизайном. Получилось именно то, что хотела. Материал приятный, принт яркий."
-    },
-    {
-      name: "Виктор Смирнов",
-      photo: "https://i.pravatar.cc/128?u=victor",
-      review: "Быстрое изготовление и отличное качество печати!",
-      additionalText: "Нужны были футболки для корпоратива. Сделали за 4 дня, все получилось отлично. Коллеги остались довольны."
-    },
-    {
-      name: "Ирина Николаева",
-      photo: "https://i.pravatar.cc/128?u=irina",
-      review: "Профессиональный подход и качественная работа!",
-      additionalText: "Заказывала футболки для детского лагеря. Сделали быстро, качественно. Дети носили с удовольствием весь сезон."
-    },
-    {
-      name: "Павел Иванов",
-      photo: "https://i.pravatar.cc/128?u=pavel",
-      review: "Отличный сервис! Помогли с выбором и сделали качественно.",
-      additionalText: "Хотел сделать подарок жене. Консультант помог выбрать лучший вариант. Жена была в восторге от подарка!"
-    }
-  ];
 
-  // Автоматическое переключение отзывов каждые 7 секунд
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentReview((prev) => (prev + 1) % reviews.length);
-    }, 7000);
-
-    return () => clearInterval(interval);
-  }, [reviews.length]);
-
-  // Функции для зацикленной навигации
-  const goToPrevReview = () => {
-    setCurrentReview((prev) => prev === 0 ? reviews.length - 1 : prev - 1);
-  };
-
-  const goToNextReview = () => {
-    setCurrentReview((prev) => (prev + 1) % reviews.length);
-  };
 
   const handleImageUpload = (imageData, file) => {
     setUploadedImage(imageData);
@@ -191,10 +276,91 @@ export default function Home() {
     });
   };
 
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [activeDiscounts, setActiveDiscounts] = useState([]);
+  
+  useEffect(() => {
+    // Загрузка активных скидок
+    const fetchDiscounts = async () => {
+      try {
+        const response = await fetch('/api/discounts');
+        if (response.ok) {
+          const data = await response.json();
+          const discounts = data.discounts || [];
+          setActiveDiscounts(discounts);
+          
+          // Вычисляем лучшую глобальную скидку для основного калькулятора
+          const globalDiscounts = discounts.filter(discount => {
+            const hasNoCategories = !discount.sectionIds || discount.sectionIds.length === 0;
+            const hasNoProducts = !discount.productIds || discount.productIds.length === 0;
+            return hasNoCategories && hasNoProducts;
+          });
+          
+          const bestGlobal = globalDiscounts.reduce((max, discount) => 
+            Math.max(max, Number(discount.percent || 0)), 0
+          );
+          setDiscountPercent(bestGlobal);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки скидок:', error);
+      }
+    };
+    
+    fetchDiscounts();
+  }, []);
+
+  // Обработка выбранного товара из страницы товаров
+  useEffect(() => {
+    const selectedProduct = localStorage.getItem('selectedProduct');
+    if (selectedProduct) {
+      try {
+        const productData = JSON.parse(selectedProduct);
+        // Устанавливаем параметры товара
+        if (productData.size) setSelectedSize(productData.size);
+        if (productData.color) setSelectedColor(productData.color);
+        if (productData.quantity) setQuantity(productData.quantity);
+        
+        // Устанавливаем цену товара (если есть)
+        if (productData.basePrice) {
+          setSelectedProductPrice({
+            basePrice: productData.basePrice,
+            originalPrice: productData.originalPrice,
+            hasDiscount: productData.hasDiscount,
+            discountPercent: productData.discountPercent
+          });
+        }
+        
+        // Очищаем localStorage после использования
+        localStorage.removeItem('selectedProduct');
+        
+        // Прокручиваем к форме заказа
+        setTimeout(() => {
+          const orderSection = document.getElementById('order-form');
+          if (orderSection) {
+            orderSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      } catch (error) {
+        console.error('Error parsing selected product:', error);
+      }
+    }
+  }, []);
+
   const calculatePrice = () => {
-    const basePrice = 1500; // Базовая цена за футболку
-    const printPrice = uploadedImage ? printSizes[printSize].price : 0; // Цена за принт зависит от размера
-    return (basePrice + printPrice) * quantity;
+    // Используем цену выбранного товара, если есть, иначе базовую цену футболки
+    const basePrice = selectedProductPrice ? selectedProductPrice.basePrice : 1500;
+    const printPrice = uploadedImage ? printSizes[printSize].price : 0;
+    const subtotal = (basePrice + printPrice) * quantity;
+    
+    // Если у выбранного товара уже есть скидка, не применяем дополнительную
+    if (selectedProductPrice && selectedProductPrice.hasDiscount) {
+      return subtotal;
+    }
+    
+    // Применяем глобальную скидку только если нет скидки на товар
+    if (!discountPercent) return subtotal;
+    const discount = Math.round((subtotal * discountPercent) / 100);
+    return Math.max(0, subtotal - discount);
   };
 
   const handleOrder = async () => {
@@ -239,6 +405,7 @@ export default function Home() {
       printSizeLabel: uploadedImage ? printSizes[printSize].label : null,
       printPricePerUnit: uploadedImage ? printSizes[printSize].price : 0,
       previewImage: previewImageDataUrl,
+      discountPercent,
       totalPrice: calculatePrice(),
     };
     
@@ -252,38 +419,110 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Header */}
-      <header className="bg-white shadow-lg">
-        <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <h1 className="text-3xl font-bold text-gray-900">PrintStyle</h1>
+      <header className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-40 border-b border-gray-200">
+        <div className="container">
+          <div className="flex justify-between items-center py-4 lg:py-6">
+            <div className="flex items-center space-x-8">
+              <h1 className="text-heading text-gray-900">
+                <a href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                  Print<span className="text-blue-600">Style</span>
+                </a>
+              </h1>
               
+              <div className="hidden lg:block"><AuthNav /></div>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="#main" className="text-gray-800 hover:text-blue-600">Главная</a>
-              <a href="#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</a>
-              <a href="#about" className="text-gray-800 hover:text-blue-600">О нас</a>
-              <a href="#contacts" className="text-gray-800 hover:text-blue-600">Контакты</a>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <a href="#main" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Главная</a>
+              <a href="/products" className="btn btn-ghost btn-sm">Товары</a>
+              <a href="/reviews" className="btn btn-ghost btn-sm">Отзывы</a>
+              <a href="#about" className="btn btn-ghost btn-sm">О нас</a>
+              <CartDropdown />
             </nav>
+            
+            {/* Mobile Menu */}
+            <MobileMenu />
           </div>
         </div>
       </header>
+      
+      {/* Breadcrumbs */}
+      <Breadcrumbs />
 
-      <main id="main" className="w-full px-0 sm:max-w-7xl sm:mx-auto sm:px-6 lg:px-8 py-6 lg:py-12 scroll-smooth">
-        <div className="text-center mb-8 lg:mb-12">
-          <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 text-white min-h-[90vh] flex items-center">
+        {/* Subtle overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/10"></div>
+        
+        {/* Анимированные фоновые blob'ы */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-subtle"></div>
+          <div className="absolute top-32 right-10 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-subtle" style={{animationDelay: '2s'}}></div>
+          <div className="absolute -bottom-20 left-32 w-80 h-80 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-subtle" style={{animationDelay: '4s'}}></div>
+        </div>
+        
+        <div className="relative container py-20 lg:py-32">
+          <div className="text-center">
+            <h1 className="text-display mb-8 animate-fade-in">
+              <span className="block">Создай свой</span>
+              <span className="block bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent animate-pulse-subtle">
+                УНИКАЛЬНЫЙ
+              </span>
+              <span className="block">стиль</span>
+            </h1>
+            
+            <p className="max-w-3xl mx-auto text-xl md:text-2xl text-blue-100 mb-12 text-body animate-fade-in" style={{animationDelay: '0.2s'}}>
+              Преврати свои идеи в реальность! Профессиональная печать на футболках с гарантией качества и быстрой доставкой.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in" style={{animationDelay: '0.4s'}}>
+              <a href="#order-form" className="btn btn-xl group relative bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300">
+                <span className="relative z-10">Начать создание</span>
+                <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-lg blur opacity-0 group-hover:opacity-50 transition-opacity"></div>
+              </a>
+              
+              <a href="/products" className="btn btn-xl bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 transition-all duration-300">
+                Каталог товаров
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </a>
+            </div>
+            
+
+          </div>
+        </div>
+        
+        {/* Enhanced Decorative wave - Rotated for smooth transition */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-20 text-white" preserveAspectRatio="none" viewBox="0 0 1200 120" fill="currentColor" style={{ transform: 'rotate(180deg)' }}>
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </section>
+
+      <main className="relative bg-gradient-to-b from-white via-blue-50/30 to-indigo-100/50">
+        <div className="container py-12 lg:py-20 scroll-smooth">
+        <div id="order-form" className="text-center mb-12 animate-fade-in">
+          <h2 className="text-heading text-gray-900 mb-4">
             Создайте свою уникальную футболку
           </h2>
-          <p className="text-base lg:text-xl text-gray-800 max-w-2xl mx-auto">
+          <p className="text-body text-gray-600 max-w-2xl mx-auto">
             Загрузите свой дизайн и получите качественную футболку с принтом
           </p>
         </div>
 
         {/* Мобильная версия - одна колонка */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
           {/* 1. Загрузка принта */}
-          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-black">Загрузите ваш принт</h3>
+          <div className="card card-md">
+            <h3 className="text-subheading text-gray-900 mb-4">Загрузите ваш принт</h3>
             <ImageUploader 
               onImageUpload={handleImageUpload}
               onImageRemove={handleImageRemove}
@@ -435,14 +674,25 @@ export default function Home() {
             onTouchEnd={handleOrder}
             onPointerUp={handleOrder}
             aria-disabled={!uploadedImage}
-            className={`relative z-50 pointer-events-auto w-full py-3 px-4 rounded-lg text-base font-semibold transition-colors ${
+            className={`group relative z-50 pointer-events-auto w-full py-4 px-6 rounded-xl text-lg font-bold transition-all duration-300 transform ${
               uploadedImage
-                ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
             style={{ touchAction: 'manipulation' }}
           >
-            Оформить заказ
+            <span className="relative z-10 flex items-center justify-center">
+              <svg className="w-6 h-6 mr-2 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              Оформить заказ
+              <svg className={`w-5 h-5 ml-2 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+            {uploadedImage && (
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+            )}
           </button>
         </div>
 
@@ -607,14 +857,25 @@ export default function Home() {
               onTouchEnd={handleOrder}
               onPointerUp={handleOrder}
               aria-disabled={!uploadedImage}
-              className={`relative z-50 pointer-events-auto w-full py-3 lg:py-4 px-4 lg:px-6 rounded-lg text-base lg:text-lg font-semibold transition-colors ${
+              className={`group relative z-50 pointer-events-auto w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl text-lg lg:text-xl font-bold transition-all duration-300 transform ${
                 uploadedImage
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               style={{ touchAction: 'manipulation' }}
             >
-              Оформить заказ
+              <span className="relative z-10 flex items-center justify-center">
+                <svg className="w-6 h-6 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                Оформить заказ
+                <svg className={`w-6 h-6 ml-3 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+              {uploadedImage && (
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+              )}
             </button>
           </div>
         </div>
@@ -653,79 +914,34 @@ export default function Home() {
         </div>
 
         {/* Секция отзывов */}
-        <section id="reviews" className="mt-8 lg:mt-16 mb-0">
-          <h3 className="text-xl lg:text-2xl font-bold text-center mb-6 lg:mb-8 text-gray-900">ОТЗЫВЫ КЛИЕНТОВ</h3>
-          
-          <div className="relative max-w-4xl mx-auto">
-            {/* Стрелка влево */}
-            <button 
-              onClick={goToPrevReview}
-              className="absolute left-2 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
-            >
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+        <ReviewsCarousel />
 
-            {/* Стрелка вправо */}
-            <button 
-              onClick={goToNextReview}
-              className="absolute right-2 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
-            >
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Контейнер отзывов */}
-            <div className="px-4 sm:px-4 lg:px-16">
-              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-8">
-                <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
-                  {/* Фото клиента */}
-                  <div className="flex-shrink-0">
-                    <div className="w-20 h-20 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-200">
-                      <Image 
-                        src={reviews[currentReview].photo} 
-                        alt={reviews[currentReview].name}
-                        width={128}
-                        height={128}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.src = `https://i.pravatar.cc/128?u=${reviews[currentReview].name}`;
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Текст отзыва */}
-                  <div className="flex-1 text-center lg:text-left">
-                    <div className="space-y-3 lg:space-y-4">
-                      <p className="text-gray-800 text-sm lg:text-lg leading-relaxed">
-                        &ldquo;{reviews[currentReview].review}&rdquo;
-                      </p>
-                      <p className="text-gray-800 text-sm lg:text-lg leading-relaxed">
-                        {reviews[currentReview].additionalText}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Точки пагинации */}
-            <div className="flex justify-center mt-6 space-x-2">
-              {reviews.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentReview(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentReview ? 'bg-red-500' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
+        {/* Call to Action секция */}
+        <section className="mt-16 mb-8 text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+            <h3 className="text-2xl lg:text-3xl font-bold mb-4">
+              Готовы создать свою уникальную футболку?
+            </h3>
+            <p className="text-lg text-blue-100 mb-6 max-w-2xl mx-auto">
+              Присоединяйтесь к тысячам довольных клиентов! Посмотрите отзывы и поделитесь своим опытом.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="#order-form" 
+                className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                Создать дизайн
+              </a>
+              <a 
+                href="/reviews" 
+                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
+              >
+                Посмотреть отзывы
+              </a>
             </div>
           </div>
         </section>
+        </div>
       </main>
 
       {/* Footer */}
@@ -775,6 +991,12 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      
+      {/* Попап с уведомлениями о скидках */}
+      <DiscountPopup />
+      
+      {/* Уведомления о добавлении в корзину */}
+      <CartNotification />
     </div>
   );
 } 

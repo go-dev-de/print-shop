@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ensureDefaultAdmin } from "@/lib/seedAdmin";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,8 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  // Seed default admin on first render of the server
+  ensureDefaultAdmin();
   return (
     <html lang="en">
       <body
