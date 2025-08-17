@@ -736,11 +736,11 @@ export default function AdminPanel() {
                   <div>
                     <h5 className="font-medium text-gray-700 mb-1">Статус оплаты</h5>
                     <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      orderDetails.payload?.paymentMethod === 'online' 
-                        ? 'bg-yellow-100 text-yellow-800' 
-                        : 'bg-green-100 text-green-800'
+                      orderDetails.payload?.paymentMethod === 'cash' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
                     }`}>
-                      {orderDetails.payload?.paymentMethod === 'online' ? 'Ожидает оплаты' : 'Оплачено'}
+                      {orderDetails.payload?.paymentMethod === 'cash' ? 'Оплачено' : 'Ожидает оплаты'}
                     </div>
                   </div>
                   
