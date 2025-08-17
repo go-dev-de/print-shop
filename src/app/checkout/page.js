@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import AuthNav from '@/components/AuthNav';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
@@ -194,19 +195,19 @@ export default function CheckoutPage() {
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-gray-900">
-                <a href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
                   Print<span className="text-blue-600">Style</span>
-                </a>
+                </Link>
               </h1>
               <div className="hidden lg:block"><AuthNav /></div>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="/#main" className="btn btn-ghost btn-sm">Главная</a>
-              <a href="/products" className="btn btn-ghost btn-sm">Товары</a>
-              <a href="/reviews" className="btn btn-ghost btn-sm">Отзывы</a>
-              <a href="/#about" className="btn btn-ghost btn-sm">О нас</a>
+              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
               <CartDropdown />
             </nav>
           </div>

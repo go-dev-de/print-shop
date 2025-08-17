@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import AuthNav from '@/components/AuthNav';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
@@ -486,9 +487,9 @@ export default function ReviewsPage() {
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-gray-900">
-                <a href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
                   Print<span className="text-blue-600">Style</span>
-                </a>
+                </Link>
               </h1>
               
               <div className="hidden lg:block"><AuthNav /></div>
@@ -496,10 +497,10 @@ export default function ReviewsPage() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="/#main" className="btn btn-ghost btn-sm">Главная</a>
-              <a href="/products" className="btn btn-ghost btn-sm">Товары</a>
-              <a href="/reviews" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Отзывы</a>
-              <a href="/#about" className="btn btn-ghost btn-sm">О нас</a>
+              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
               <CartDropdown />
             </nav>
             

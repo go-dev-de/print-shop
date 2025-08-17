@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -58,9 +59,9 @@ export default function PaymentPage() {
         <div className="container">
           <div className="flex justify-center items-center py-4 lg:py-6">
             <h1 className="text-heading text-gray-900">
-              <a href="/" className="hover:text-blue-600 transition-all duration-300">
+              <Link href="/" className="hover:text-blue-600 transition-all duration-300">
                 Print<span className="text-blue-600">Style</span>
-              </a>
+              </Link>
             </h1>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import ImageUploader from '../components/ImageUploader';
 import TshirtPreview from '../components/TshirtPreview';
 import AuthNav from '@/components/AuthNav';
@@ -149,7 +150,7 @@ function ReviewsCarousel() {
             )}
 
             <p className="text-gray-700 text-center leading-relaxed text-lg">
-              "{reviews[currentReviewIndex]?.content || 'Отличный сервис!'}"
+              &ldquo;{reviews[currentReviewIndex]?.content || 'Отличный сервис!'}&rdquo;
             </p>
 
             {/* Media content if available */}
@@ -424,9 +425,9 @@ export default function Home() {
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-gray-900">
-                <a href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
                   Print<span className="text-blue-600">Style</span>
-                </a>
+                </Link>
               </h1>
               
               <div className="hidden lg:block"><AuthNav /></div>

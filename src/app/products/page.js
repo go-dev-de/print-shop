@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import AuthNav from '@/components/AuthNav';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -49,17 +50,17 @@ export default function ProductsPage() {
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
                 <h1 className="text-3xl font-bold text-gray-900">
-                  <a href="/" className="hover:text-blue-600 transition-colors">PrintStyle</a>
+                  <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><AuthNav /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
-                <a href="/#main" className="text-gray-800 hover:text-blue-600">Главная</a>
-                <a href="/products" className="text-blue-600 font-medium">Товары</a>
-                <a href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</a>
-                <a href="/#about" className="text-gray-800 hover:text-blue-600">О нас</a>
-                <a href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</a>
+                <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
+                <Link href="/products" className="text-blue-600 font-medium">Товары</Link>
+                <Link href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</Link>
+                <Link href="/#about" className="text-gray-800 hover:text-blue-600">О нас</Link>
+                <Link href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</Link>
               </nav>
             </div>
           </div>
@@ -92,17 +93,17 @@ export default function ProductsPage() {
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
                 <h1 className="text-3xl font-bold text-gray-900">
-                  <a href="/" className="hover:text-blue-600 transition-colors">PrintStyle</a>
+                  <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><AuthNav /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
-                <a href="/#main" className="text-gray-800 hover:text-blue-600">Главная</a>
-                <a href="/products" className="text-blue-600 font-medium">Товары</a>
-                <a href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</a>
-                <a href="/#about" className="text-gray-800 hover:text-blue-600">О нас</a>
-                <a href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</a>
+                <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
+                <Link href="/products" className="text-blue-600 font-medium">Товары</Link>
+                <Link href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</Link>
+                <Link href="/#about" className="text-gray-800 hover:text-blue-600">О нас</Link>
+                <Link href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</Link>
               </nav>
             </div>
           </div>
@@ -138,19 +139,19 @@ export default function ProductsPage() {
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-gray-900">
-                <a href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
                   Print<span className="text-blue-600">Style</span>
-                </a>
+                </Link>
               </h1>
               
               <div className="hidden lg:block"><AuthNav /></div>
             </div>
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="/#main" className="btn btn-ghost btn-sm">Главная</a>
-              <a href="/products" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Товары</a>
-              <a href="/reviews" className="btn btn-ghost btn-sm">Отзывы</a>
-              <a href="/#about" className="btn btn-ghost btn-sm">О нас</a>
+              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
               <CartDropdown />
             </nav>
             
@@ -247,12 +248,12 @@ export default function ProductsPage() {
             <p className="text-gray-600 mb-6">
               Мы можем изготовить принт на любом изделии. Свяжитесь с нами для индивидуального заказа.
             </p>
-            <a
+            <Link
               href="/"
               className="inline-block bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
             >
               Создать свой дизайн
-            </a>
+            </Link>
           </div>
         )}
       </main>
