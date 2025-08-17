@@ -138,6 +138,12 @@ export default function AdminPanel() {
       </div>
     );
   };
+
+  // Helper function to shorten IDs for better mobile display
+  const shortenId = (id, length = 8) => {
+    if (!id || typeof id !== 'string') return 'N/A';
+    return id.length > length ? id.substring(0, length) + '...' : id;
+  };
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [sections, setSections] = useState([]);
@@ -544,7 +550,9 @@ export default function AdminPanel() {
               <tbody>
                 {filteredOrders.map((o, idx) => (
                   <tr key={o.id || `order-${idx}`} className={idx % 2 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="p-3 align-top text-xs text-gray-800 break-all font-mono">{o.id}</td>
+                    <td className="p-3 align-top text-xs text-gray-800 font-mono" title={o.id}>
+                      {shortenId(o.id)}
+                    </td>
                     <td className="p-3 align-top text-sm text-gray-800">{new Date(o.createdAt).toLocaleString()}</td>
                     <td className="p-3 align-top">
                       <div className="flex items-center gap-2">
@@ -587,7 +595,9 @@ export default function AdminPanel() {
                             {filteredOrders.map((o, idx) => (
                   <div key={o.id || `mobile-order-${idx}`} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="text-xs text-gray-800 break-all font-mono">{o.id}</div>
+                  <div className="text-xs text-gray-800 font-mono" title={o.id}>
+                    {shortenId(o.id)}
+                  </div>
                   <StatusBadge status={o.status} />
                 </div>
                 <div className="mt-1 text-xs text-gray-700">{new Date(o.createdAt).toLocaleString()}</div>
@@ -630,7 +640,7 @@ export default function AdminPanel() {
             {/* Basic order info */}
             <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50 p-4 rounded-lg">
               <div className="text-gray-700 font-medium">ID</div>
-              <div className="break-all text-gray-900 font-mono text-xs">{orderDetails.id}</div>
+              <div className="text-gray-900 font-mono text-xs break-all">{orderDetails.id}</div>
               <div className="text-gray-700 font-medium">Статус</div>
               <div className="text-gray-900 font-semibold">{STATUS_LABELS[orderDetails.status] || orderDetails.status}</div>
               <div className="text-gray-700 font-medium">Создан</div>
@@ -720,7 +730,9 @@ export default function AdminPanel() {
                   
                   <div>
                     <h5 className="font-medium text-gray-700 mb-1">ID товара</h5>
-                    <div className="font-mono text-sm text-gray-800">{orderDetails.payload?.productId || 'custom-print'}</div>
+                    <div className="font-mono text-sm text-gray-800" title={orderDetails.payload?.productId}>
+                      {shortenId(orderDetails.payload?.productId || 'custom-print', 12)}
+                    </div>
                   </div>
                   
                   <div>
@@ -848,7 +860,9 @@ export default function AdminPanel() {
             <tbody>
               {users.map((u, idx) => (
                 <tr key={u.id || `user-${idx}`} className={idx % 2 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="p-3 text-xs text-gray-800 break-all font-mono">{u.id}</td>
+                  <td className="p-3 text-xs text-gray-800 font-mono" title={u.id}>
+                    {shortenId(u.id)}
+                  </td>
                   <td className="p-3 text-gray-900 font-medium">{u.name}</td>
                   <td className="p-3 text-gray-900">{u.email}</td>
                   <td className="p-3">
@@ -886,8 +900,8 @@ export default function AdminPanel() {
             <tbody>
               {sections.map((s, idx) => (
                 <tr key={s.id || `section-${idx}`} className={`${idx % 2 ? 'bg-white' : 'bg-gray-50'} ${!s.id || s.id.trim() === '' ? 'border-l-4 border-red-400 bg-red-50' : ''}`}>
-                  <td className="p-3 text-xs text-gray-800 break-all font-mono">
-                    {s.id || <span className="text-red-600 font-bold">⚠️ ПУСТОЙ ID</span>}
+                  <td className="p-3 text-xs text-gray-800 font-mono" title={s.id}>
+                    {s.id ? shortenId(s.id) : <span className="text-red-600 font-bold">⚠️ ПУСТОЙ ID</span>}
                   </td>
                   <td className="p-3 text-gray-900 font-medium" title={`Slug: ${s.slug || 'не задан'}`}>{s.name}</td>
                   <td className="p-3">
@@ -945,8 +959,8 @@ export default function AdminPanel() {
             <tbody>
               {products.map((p, idx) => (
                 <tr key={p.id || `product-${idx}`} className={`${idx % 2 ? 'bg-white' : 'bg-gray-50'} ${!p.id || p.id.trim() === '' ? 'border-l-4 border-red-400 bg-red-50' : ''}`}>
-                  <td className="p-3 text-xs text-gray-800 break-all font-mono">
-                    {p.id || <span className="text-red-600 font-bold">⚠️ ПУСТОЙ ID</span>}
+                  <td className="p-3 text-xs text-gray-800 font-mono" title={p.id}>
+                    {p.id ? shortenId(p.id) : <span className="text-red-600 font-bold">⚠️ ПУСТОЙ ID</span>}
                   </td>
                   <td className="p-3 text-gray-900 font-medium">{p.name}</td>
                   <td className="p-3 text-gray-800">{sections.find((s) => s.id === p.sectionId)?.name || '-'}</td>
@@ -1031,7 +1045,9 @@ export default function AdminPanel() {
             <tbody>
               {discounts.map((d, idx) => (
                 <tr key={d.id || `discount-${idx}`} className={idx % 2 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="p-3 text-xs text-gray-800 break-all font-mono">{d.id}</td>
+                  <td className="p-3 text-xs text-gray-800 font-mono" title={d.id}>
+                    {shortenId(d.id)}
+                  </td>
                   <td className="p-3 text-gray-900 font-medium">{d.name}</td>
                   <td className="p-3 text-gray-900 font-bold text-orange-600">{d.percent}%</td>
                   <td className="p-3 text-sm text-gray-800">{new Date(d.startsAt).toLocaleDateString()} — {new Date(d.endsAt).toLocaleDateString()}</td>
