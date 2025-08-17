@@ -494,7 +494,9 @@ export default function AdminPanel() {
                         {o.payload?.customerInfo?.name || o.payload?.customer?.name || 'Не указано'}
                       </div>
                     </td>
-                    <td className="p-3 align-top font-bold text-green-700 text-lg">{o.totalPrice} ₽</td>
+                    <td className="p-3 align-top font-bold text-green-700 text-lg">
+                      {(o.payload?.pricing?.orderTotal || o.totalPrice || 0)} ₽
+                    </td>
                   <td className="p-3 align-top">
                       <div className="flex flex-wrap gap-2">
                         <button className={deleteButtonStyles} onClick={() => deleteOrder(o.id)}>Удалить</button>
@@ -528,7 +530,7 @@ export default function AdminPanel() {
                     {o.payload?.customerInfo?.name || o.payload?.customer?.name || 'Не указано'}
                   </div>
                   <div className="text-gray-800 font-medium">Итого</div>
-                  <div className="font-semibold">{o.totalPrice} ₽</div>
+                  <div className="font-semibold">{(o.payload?.pricing?.orderTotal || o.totalPrice || 0)} ₽</div>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <select className="border border-gray-300 rounded px-2 py-1 bg-white" value={o.status} onChange={(e) => updateOrderStatus(o.id, e.target.value)}>
@@ -567,7 +569,27 @@ export default function AdminPanel() {
               <div className="text-gray-700 font-medium">Создан</div>
               <div className="text-gray-900">{new Date(orderDetails.createdAt).toLocaleString()}</div>
               <div className="text-gray-700 font-medium">Итого</div>
-              <div className="font-bold text-green-700 text-lg">{orderDetails.totalPrice} ₽</div>
+              <div className="space-y-1">
+                <div className="font-bold text-green-700 text-lg">
+                  {(orderDetails.payload?.pricing?.orderTotal || orderDetails.totalPrice || 0)} ₽
+                </div>
+                {orderDetails.payload?.pricing && (
+                  <div className="text-xs text-gray-600">
+                    {orderDetails.payload.pricing.baseTshirtPrice && (
+                      <div>Футболка: {orderDetails.payload.pricing.baseTshirtPrice} ₽</div>
+                    )}
+                    {orderDetails.payload.pricing.printPricePerUnit && (
+                      <div>Принт: {orderDetails.payload.pricing.printPricePerUnit} ₽</div>
+                    )}
+                    {orderDetails.payload.pricing.quantity && orderDetails.payload.pricing.quantity > 1 && (
+                      <div>Количество: {orderDetails.payload.pricing.quantity} шт.</div>
+                    )}
+                    {orderDetails.payload.pricing.shippingCost && orderDetails.payload.pricing.shippingCost > 0 && (
+                      <div>Доставка: {orderDetails.payload.pricing.shippingCost} ₽</div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Download buttons */}
@@ -708,6 +730,17 @@ export default function AdminPanel() {
                     <h5 className="font-medium text-gray-700 mb-1">Способ оплаты</h5>
                     <div className="text-gray-900">
                       {orderDetails.payload?.paymentMethod === 'online' ? 'Онлайн оплата' : 'Наличными'}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h5 className="font-medium text-gray-700 mb-1">Статус оплаты</h5>
+                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                      orderDetails.payload?.paymentMethod === 'online' 
+                        ? 'bg-yellow-100 text-yellow-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {orderDetails.payload?.paymentMethod === 'online' ? 'Ожидает оплаты' : 'Оплачено'}
                     </div>
                   </div>
                   
