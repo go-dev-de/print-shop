@@ -74,37 +74,45 @@ export default function AdminPanel() {
 
   // Price calculation functions
   const calculateDisplayTotal = (order) => {
-    // Priority 1: Use totalPrice from payload if available (includes discounts)
+    // Priority 1: Use totalPrice from payload (calculated on main page with discounts)
     if (order.payload?.totalPrice && order.payload.totalPrice > 0) {
+      console.log('Using payload.totalPrice:', order.payload.totalPrice);
       return order.payload.totalPrice;
     }
     
     // Priority 2: Use pricing.orderTotal from order page calculation
     if (order.payload?.pricing?.orderTotal && order.payload.pricing.orderTotal > 0) {
+      console.log('Using pricing.orderTotal:', order.payload.pricing.orderTotal);
       return order.payload.pricing.orderTotal;
     }
     
-    // Priority 3: Use stored totalPrice
+    // Priority 3: Use stored totalPrice from API
     if (order.totalPrice && order.totalPrice > 0) {
+      console.log('Using stored totalPrice:', order.totalPrice);
       return order.totalPrice;
     }
     
-    // Priority 4: Manual calculation as fallback
+    // Priority 4: Manual calculation with discount support
+    console.log('Manual calculation for order:', order.id);
     const basePrice = order.payload?.pricing?.baseTshirtPrice || 700;
     const printPrice = order.payload?.pricing?.printPricePerUnit || order.payload?.printPricePerUnit || 0;
     const quantity = order.payload?.quantity || order.payload?.pricing?.quantity || 1;
     const shipping = order.payload?.pricing?.shippingCost || 0;
+    const discountPercent = order.payload?.discountPercent || 0;
     
     let subtotal = (basePrice + printPrice) * quantity;
+    console.log(`Manual calc: base=${basePrice}, print=${printPrice}, qty=${quantity}, discount=${discountPercent}%`);
     
     // Apply discount if present
-    const discountPercent = order.payload?.discountPercent || 0;
     if (discountPercent > 0) {
       const discount = Math.round((subtotal * discountPercent) / 100);
       subtotal = Math.max(0, subtotal - discount);
+      console.log(`Applied discount: ${discount}₽, new subtotal: ${subtotal}₽`);
     }
     
-    return subtotal + shipping;
+    const total = subtotal + shipping;
+    console.log(`Final total: ${total}₽ (subtotal=${subtotal} + shipping=${shipping})`);
+    return total;
   };
 
   const renderPriceBreakdown = (order) => {
@@ -256,6 +264,12 @@ export default function AdminPanel() {
 
   const updateOrderStatus = async (id, status) => {
     try {
+      // Log order before update
+      const oldOrder = orders.find(o => o.id === id);
+      console.log('🔄 Updating order status:', { id, status });
+      console.log('📦 Order before update:', oldOrder);
+      console.log('💰 Price before update:', calculateDisplayTotal(oldOrder));
+      
       const res = await fetch(`/api/orders/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -263,6 +277,11 @@ export default function AdminPanel() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Ошибка обновления статуса');
+      
+      // Log order after update
+      console.log('📦 Order after update:', data.order);
+      console.log('💰 Price after update:', calculateDisplayTotal(data.order));
+      
       setOrders((prev) => prev.map((o) => (o.id === id ? data.order : o)));
     } catch (e) {
       alert(String(e.message || e));
