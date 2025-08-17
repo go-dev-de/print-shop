@@ -71,6 +71,73 @@ export default function AdminPanel() {
     a.click();
     document.body.removeChild(a);
   };
+
+  // Price calculation functions
+  const calculateDisplayTotal = (order) => {
+    // Priority 1: Use totalPrice from payload if available (includes discounts)
+    if (order.payload?.totalPrice && order.payload.totalPrice > 0) {
+      return order.payload.totalPrice;
+    }
+    
+    // Priority 2: Use pricing.orderTotal from order page calculation
+    if (order.payload?.pricing?.orderTotal && order.payload.pricing.orderTotal > 0) {
+      return order.payload.pricing.orderTotal;
+    }
+    
+    // Priority 3: Use stored totalPrice
+    if (order.totalPrice && order.totalPrice > 0) {
+      return order.totalPrice;
+    }
+    
+    // Priority 4: Manual calculation as fallback
+    const basePrice = order.payload?.pricing?.baseTshirtPrice || 700;
+    const printPrice = order.payload?.pricing?.printPricePerUnit || order.payload?.printPricePerUnit || 0;
+    const quantity = order.payload?.quantity || order.payload?.pricing?.quantity || 1;
+    const shipping = order.payload?.pricing?.shippingCost || 0;
+    
+    let subtotal = (basePrice + printPrice) * quantity;
+    
+    // Apply discount if present
+    const discountPercent = order.payload?.discountPercent || 0;
+    if (discountPercent > 0) {
+      const discount = Math.round((subtotal * discountPercent) / 100);
+      subtotal = Math.max(0, subtotal - discount);
+    }
+    
+    return subtotal + shipping;
+  };
+
+  const renderPriceBreakdown = (order) => {
+    const basePrice = order.payload?.pricing?.baseTshirtPrice || 700;
+    const printPrice = order.payload?.pricing?.printPricePerUnit || order.payload?.printPricePerUnit || 0;
+    const quantity = order.payload?.quantity || order.payload?.pricing?.quantity || 1;
+    const shipping = order.payload?.pricing?.shippingCost || 0;
+    const discountPercent = order.payload?.discountPercent || 0;
+    
+    const subtotal = (basePrice + printPrice) * quantity;
+    const discountAmount = discountPercent > 0 ? Math.round((subtotal * discountPercent) / 100) : 0;
+    
+    return (
+      <div className="text-xs text-gray-600">
+        <div>Футболка: {basePrice} ₽</div>
+        {printPrice > 0 && (
+          <div>Принт: {printPrice} ₽</div>
+        )}
+        {quantity > 1 && (
+          <div>Количество: {quantity} шт.</div>
+        )}
+        {quantity > 1 && (
+          <div>Промежуточная сумма: {subtotal} ₽</div>
+        )}
+        {discountPercent > 0 && (
+          <div className="text-red-600">Скидка {discountPercent}%: -{discountAmount} ₽</div>
+        )}
+        {shipping > 0 && (
+          <div>Доставка: {shipping} ₽</div>
+        )}
+      </div>
+    );
+  };
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [sections, setSections] = useState([]);
@@ -495,7 +562,7 @@ export default function AdminPanel() {
                       </div>
                     </td>
                     <td className="p-3 align-top font-bold text-green-700 text-lg">
-                      {(o.payload?.pricing?.orderTotal || o.totalPrice || 0)} ₽
+                      {calculateDisplayTotal(o)} ₽
                     </td>
                   <td className="p-3 align-top">
                       <div className="flex flex-wrap gap-2">
@@ -530,7 +597,7 @@ export default function AdminPanel() {
                     {o.payload?.customerInfo?.name || o.payload?.customer?.name || 'Не указано'}
                   </div>
                   <div className="text-gray-800 font-medium">Итого</div>
-                  <div className="font-semibold">{(o.payload?.pricing?.orderTotal || o.totalPrice || 0)} ₽</div>
+                  <div className="font-semibold">{calculateDisplayTotal(o)} ₽</div>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <select className="border border-gray-300 rounded px-2 py-1 bg-white" value={o.status} onChange={(e) => updateOrderStatus(o.id, e.target.value)}>
@@ -571,24 +638,9 @@ export default function AdminPanel() {
               <div className="text-gray-700 font-medium">Итого</div>
               <div className="space-y-1">
                 <div className="font-bold text-green-700 text-lg">
-                  {(orderDetails.payload?.pricing?.orderTotal || orderDetails.totalPrice || 0)} ₽
+                  {calculateDisplayTotal(orderDetails)} ₽
                 </div>
-                {orderDetails.payload?.pricing && (
-                  <div className="text-xs text-gray-600">
-                    {orderDetails.payload.pricing.baseTshirtPrice && (
-                      <div>Футболка: {orderDetails.payload.pricing.baseTshirtPrice} ₽</div>
-                    )}
-                    {orderDetails.payload.pricing.printPricePerUnit && (
-                      <div>Принт: {orderDetails.payload.pricing.printPricePerUnit} ₽</div>
-                    )}
-                    {orderDetails.payload.pricing.quantity && orderDetails.payload.pricing.quantity > 1 && (
-                      <div>Количество: {orderDetails.payload.pricing.quantity} шт.</div>
-                    )}
-                    {orderDetails.payload.pricing.shippingCost && orderDetails.payload.pricing.shippingCost > 0 && (
-                      <div>Доставка: {orderDetails.payload.pricing.shippingCost} ₽</div>
-                    )}
-                  </div>
-                )}
+                {renderPriceBreakdown(orderDetails)}
               </div>
             </div>
 
