@@ -37,7 +37,13 @@ export async function POST(request) {
     // Ensure tables exist
     await ensureTablesExist();
     
-    const { name, basePrice, sectionId, description, image, images } = await request.json();
+    const requestBody = await request.json();
+    const { name, basePrice, sectionId, description, image, images } = requestBody;
+    
+    // Логируем размер запроса для отладки
+    const bodySize = JSON.stringify(requestBody).length;
+    console.log('📊 DEBUG: Request body size:', bodySize, 'bytes', '~', Math.round(bodySize / 1024), 'KB');
+    
     if (!name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
     
     // Пытаемся сохранить в YDB

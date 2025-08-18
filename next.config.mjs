@@ -10,6 +10,11 @@ const nextConfig = {
       },
     ],
   },
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb', // Увеличиваем лимит для изображений
+    },
+  },
 };
 
 export default nextConfig;

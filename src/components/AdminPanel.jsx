@@ -1268,9 +1268,17 @@ function ProductCreateForm({ sections, onCreate }) {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     files.forEach(file => {
+      // Проверяем размер файла (максимум 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert(`Файл "${file.name}" слишком большой. Максимальный размер: 2MB`);
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImages(prev => [...prev, e.target.result]);
+        const result = e.target.result;
+        console.log('🖼️ DEBUG: Image loaded:', file.name, 'Size:', Math.round(result.length / 1024), 'KB');
+        setImages(prev => [...prev, result]);
       };
       reader.readAsDataURL(file);
     });
@@ -1335,7 +1343,7 @@ function ProductCreateForm({ sections, onCreate }) {
             </svg>
             Добавить изображения
           </label>
-          <p className="text-xs text-gray-500 mt-1">PNG, JPG до 5MB (можно выбрать несколько)</p>
+          <p className="text-xs text-gray-500 mt-1">PNG, JPG до 2MB (можно выбрать несколько)</p>
 
           {/* Список загруженных изображений */}
           {images.length > 0 && (
