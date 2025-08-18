@@ -370,11 +370,11 @@ export default function AdminPanel() {
   // Products CRUD
   const createProduct = async (payload) => {
     try {
-      console.log('📡 DEBUG: Sending product to API:', { 
-        name: payload.name, 
-        imagesCount: payload.images?.length || 0,
-        totalPayloadSize: JSON.stringify(payload).length 
-      });
+      console.log('📡 DEBUG: Sending product to API:');
+      console.log('   📝 Name:', payload.name);
+      console.log('   🖼️ Images count:', payload.images?.length || 0);
+      console.log('   📊 Total payload size:', JSON.stringify(payload).length, 'bytes');
+      console.log('   📦 Images data:', payload.images?.length > 0 ? 'Present' : 'Missing');
       const res = await fetch('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1277,8 +1277,15 @@ function ProductCreateForm({ sections, onCreate }) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target.result;
-        console.log('🖼️ DEBUG: Image loaded:', file.name, 'Size:', Math.round(result.length / 1024), 'KB');
-        setImages(prev => [...prev, result]);
+        console.log('🖼️ DEBUG: Image loaded successfully:');
+        console.log('   📁 File name:', file.name);
+        console.log('   📏 Base64 size:', Math.round(result.length / 1024), 'KB');
+        console.log('   ✅ Added to images array');
+        setImages(prev => {
+          const newImages = [...prev, result];
+          console.log('   📦 Total images now:', newImages.length);
+          return newImages;
+        });
       };
       reader.readAsDataURL(file);
     });
@@ -1296,7 +1303,11 @@ function ProductCreateForm({ sections, onCreate }) {
         e.preventDefault();
         if (!name.trim()) return;
         const productData = { name: name.trim(), basePrice: Number(price)||0, sectionId: sectionId || 'general', description, images };
-        console.log('🖼️ DEBUG: Creating product with images:', { name: name.trim(), imagesCount: images.length, firstImageLength: images[0]?.length });
+        console.log('🖼️ DEBUG: Creating product with images:');
+        console.log('   📝 Name:', name.trim());
+        console.log('   🖼️ Images count:', images.length);
+        console.log('   📏 First image length:', images[0]?.length || 'No images');
+        console.log('   📦 Images array:', images.length > 0 ? 'Has images' : 'Empty');
         onCreate(productData);
         setName(''); setPrice('1500'); setSectionId(''); setDescription(''); setImages([]);
       }}>
