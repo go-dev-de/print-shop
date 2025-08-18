@@ -370,6 +370,11 @@ export default function AdminPanel() {
   // Products CRUD
   const createProduct = async (payload) => {
     try {
+      console.log('📡 DEBUG: Sending product to API:', { 
+        name: payload.name, 
+        imagesCount: payload.images?.length || 0,
+        totalPayloadSize: JSON.stringify(payload).length 
+      });
       const res = await fetch('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1282,7 +1287,9 @@ function ProductCreateForm({ sections, onCreate }) {
       <form className="space-y-4" onSubmit={(e) => {
         e.preventDefault();
         if (!name.trim()) return;
-        onCreate({ name: name.trim(), basePrice: Number(price)||0, sectionId: sectionId || 'general', description, images });
+        const productData = { name: name.trim(), basePrice: Number(price)||0, sectionId: sectionId || 'general', description, images };
+        console.log('🖼️ DEBUG: Creating product with images:', { name: name.trim(), imagesCount: images.length, firstImageLength: images[0]?.length });
+        onCreate(productData);
         setName(''); setPrice('1500'); setSectionId(''); setDescription(''); setImages([]);
       }}>
         {/* Основные поля товара */}
