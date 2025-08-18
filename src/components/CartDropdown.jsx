@@ -48,8 +48,26 @@ export default function CartDropdown() {
     };
   }, []);
 
-  const loadCart = () => {
+  const loadCart = async () => {
     try {
+      // Сначала пытаемся загрузить из API (для авторизованных пользователей)
+      try {
+        const response = await fetch('/api/cart');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.cart && Array.isArray(data.cart.items)) {
+            console.log('Загружаем корзину из YDB:', data.cart.items);
+            setCartItems(data.cart.items);
+            // Синхронизируем с localStorage
+            localStorage.setItem('printStyle_cart', JSON.stringify(data.cart.items));
+            return;
+          }
+        }
+      } catch (apiError) {
+        console.warn('API корзины недоступен, используем localStorage:', apiError);
+      }
+
+      // Fallback к localStorage для неавторизованных пользователей
       const savedCart = localStorage.getItem('printStyle_cart');
       console.log('Загружаем корзину из localStorage:', savedCart);
       if (savedCart) {
@@ -65,13 +83,33 @@ export default function CartDropdown() {
     }
   };
 
-  const saveCart = (items) => {
+  const saveCart = async (items) => {
     try {
+      // Сохраняем в localStorage сразу для быстрого отклика UI
       localStorage.setItem('printStyle_cart', JSON.stringify(items));
       setCartItems(items);
       
       // Уведомляем об обновлении корзины
       window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+      // Пытаемся синхронизировать с API (для авторизованных пользователей)
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ items }),
+        });
+        
+        if (response.ok) {
+          console.log('Корзина синхронизирована с YDB');
+        } else {
+          console.warn('Не удалось синхронизировать корзину с YDB:', response.status);
+        }
+      } catch (apiError) {
+        console.warn('API недоступен, корзина сохранена только в localStorage:', apiError);
+      }
     } catch (error) {
       console.error('Ошибка сохранения корзины:', error);
     }

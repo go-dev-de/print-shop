@@ -71,6 +71,21 @@ async function initializeTables() {
           .withPrimaryKey('id');
         await session.createTable(`${database}/discounts`, desc);
       }
+
+      // Check and create carts table
+      try {
+        await session.describeTable(`${database}/carts`);
+        console.log('✅ carts table exists');
+      } catch {
+        console.log('🔧 creating carts table...');
+        const desc = new TableDescription()
+          .withColumn(new Column('id', Types.UTF8))
+          .withColumn(new Column('user_id', Types.UTF8))
+          .withColumn(new Column('items', Types.JSON))
+          .withColumn(new Column('updated_at', Types.UINT64))
+          .withPrimaryKey('id');
+        await session.createTable(`${database}/carts`, desc);
+      }
     });
     
     console.log('✅ YDB tables initialized successfully');

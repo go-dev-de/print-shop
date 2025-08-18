@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 
 export async function GET() {
   await initSchemaIfNeeded();
-  const user = getSession();
+  const user = await getSession();
   if (!user) return NextResponse.json({ cart: null });
   const cart = await getCartByUser(user.id);
   return NextResponse.json({ cart });
@@ -15,7 +15,7 @@ export async function GET() {
 
 export async function POST(request) {
   await initSchemaIfNeeded();
-  const user = getSession();
+  const user = await getSession();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { items, id } = await request.json();
   const incoming = Array.isArray(items) ? items : [];
