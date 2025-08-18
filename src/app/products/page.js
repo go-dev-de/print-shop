@@ -43,7 +43,8 @@ export default function ProductsPage() {
     : products.filter(product => 
         product.sectionId === selectedSection || 
         product.section?.id === selectedSection ||
-        product.section === selectedSection
+        product.section === selectedSection ||
+        (selectedSection === 'general' && (product.section === 'general' || !product.section || product.section === ''))
       );
 
   if (loading) {
@@ -192,12 +193,13 @@ export default function ProductsPage() {
               >
                 Все товары ({products.length})
               </button>
-              {sections.map((section, index) => {
-                const count = products.filter(p => 
-                  p.sectionId === section.id || 
-                  p.section?.id === section.id ||
-                  p.section === section.id
-                ).length;
+              {[{ id: 'general', name: 'Общий раздел' }, ...sections].map((section, index) => {
+                        const count = products.filter(p => 
+          p.sectionId === section.id || 
+          p.section?.id === section.id ||
+          p.section === section.id ||
+          (section.id === 'general' && (p.section === 'general' || !p.section || p.section === ''))
+        ).length;
                 return (
                   <button
                     key={section.id || `section-${index}`}

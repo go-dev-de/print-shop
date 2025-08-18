@@ -1282,7 +1282,7 @@ function ProductCreateForm({ sections, onCreate }) {
       <form className="space-y-4" onSubmit={(e) => {
         e.preventDefault();
         if (!name.trim()) return;
-        onCreate({ name: name.trim(), basePrice: Number(price)||0, sectionId: sectionId || null, description, images });
+        onCreate({ name: name.trim(), basePrice: Number(price)||0, sectionId: sectionId || 'general', description, images });
         setName(''); setPrice('1500'); setSectionId(''); setDescription(''); setImages([]);
       }}>
         {/* Основные поля товара */}
@@ -1298,7 +1298,7 @@ function ProductCreateForm({ sections, onCreate }) {
           <div>
             <label className="block text-sm mb-1 text-gray-900">Раздел</label>
             <select className="border-2 border-gray-400 rounded-md px-3 py-2 w-full bg-white text-gray-900 focus:border-blue-600 focus:outline-none" value={sectionId} onChange={(e) => setSectionId(e.target.value)}>
-              <option value="">—</option>
+              <option value="">Общий раздел</option>
               {sections.map((s, idx) => <option key={s.id || `edit-section-${idx}`} value={s.id || ''}>{s.name}</option>)}
             </select>
           </div>
