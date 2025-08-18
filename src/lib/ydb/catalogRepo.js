@@ -117,6 +117,8 @@ export async function deleteSectionYdb(id) {
 // ===== PRODUCTS (ТОВАРЫ) =====
 
 export async function createProductYdb({ name, basePrice, description, section, images }) {
+  console.log('🗄️ YDB createProduct called with:', { name, basePrice, section, imagesType: typeof images, imagesLength: images?.length });
+  
   const driver = await getYdbDriver();
   const db = driver.database;
   const id = crypto.randomUUID();
@@ -133,7 +135,11 @@ export async function createProductYdb({ name, basePrice, description, section, 
           '$basePrice': TypedValues.double(parseFloat(basePrice) || 0),
           '$description': TypedValues.utf8(description || ''),
           '$section': TypedValues.utf8(section || ''),
-          '$images': TypedValues.json(json(images || [])),
+          '$images': (() => {
+            const jsonString = json(images || []);
+            console.log('🔄 YDB Images JSON conversion:', jsonString);
+            return TypedValues.json(jsonString);
+          })(),
           '$createdAt': TypedValues.uint64(now),
           '$updatedAt': TypedValues.uint64(now),
         }

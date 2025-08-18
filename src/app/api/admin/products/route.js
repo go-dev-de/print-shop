@@ -56,7 +56,9 @@ export async function POST(request) {
         images: images && images.length > 0 ? images : (image ? [image] : [])
       };
       console.log('💾 DEBUG: Creating product with data:', productData);
+      console.log('🖼️ DEBUG: Images array:', productData.images, 'Type:', typeof productData.images, 'Length:', productData.images?.length);
       const newProduct = await createProductYdb(productData);
+      console.log('📄 DEBUG: YDB returned product:', { id: newProduct.id, images: newProduct.images });
       console.log('✅ DEBUG: Product created in YDB:', newProduct.id);
       const allProducts = await listProductsYdb();
       console.log('📋 DEBUG: All products after creation:', allProducts.length);
