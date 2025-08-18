@@ -2,12 +2,16 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
 import { addSection, listSections } from '@/lib/catalogStore';
 import { listSectionsYdb, createSectionYdb, deleteSectionYdb, updateSectionYdb } from '@/lib/ydb/catalogRepo';
+import { ensureTablesExist } from '@/lib/ydb/autoInit';
 
 export async function GET() {
   const user = await getSession();
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
+    // Ensure tables exist
+    await ensureTablesExist();
+    
     console.log('🔍 Admin fetching sections...');
     // Пытаемся получить из YDB
     let ydbSections = [];
@@ -40,6 +44,9 @@ export async function POST(request) {
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
+    // Ensure tables exist
+    await ensureTablesExist();
+    
     const { name, description } = await request.json();
     console.log('🗂️ Creating section:', { name, description });
     if (!name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
