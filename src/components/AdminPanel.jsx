@@ -373,6 +373,12 @@ export default function AdminPanel() {
       let imageUrls = [];
       
       // Если есть изображения (base64), сначала загружаем их в S3
+      console.log('🔍 DEBUG: Checking images condition:', {
+        hasImages: !!payload.images,
+        imagesLength: payload.images?.length || 0,
+        firstImageType: typeof payload.images?.[0]
+      });
+      
       if (payload.images && payload.images.length > 0) {
         console.log('📤 Uploading images to S3...');
         
