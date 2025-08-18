@@ -10,6 +10,8 @@
     "ydb:init": "node ./scripts/ydb-init.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.864.0",
+    "@aws-sdk/s3-request-presigner": "^3.864.0",
     "@react-three/drei": "^10.6.1",
     "@react-three/fiber": "^9.3.0",
     "html-to-image": "^1.11.11",

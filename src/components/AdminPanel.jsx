@@ -370,20 +370,56 @@ export default function AdminPanel() {
   // Products CRUD
   const createProduct = async (payload) => {
     try {
-      console.log('📡 DEBUG: Sending product to API:');
-      console.log('   📝 Name:', payload.name);
-      console.log('   🖼️ Images count:', payload.images?.length || 0);
-      console.log('   📊 Total payload size:', JSON.stringify(payload).length, 'bytes');
-      console.log('   📦 Images data:', payload.images?.length > 0 ? 'Present' : 'Missing');
+      let imageUrls = [];
+      
+      // Если есть изображения (base64), сначала загружаем их в S3
+      if (payload.images && payload.images.length > 0) {
+        console.log('📤 Uploading images to S3...');
+        
+        const formData = new FormData();
+        
+        // Конвертируем base64 обратно в файлы
+        for (let i = 0; i < payload.images.length; i++) {
+          const base64 = payload.images[i];
+          const response = await fetch(base64);
+          const blob = await response.blob();
+          formData.append('files', blob, `image-${i}.jpg`);
+        }
+        
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Ошибка загрузки изображений');
+        
+        imageUrls = uploadData.urls;
+        console.log('✅ Images uploaded:', imageUrls);
+      }
+      
+      // Создаем товар с URLs вместо base64
+      const productData = {
+        ...payload,
+        images: imageUrls // Заменяем base64 на URLs
+      };
+      
+      console.log('📡 DEBUG: Creating product with S3 URLs:');
+      console.log('   📝 Name:', productData.name);
+      console.log('   🖼️ Image URLs:', imageUrls);
+      
       const res = await fetch('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(productData),
       });
+      
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Ошибка создания товара');
       setProducts(data.products || []);
+      
     } catch (e) {
+      console.error('❌ Product creation error:', e);
       alert(String(e.message || e));
     }
   };
