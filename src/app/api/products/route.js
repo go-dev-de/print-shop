@@ -40,8 +40,12 @@ export async function GET() {
       
       return {
         ...product,
+        sectionId: section?.id || product.sectionId || product.section, // ID раздела для скидок и фильтров
         sectionName: section?.name || product.section || 'Без раздела',
-        section: section // Полный объект раздела
+        section: section || { // Полный объект раздела для отображения или заглушка
+          id: product.section,
+          name: product.section || 'Без раздела'
+        }
       };
     });
     
