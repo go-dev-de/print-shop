@@ -40,7 +40,11 @@ export default function ProductsPage() {
   // Фильтрация товаров по разделу
   const filteredProducts = selectedSection === 'all' 
     ? products 
-    : products.filter(product => product.sectionId === selectedSection);
+    : products.filter(product => 
+        product.sectionId === selectedSection || 
+        product.section?.id === selectedSection ||
+        product.section === selectedSection
+      );
 
   if (loading) {
     return (
@@ -189,7 +193,11 @@ export default function ProductsPage() {
                 Все товары ({products.length})
               </button>
               {sections.map((section, index) => {
-                const count = products.filter(p => p.sectionId === section.id).length;
+                const count = products.filter(p => 
+                  p.sectionId === section.id || 
+                  p.section?.id === section.id ||
+                  p.section === section.id
+                ).length;
                 return (
                   <button
                     key={section.id || `section-${index}`}

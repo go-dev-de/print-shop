@@ -26,10 +26,24 @@ export async function GET() {
     const allSections = [...ydbSections, ...inMemorySections];
     
     // Добавляем информацию о разделе к каждому товару
-    const productsWithSections = allProducts.map(product => ({
-      ...product,
-      section: allSections.find(s => s.id === product.sectionId || s.name === product.section) || null
-    }));
+    const productsWithSections = allProducts.map(product => {
+      // Ищем раздел: сначала по sectionId, потом по section (ID или название)
+      let section = null;
+      
+      if (product.sectionId) {
+        // Есть поле sectionId - ищем по ID
+        section = allSections.find(s => s.id === product.sectionId);
+      } else if (product.section) {
+        // Есть поле section - может быть ID или название
+        section = allSections.find(s => s.id === product.section || s.name === product.section);
+      }
+      
+      return {
+        ...product,
+        sectionName: section?.name || product.section || 'Без раздела',
+        section: section // Полный объект раздела
+      };
+    });
     
     return NextResponse.json({ 
       products: productsWithSections,
