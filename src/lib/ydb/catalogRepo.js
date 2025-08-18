@@ -126,14 +126,14 @@ export async function createProductYdb({ name, basePrice, description, section, 
     await driver.tableClient.withSession(async (session) => {
       await session.executeQuery(
         'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $basePrice AS Double; DECLARE $description AS Utf8; DECLARE $section AS Utf8; DECLARE $images AS Json; DECLARE $createdAt AS Uint64; DECLARE $updatedAt AS Uint64;\n'
-        + `UPSERT INTO \`${db}/products\` (id, name, base_price, description, section, images, created_at, updated_at) VALUES ($id, $name, $basePrice, $description, $section, CAST($images AS Json), $createdAt, $updatedAt);`,
+        + `UPSERT INTO \`${db}/products\` (id, name, base_price, description, section, images, created_at, updated_at) VALUES ($id, $name, $basePrice, $description, $section, $images, $createdAt, $updatedAt);`,
         {
           '$id': TypedValues.utf8(id),
           '$name': TypedValues.utf8(name || ''),
           '$basePrice': TypedValues.double(parseFloat(basePrice) || 0),
           '$description': TypedValues.utf8(description || ''),
           '$section': TypedValues.utf8(section || ''),
-          '$images': TypedValues.utf8(json(images || [])),
+          '$images': TypedValues.json(json(images || [])),
           '$createdAt': TypedValues.uint64(now),
           '$updatedAt': TypedValues.uint64(now),
         }
@@ -195,7 +195,7 @@ export async function updateProductYdb(id, { name, basePrice, description, secti
           base_price = $basePrice,
           description = $description,
           section = $section,
-          images = CAST($images AS Json),
+          images = $images,
           updated_at = $updatedAt
         WHERE id = $id;
       `;
@@ -205,7 +205,7 @@ export async function updateProductYdb(id, { name, basePrice, description, secti
         '$basePrice': TypedValues.double(parseFloat(basePrice)),
         '$description': TypedValues.utf8(description),
         '$section': TypedValues.utf8(section),
-        '$images': TypedValues.utf8(json(images)),
+        '$images': TypedValues.json(json(images)),
         '$updatedAt': TypedValues.uint64(now),
       });
     });
