@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { listProducts, listSections } from '@/lib/catalogStore';
 import { listProductsYdb, listSectionsYdb } from '@/lib/ydb/catalogRepo';
+import { ensureTablesExist } from '@/lib/ydb/autoInit';
 
 export async function GET() {
   try {
+    // Ensure YDB tables exist on first run
+    await ensureTablesExist();
+    
     // Получаем данные из YDB и in-memory
     const ydbProducts = await listProductsYdb().catch(error => {
       console.warn('Failed to fetch products from YDB:', error);

@@ -2,12 +2,16 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
 import { addProduct, listProducts } from '@/lib/catalogStore';
 import { listProductsYdb, createProductYdb, deleteProductYdb } from '@/lib/ydb/catalogRepo';
+import { ensureTablesExist } from '@/lib/ydb/autoInit';
 
 export async function GET() {
   const user = await getSession();
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
+    // Ensure tables exist
+    await ensureTablesExist();
+    
     // Пытаемся получить из YDB
     const ydbProducts = await listProductsYdb();
     const inMemoryProducts = listProducts();
@@ -30,6 +34,9 @@ export async function POST(request) {
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
+    // Ensure tables exist
+    await ensureTablesExist();
+    
     const { name, basePrice, sectionId, description, image, images } = await request.json();
     if (!name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
     
