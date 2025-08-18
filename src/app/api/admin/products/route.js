@@ -49,10 +49,15 @@ export async function POST(request) {
         section: sectionId,
         images: images && images.length > 0 ? images : (image ? [image] : [])
       };
+      console.log('💾 DEBUG: Creating product with data:', productData);
       const newProduct = await createProductYdb(productData);
+      console.log('✅ DEBUG: Product created in YDB:', newProduct.id);
       const allProducts = await listProductsYdb();
+      console.log('📋 DEBUG: All products after creation:', allProducts.length);
       return NextResponse.json({ product: newProduct, products: allProducts });
     } catch (ydbError) {
+      console.error('❌ DEBUG: YDB product creation failed:', ydbError.message);
+      console.error('❌ DEBUG: Full YDB error:', ydbError);
       console.warn('Failed to save product to YDB, falling back to in-memory:', ydbError);
       const p = addProduct({ name, basePrice, sectionId, description, image, images });
       return NextResponse.json({ product: p, products: listProducts() });
