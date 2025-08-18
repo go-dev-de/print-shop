@@ -6,6 +6,11 @@ import { ensureTablesExist } from '@/lib/ydb/autoInit';
 export async function GET() {
   try {
     console.log('🔍 DEBUG: Starting product debug...');
+    console.log('🌍 DEBUG: Environment variables:');
+    console.log('   YDB_ENDPOINT:', process.env.YDB_ENDPOINT);
+    console.log('   YDB_DATABASE:', `"${process.env.YDB_DATABASE}"` );
+    console.log('   YDB_SA_KEY_JSON:', process.env.YDB_SA_KEY_JSON ? 'SET' : 'NOT SET');
+    console.log('   YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS:', process.env.YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS ? 'SET' : 'NOT SET');
     
     // Ensure tables exist
     await ensureTablesExist();
@@ -14,19 +19,24 @@ export async function GET() {
     // Get YDB data
     let ydbProducts = [];
     let ydbSections = [];
+    let ydbError = null;
     
     try {
       ydbProducts = await listProductsYdb();
       console.log('🗄️ DEBUG: YDB Products:', ydbProducts.length, ydbProducts);
     } catch (error) {
+      ydbError = error.message;
       console.error('❌ DEBUG: YDB Products error:', error.message);
+      console.error('❌ DEBUG: Full YDB error:', error);
     }
     
     try {
       ydbSections = await listSectionsYdb();
       console.log('🗂️ DEBUG: YDB Sections:', ydbSections.length, ydbSections);
     } catch (error) {
+      if (!ydbError) ydbError = error.message;
       console.error('❌ DEBUG: YDB Sections error:', error.message);
+      console.error('❌ DEBUG: Full YDB error:', error);
     }
     
     // Get in-memory data
@@ -44,9 +54,16 @@ export async function GET() {
     return NextResponse.json({ 
       debug: true,
       timestamp: new Date().toISOString(),
+      environment: {
+        YDB_ENDPOINT: process.env.YDB_ENDPOINT,
+        YDB_DATABASE: process.env.YDB_DATABASE,
+        YDB_SA_KEY_JSON_LENGTH: process.env.YDB_SA_KEY_JSON?.length || 0,
+        YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS: process.env.YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS
+      },
       ydb: {
         products: ydbProducts,
-        sections: ydbSections
+        sections: ydbSections,
+        error: ydbError
       },
       inMemory: {
         products: inMemoryProducts,
