@@ -171,7 +171,16 @@ export async function listProductsYdb() {
         basePrice: basePriceCol?.doubleValue || 0,
         description: descriptionCol?.textValue || '',
         section: sectionCol?.textValue || '',
-        images: JSON.parse(imagesCol?.jsonValue || '[]'),
+        images: (() => {
+          const rawValue = imagesCol?.jsonValue;
+          console.log('🔍 DEBUG: Reading images from YDB:', { rawValue, type: typeof rawValue });
+          try {
+            return JSON.parse(rawValue || '[]');
+          } catch (e) {
+            console.error('❌ JSON parse error:', e, 'Raw value:', rawValue);
+            return [];
+          }
+        })(),
         createdAt: createdCol?.uint64Value || 0,
         updatedAt: updatedCol?.uint64Value || 0,
       };
