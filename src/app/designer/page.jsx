@@ -11,7 +11,7 @@ import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
 
-export default function Constructor() {
+export default function Designer() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('white');
@@ -250,8 +250,8 @@ export default function Constructor() {
               <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
                 Товары
               </a>
-              <a href="/constructor" className="px-4 py-2 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors rounded-lg">
-                Конструктор
+              <a href="/designer" className="px-4 py-2 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors rounded-lg">
+                Дизайнер
               </a>
               <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
                 Отзывы
@@ -274,7 +274,7 @@ export default function Constructor() {
       {/* Breadcrumbs */}
       <Breadcrumbs />
 
-      {/* Constructor Hero */}
+      {/* Designer Hero */}
       <section className="bg-gray-50 py-16">
         <div className="container text-center">
           <h1 className="text-4xl lg:text-5xl font-light text-gray-900 mb-6 tracking-tight">

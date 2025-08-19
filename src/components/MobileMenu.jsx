@@ -12,7 +12,7 @@ export default function MobileMenu() {
   const menuItems = [
     { name: 'Главная', href: '/#main' },
     { name: 'Товары', href: '/products' },
-    { name: 'Конструктор', href: '/constructor' },
+    { name: 'Дизайнер', href: '/designer' },
     { name: 'Отзывы', href: '/reviews' },
     { name: 'О нас', href: '/#about' },
     { name: 'Корзина', href: '#', special: 'cart' }
