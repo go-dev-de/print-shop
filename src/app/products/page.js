@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
-import AuthNav from '@/components/AuthNav';
+import UserProfile from '@/components/UserProfile';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
@@ -58,7 +58,7 @@ export default function ProductsPage() {
                   <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
                 </h1>
                 
-                <div className="ml-6 hidden md:block"><AuthNav /></div>
+                <div className="ml-6 hidden md:block"><UserProfile /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
                 <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
@@ -101,7 +101,7 @@ export default function ProductsPage() {
                   <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
                 </h1>
                 
-                <div className="ml-6 hidden md:block"><AuthNav /></div>
+                <div className="ml-6 hidden md:block"><UserProfile /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
                 <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
@@ -149,7 +149,7 @@ export default function ProductsPage() {
                 </Link>
               </h1>
               
-              <div className="hidden lg:block"><AuthNav /></div>
+
             </div>
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
@@ -157,7 +157,10 @@ export default function ProductsPage() {
               <Link href="/products" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Товары</Link>
               <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
               <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
-              <CartDropdown />
+              <div className="flex items-center space-x-3">
+                <CartDropdown />
+                <UserProfile />
+              </div>
             </nav>
             
             {/* Mobile Menu */}

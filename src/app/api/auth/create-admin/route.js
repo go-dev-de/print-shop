@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { addUser, findUserByEmail, listUsers } from '@/lib/userStore';
-import { initSchemaIfNeeded, createUserYdb, listUsersYdb } from '@/lib/ydb/repo';
+import { initSchemaIfNeeded, createUser, listUsersYdb } from '@/lib/ydb/repo';
 
 export async function POST(request) {
   try {
@@ -40,7 +40,7 @@ export async function POST(request) {
     };
 
     try {
-      await createUserYdb(adminUser);
+      await createUser(adminUser);
     } catch (ydbError) {
       console.warn('YDB user creation failed, using memory store:', ydbError.message);
       addUser(adminUser);

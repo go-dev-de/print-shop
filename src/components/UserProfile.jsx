@@ -1,0 +1,469 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+
+export default function UserProfile() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const dropdownRef = useRef(null);
+  const modalRef = useRef(null);
+  
+  // Форма редактирования профиля
+  const [profileForm, setProfileForm] = useState({
+    name: '',
+    email: '',
+    avatar: ''
+  });
+
+  // Загрузка данных пользователя
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include',
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
+        
+        if (response.ok) {
+          const responseData = await response.json();
+          const userData = responseData.user;
+          setUser(userData);
+          setProfileForm({
+            name: userData?.name || '',
+            email: userData?.email || '',
+            avatar: userData?.avatar || ''
+          });
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching user:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Проверяем флаг выхода ПЕРЕД загрузкой пользователя
+    const loggedOut = sessionStorage.getItem('user_logged_out');
+    if (loggedOut === 'true') {
+      console.log('🚪 User already logged out, skipping auth check');
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+    
+    // Проверяем URL параметр logout
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') === 'true') {
+      console.log('🚪 Logout parameter detected, clearing user state');
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    fetchUser();
+    
+    // Слушаем событие выхода
+    const handleLogoutEvent = () => {
+      console.log('🚪 Logout event received');
+      setUser(null);
+    };
+    
+    window.addEventListener('user-logged-out', handleLogoutEvent);
+    
+    return () => {
+      window.removeEventListener('user-logged-out', handleLogoutEvent);
+    };
+  }, []);
+
+  // Закрытие dropdown при клике вне
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Закрытие модалки при клике вне
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Проверяем, что клик не по кнопке профиля и не внутри модалки
+      const profileButton = event.target.closest('[data-profile-button]');
+      if (!profileButton && modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+        setIsEditing(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsModalOpen(false);
+        setIsEditing(false);
+      }
+    };
+
+    if (isModalOpen) {
+      // Добавляем небольшую задержку, чтобы клик по кнопке профиля не сразу закрывал модалку
+      setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 100);
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isModalOpen]);
+
+
+
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('/api/auth/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileForm)
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser(updatedUser);
+        setIsEditing(false);
+        alert('Профиль успешно обновлен!');
+      } else {
+        alert('Ошибка при обновлении профиля');
+      }
+    } catch (error) {
+      console.error('Profile update error:', error);
+      alert('Ошибка при обновлении профиля');
+    }
+  };
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const getAvatarUrl = (avatar) => {
+    if (!avatar) return null;
+    if (avatar.startsWith('http')) return avatar;
+    return `/avatars/${avatar}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse"></div>
+    );
+  }
+
+  // Если пользователь не залогинен
+  if (!user) {
+    return (
+      <div className="flex items-center space-x-3">
+        <a
+          href="/login"
+          className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
+        >
+          Вход
+        </a>
+        <a
+          href="/register"
+          className="px-4 py-2 text-sm font-medium bg-black text-white rounded-lg hover:bg-gray-800 transition-all"
+        >
+          Регистрация
+        </a>
+      </div>
+    );
+  }
+
+  // Если пользователь залогинен
+  return (
+    <div className="relative" ref={dropdownRef}>
+      {/* Avatar/Profile Button */}
+      <button
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-50 transition-colors group"
+        data-profile-button
+      >
+        <div className="relative">
+          {getAvatarUrl(user.avatar) ? (
+            <img
+              src={getAvatarUrl(user.avatar)}
+              alt={user.name}
+              className="w-9 h-9 rounded-full object-cover border-2 border-gray-200 group-hover:border-gray-300 transition-colors"
+            />
+          ) : (
+            <div className="w-9 h-9 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">
+              {getInitials(user.name)}
+            </div>
+          )}
+          
+          {/* Online indicator */}
+          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+        </div>
+
+      </button>
+
+      {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 animate-fade-in">
+          {/* User Info */}
+          <div className="px-4 py-3 border-b border-gray-100">
+            <div className="flex items-center space-x-3">
+              {getAvatarUrl(user.avatar) ? (
+                <img
+                  src={getAvatarUrl(user.avatar)}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white font-semibold">
+                  {getInitials(user.name)}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate">
+                  {user.role === 'admin' ? 'Администратор' : (user.name || 'Пользователь')}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Menu Items */}
+          <div className="py-1">
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsDropdownOpen(false);
+              }}
+              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3 transition-colors"
+              data-profile-button
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span>Настройки профиля</span>
+            </button>
+
+            {user.role === 'admin' && (
+              <a
+                href="/admin"
+                className="w-full px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center space-x-3 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Панель администратора</span>
+              </a>
+            )}
+
+            <div className="border-t border-gray-100 my-1"></div>
+
+            <Link
+              href="/?logout=true"
+              className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-3 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Выйти</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Settings Modal */}
+      {isModalOpen && (
+        <div className="absolute right-0 top-12 z-50">
+          <div ref={modalRef} className="bg-white rounded-xl w-80 max-h-[60vh] overflow-y-auto shadow-xl border border-gray-200 animate-modal-in">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">
+                {isEditing ? 'Редактировать профиль' : 'Мой профиль'}
+              </h2>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setIsEditing(false);
+                }}
+                className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4">
+              {!isEditing ? (
+                // View Mode
+                <div className="space-y-4">
+                  {/* Avatar */}
+                  <div className="flex justify-center">
+                    {getAvatarUrl(user.avatar) ? (
+                      <img
+                        src={getAvatarUrl(user.avatar)}
+                        alt={user.name}
+                        className="w-20 h-20 rounded-full object-cover border-3 border-gray-200"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-xl font-bold border-3 border-gray-200">
+                        {getInitials(user.name)}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* User Info */}
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                      <p className="text-gray-900">{user.name || 'Не указано'}</p>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <p className="text-gray-900">{user.email}</p>
+                    </div>
+
+                    {user.role === 'admin' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Роль</label>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                          Администратор
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="w-full bg-black text-white py-2.5 rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                  >
+                    Редактировать профиль
+                  </button>
+                </div>
+              ) : (
+                // Edit Mode
+                <form onSubmit={handleProfileUpdate} className="space-y-4">
+                  {/* Avatar Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Аватар</label>
+                    <div className="flex items-center space-x-3 mb-3">
+                      {getAvatarUrl(profileForm.avatar) ? (
+                        <img
+                          src={getAvatarUrl(profileForm.avatar)}
+                          alt="Preview"
+                          className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white font-semibold border-2 border-gray-200">
+                          {getInitials(profileForm.name)}
+                        </div>
+                      )}
+                      <span className="text-sm text-gray-600">Выберите аватар из предложенных вариантов</span>
+                    </div>
+                    
+                    {/* Avatar Selection Grid */}
+                    <div className="grid grid-cols-5 gap-2">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((avatarId) => {
+                        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=avatar${avatarId}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+                        const isSelected = profileForm.avatar === avatarUrl;
+                        
+                        return (
+                          <button
+                            key={avatarId}
+                            type="button"
+                            onClick={() => setProfileForm(prev => ({ ...prev, avatar: avatarUrl }))}
+                            className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-105 ${
+                              isSelected 
+                                ? 'border-blue-500 ring-2 ring-blue-200' 
+                                : 'border-gray-300 hover:border-gray-400'
+                            }`}
+                          >
+                            <img
+                              src={avatarUrl}
+                              alt={`Avatar ${avatarId}`}
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                    <input
+                      type="text"
+                      value={profileForm.name}
+                      onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full px-3 py-2 text-sm text-black placeholder-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="Ваше имя"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={profileForm.email}
+                      onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full px-3 py-2 text-sm text-black placeholder-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="your@email.com"
+                      required
+                    />
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex space-x-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="flex-1 px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Отмена
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 bg-black text-white py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors font-medium"
+                    >
+                      Сохранить
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

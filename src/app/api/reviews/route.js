@@ -9,15 +9,20 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'approved';
     const limit = parseInt(searchParams.get('limit')) || 50;
-    const offset = parseInt(searchParams.get('offset')) || 0;
+    const page = parseInt(searchParams.get('page')) || 1;
+    const isAdmin = searchParams.get('admin') === 'true';
+    const offset = (page - 1) * limit;
+
+    // Для админа показываем все отзывы, для пользователей только одобренные
+    const finalStatus = isAdmin ? 'all' : status;
 
     let result;
     try {
       await initSchemaIfNeeded();
-      result = await listReviewsYdb({ status, limit, offset });
+      result = await listReviewsYdb({ status: finalStatus, limit, offset });
     } catch (ydbError) {
       console.warn('YDB reviews query failed, using memory store:', ydbError.message);
-      result = listReviews({ status, limit, offset });
+      result = listReviews({ status: finalStatus, limit, offset });
     }
 
     return NextResponse.json(result);

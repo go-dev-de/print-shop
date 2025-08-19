@@ -26,6 +26,8 @@ export default function RegisterPage() {
       if (!res.ok) {
         setError(data.error || 'Ошибка регистрации');
       } else {
+        // Очищаем флаг выхода при успешной регистрации
+        sessionStorage.removeItem('user_logged_out');
         router.push('/');
       }
     } catch (e) {

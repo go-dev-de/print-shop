@@ -63,7 +63,18 @@ export async function setSession(user) {
 
 export async function clearSession() {
   const cookieStore = await cookies();
-  // Clear the session cookie by setting it to expire immediately
+  
+  try {
+    // First try to delete the cookie
+    cookieStore.delete({
+      name: COOKIE_NAME,
+      path: '/',
+    });
+  } catch (error) {
+    console.log('Delete cookie failed, trying to clear:', error);
+  }
+  
+  // Also set it to expire immediately as backup
   cookieStore.set({
     name: COOKIE_NAME,
     value: '',
@@ -74,5 +85,7 @@ export async function clearSession() {
     maxAge: 0, // Expire immediately
     expires: new Date(0), // Also set explicit expiry
   });
+  
+  console.log('Session cookie cleared');
 }
 

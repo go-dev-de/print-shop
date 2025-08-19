@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   name Utf8,
   password_hash Utf8,
   role Utf8,
+  avatar Utf8,
   created_at Uint64,
   PRIMARY KEY (id)
 );

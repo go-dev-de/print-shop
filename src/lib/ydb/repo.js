@@ -2,74 +2,95 @@ import crypto from 'node:crypto';
 import { getYdbDriver } from './client';
 import { TypedValues } from 'ydb-sdk';
 import path from 'node:path';
-import fs from 'node:fs/promises';
 
 function json(val) {
   return JSON.stringify(val ?? null);
 }
 
 export async function initSchemaIfNeeded() {
-  const driver = await getYdbDriver();
-  try {
-    const schemaPath = path.join(process.cwd(), 'src', 'lib', 'ydb', 'schema.sql');
-    const schema = await fs.readFile(schemaPath, 'utf8');
-    const stmts = schema.split(/;\s*\n/).map((s) => s.trim()).filter(Boolean);
-    for (const s of stmts) {
-      await driver.tableClient.withSession(async (sesh) => sesh.executeSchemeQuery(s + ';'));
-    }
-  } catch (e) {
-    // ignore
-  }
+  // Миграция не требуется, updateUserYdb теперь работает с опциональным полем avatar
   return true;
 }
 
 // Users
-export async function createUser({ email, name, passwordHash, role = 'user' }) {
+export async function createUser({ email, name, passwordHash, role = 'user', avatar = '' }) {
   const driver = await getYdbDriver();
   const db = driver.database;
   const id = crypto.randomUUID();
   const createdAt = Date.now();
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(
-      'DECLARE $id AS Utf8; DECLARE $email AS Utf8; DECLARE $name AS Utf8; DECLARE $ph AS Utf8; DECLARE $role AS Utf8; DECLARE $createdAt AS Uint64;\n'
-      + `UPSERT INTO \`${db}/users\` (id, email, name, password_hash, role, created_at) VALUES ($id, $email, $name, $ph, $role, $createdAt);`,
+      'DECLARE $id AS Utf8; DECLARE $email AS Utf8; DECLARE $name AS Utf8; DECLARE $ph AS Utf8; DECLARE $role AS Utf8; DECLARE $avatar AS Utf8; DECLARE $createdAt AS Uint64;\n'
+      + `UPSERT INTO \`${db}/users\` (id, email, name, password_hash, role, avatar, created_at) VALUES ($id, $email, $name, $ph, $role, $avatar, $createdAt);`,
       {
         '$id': TypedValues.utf8(id),
         '$email': TypedValues.utf8(email),
         '$name': TypedValues.utf8(name || ''),
         '$ph': TypedValues.utf8(passwordHash),
         '$role': TypedValues.utf8(role),
+        '$avatar': TypedValues.utf8(avatar),
         '$createdAt': TypedValues.uint64(createdAt),
       }
     );
   });
-  return { id, email, name, role, createdAt };
+  return { id, email, name, role, avatar, createdAt };
 }
 
 export async function findUserByEmailYdb(email) {
   const driver = await getYdbDriver();
   const db = driver.database;
-  const row = await driver.tableClient.withSession(async (session) => {
-    const { resultSets } = await session.executeQuery(
-      'DECLARE $email AS Utf8;\n'
-      + `SELECT id, email, name, password_hash, role, created_at FROM \`${db}/users\` WHERE email = $email LIMIT 1;`,
-      { '$email': TypedValues.utf8(email) }
-    );
-    const rs = resultSets?.[0];
-    if (!rs || !rs.rows || rs.rows.length === 0) return null;
-    const r = rs.rows[0];
-    return r;
+  const result = await driver.tableClient.withSession(async (session) => {
+    // Сначала проверяем, есть ли поле avatar
+    let hasAvatarField = false;
+    try {
+      await session.executeQuery(`SELECT avatar FROM \`${db}/users\` LIMIT 1;`);
+      hasAvatarField = true;
+    } catch (e) {
+      // Поле avatar не существует
+    }
+
+    let query, row;
+    if (hasAvatarField) {
+      const { resultSets } = await session.executeQuery(
+        'DECLARE $email AS Utf8;\n'
+        + `SELECT id, email, name, password_hash, role, avatar, created_at FROM \`${db}/users\` WHERE email = $email LIMIT 1;`,
+        { '$email': TypedValues.utf8(email) }
+      );
+      const rs = resultSets?.[0];
+      if (!rs || !rs.rows || rs.rows.length === 0) return null;
+      row = rs.rows[0];
+      const [idCol, emailCol, nameCol, phCol, roleCol, avatarCol, createdCol] = row.items;
+      return {
+        id: idCol?.textValue || '',
+        email: emailCol?.textValue || '',
+        name: nameCol?.textValue || '',
+        passwordHash: phCol?.textValue || '',
+        role: roleCol?.textValue || 'user',
+        avatar: avatarCol?.textValue || '',
+        createdAt: Number(createdCol?.uint64Value?.low || 0),
+      };
+    } else {
+      const { resultSets } = await session.executeQuery(
+        'DECLARE $email AS Utf8;\n'
+        + `SELECT id, email, name, password_hash, role, created_at FROM \`${db}/users\` WHERE email = $email LIMIT 1;`,
+        { '$email': TypedValues.utf8(email) }
+      );
+      const rs = resultSets?.[0];
+      if (!rs || !rs.rows || rs.rows.length === 0) return null;
+      row = rs.rows[0];
+      const [idCol, emailCol, nameCol, phCol, roleCol, createdCol] = row.items;
+      return {
+        id: idCol?.textValue || '',
+        email: emailCol?.textValue || '',
+        name: nameCol?.textValue || '',
+        passwordHash: phCol?.textValue || '',
+        role: roleCol?.textValue || 'user',
+        avatar: '', // Поле не существует, возвращаем пустую строку
+        createdAt: Number(createdCol?.uint64Value?.low || 0),
+      };
+    }
   });
-  if (!row) return null;
-  const [idCol, emailCol, nameCol, phCol, roleCol, createdCol] = row.items;
-  return {
-    id: idCol?.textValue || '',
-    email: emailCol?.textValue || '',
-    name: nameCol?.textValue || '',
-    passwordHash: phCol?.textValue || '',
-    role: roleCol?.textValue || 'user',
-    createdAt: Number(createdCol?.uint64Value?.low || 0),
-  };
+  return result;
 }
 
 // Cart
@@ -285,4 +306,167 @@ export async function updateUserRoleYdb(userId, role) {
   return true;
 }
 
+export async function updateUserYdb(userId, { name, email, avatar }) {
+  const driver = await getYdbDriver();
+  const db = driver.database;
+  let user = null;
+  
+  await driver.tableClient.withSession(async (session) => {
+    // Пытаемся обновить пользователя с avatar
+    try {
+      await session.executeQuery(
+        'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $email AS Utf8; DECLARE $avatar AS Utf8;\n'
+        + `UPDATE \`${db}/users\` SET name = $name, email = $email, avatar = $avatar WHERE id = $id;`,
+        { 
+          '$id': TypedValues.utf8(userId), 
+          '$name': TypedValues.utf8(name || ''),
+          '$email': TypedValues.utf8(email),
+          '$avatar': TypedValues.utf8(avatar || '')
+        }
+      );
+      
+      // Получаем обновленного пользователя с avatar
+      const rs = await session.executeQuery(
+        'DECLARE $id AS Utf8;\n'
+        + `SELECT id, email, name, role, avatar FROM \`${db}/users\` WHERE id = $id;`,
+        { '$id': TypedValues.utf8(userId) }
+      );
+      
+      const result = rs.resultSets[0];
+      if (result.rows.length > 0) {
+        const row = result.rows[0];
+        const [idCol, emailCol, nameCol, roleCol, avatarCol] = row.items;
+        user = {
+          id: idCol?.textValue || '',
+          email: emailCol?.textValue || '',
+          name: nameCol?.textValue || '',
+          role: roleCol?.textValue || 'user',
+          avatar: avatarCol?.textValue || ''
+        };
+      }
+    } catch (error) {
+      if (error.message.includes('does not exist') || error.message.includes('Member not found: avatar')) {
+        // Сначала проверим, существует ли пользователь
+        const checkRs = await session.executeQuery(
+          'DECLARE $id AS Utf8;\n'
+          + `SELECT id FROM \`${db}/users\` WHERE id = $id;`,
+          { '$id': TypedValues.utf8(userId) }
+        );
+        
+        if (checkRs.resultSets[0].rows.length === 0) {
+          user = null;
+          return; // Выходим из блока try-catch, но не из функции
+        }
+        
+        // Поле avatar не существует, обновляем без него
+        await session.executeQuery(
+          'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $email AS Utf8;\n'
+          + `UPDATE \`${db}/users\` SET name = $name, email = $email WHERE id = $id;`,
+          { 
+            '$id': TypedValues.utf8(userId), 
+            '$name': TypedValues.utf8(name || ''),
+            '$email': TypedValues.utf8(email)
+          }
+        );
+        
+        // Получаем обновленного пользователя без avatar
+        const rs = await session.executeQuery(
+          'DECLARE $id AS Utf8;\n'
+          + `SELECT id, email, name, role FROM \`${db}/users\` WHERE id = $id;`,
+          { '$id': TypedValues.utf8(userId) }
+        );
+        
+        const result = rs.resultSets[0];
+        if (result.rows.length > 0) {
+          const row = result.rows[0];
+          const [idCol, emailCol, nameCol, roleCol] = row.items;
+          user = {
+            id: idCol?.textValue || '',
+            email: emailCol?.textValue || '',
+            name: nameCol?.textValue || '',
+            role: roleCol?.textValue || 'user',
+            avatar: '' // Поле не существует, возвращаем пустую строку
+          };
+        }
+      } else {
+        throw error; // Перебрасываем другие ошибки
+      }
+    }
+  });
+  
+  return user;
+}
+
+export async function getUserRepo(userId) {
+  const driver = await getYdbDriver();
+  const db = driver.database;
+  let user = null;
+  
+  await driver.tableClient.withSession(async (session) => {
+    const rs = await session.executeQuery(
+      'DECLARE $id AS Utf8;\n'
+      + `SELECT id, email, name, role, avatar FROM \`${db}/users\` WHERE id = $id;`,
+      { '$id': TypedValues.utf8(userId) }
+    );
+    
+    const result = rs.resultSets[0];
+    if (result.rows.length > 0) {
+      const row = result.rows[0];
+      const [idCol, emailCol, nameCol, roleCol, avatarCol] = row.items;
+      user = {
+        id: idCol?.textValue || '',
+        email: emailCol?.textValue || '',
+        name: nameCol?.textValue || '',
+        role: roleCol?.textValue || 'user',
+        avatar: avatarCol?.textValue || ''
+      };
+    }
+  });
+  
+  return user;
+}
+
+export async function deleteUserYdb(userId) {
+  const driver = await getYdbDriver();
+  const db = driver.database;
+  
+  // Сначала проверим, что пользователь не админ
+  let user = null;
+  await driver.tableClient.withSession(async (session) => {
+    const rs = await session.executeQuery(
+      'DECLARE $id AS Utf8;\n'
+      + `SELECT id, role FROM \`${db}/users\` WHERE id = $id;`,
+      { '$id': TypedValues.utf8(userId) }
+    );
+    
+    const result = rs.resultSets[0];
+    if (result.rows.length > 0) {
+      const row = result.rows[0];
+      const [idCol, roleCol] = row.items;
+      user = {
+        id: idCol?.textValue || '',
+        role: roleCol?.textValue || 'user'
+      };
+    }
+  });
+  
+  if (!user) {
+    throw new Error('User not found');
+  }
+  
+  if (user.role === 'admin') {
+    throw new Error('Cannot delete admin user');
+  }
+  
+  // Удаляем пользователя
+  await driver.tableClient.withSession(async (session) => {
+    await session.executeQuery(
+      'DECLARE $id AS Utf8;\n'
+      + `DELETE FROM \`${db}/users\` WHERE id = $id;`,
+      { '$id': TypedValues.utf8(userId) }
+    );
+  });
+  
+  return true;
+}
 

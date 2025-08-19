@@ -26,6 +26,9 @@ function LoginForm() {
       if (!res.ok) {
         setError(data.error || 'Ошибка входа');
       } else {
+        // Очищаем флаг выхода при успешном входе
+        sessionStorage.removeItem('user_logged_out');
+        
         // Redirect to original destination or appropriate default
         const returnTo = searchParams?.get('returnTo');
         if (returnTo) {

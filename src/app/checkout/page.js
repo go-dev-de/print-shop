@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import AuthNav from '@/components/AuthNav';
+import UserProfile from '@/components/UserProfile';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
 
@@ -199,7 +199,6 @@ export default function CheckoutPage() {
                   Print<span className="text-blue-600">Style</span>
                 </Link>
               </h1>
-              <div className="hidden lg:block"><AuthNav /></div>
             </div>
 
             {/* Desktop Navigation */}
@@ -208,7 +207,10 @@ export default function CheckoutPage() {
               <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
               <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
               <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
-              <CartDropdown />
+              <div className="flex items-center space-x-3">
+                <CartDropdown />
+                <UserProfile />
+              </div>
             </nav>
           </div>
         </div>

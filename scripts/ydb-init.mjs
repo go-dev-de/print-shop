@@ -30,8 +30,25 @@ async function main() {
 
   await driver.tableClient.withSession(async (session) => {
     try {
-      await session.describeTable(usersPath);
+      const tableDesc = await session.describeTable(usersPath);
       console.log('users table exists');
+      
+      // Проверяем, есть ли поле avatar
+      const hasAvatarColumn = tableDesc.columns.some(col => col.name === 'avatar');
+      if (!hasAvatarColumn) {
+        console.log('adding avatar column to existing users table...');
+        try {
+          await driver.schemeClient.modifyTable(usersPath, {
+            addColumns: [{
+              name: 'avatar',
+              type: { typeId: 'UTF8' }
+            }]
+          });
+          console.log('✅ Avatar column added to users table');
+        } catch (error) {
+          console.warn('Failed to add avatar column:', error.message);
+        }
+      }
     } catch {
       console.log('creating users table...');
       const desc = new TableDescription()
@@ -40,6 +57,7 @@ async function main() {
         .withColumn(new Column('name', Types.UTF8))
         .withColumn(new Column('password_hash', Types.UTF8))
         .withColumn(new Column('role', Types.UTF8))
+        .withColumn(new Column('avatar', Types.UTF8))
         .withColumn(new Column('created_at', Types.UINT64))
         .withPrimaryKey('id');
       await session.createTable(usersPath, desc);

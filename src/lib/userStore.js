@@ -73,3 +73,47 @@ export function updateUserRole(userId, role) {
   return null;
 }
 
+export function updateUser(userId, { name, email, avatar }) {
+  const store = getGlobalStore();
+  for (const [userEmail, user] of store.usersByEmail.entries()) {
+    if (user.id === userId) {
+      // Обновляем пользователя
+      const updated = { 
+        ...user, 
+        name: name || user.name,
+        avatar: avatar || user.avatar || ''
+      };
+      
+      // Если email изменился, нужно обновить ключ в Map
+      if (email && email !== user.email) {
+        const normalizedNewEmail = String(email).trim().toLowerCase();
+        store.usersByEmail.delete(userEmail);
+        updated.email = normalizedNewEmail;
+        store.usersByEmail.set(normalizedNewEmail, updated);
+      } else {
+        store.usersByEmail.set(userEmail, updated);
+      }
+      
+      const { passwordHash, ...safe } = updated;
+      return safe;
+    }
+  }
+  return null;
+}
+
+export function deleteUser(userId) {
+  const store = getGlobalStore();
+  for (const [email, user] of store.usersByEmail.entries()) {
+    if (user.id === userId) {
+      // Защита от удаления админов
+      if (user.role === 'admin') {
+        throw new Error('Cannot delete admin user');
+      }
+      store.usersByEmail.delete(email);
+      const { passwordHash, ...safe } = user;
+      return safe;
+    }
+  }
+  return null;
+}
+

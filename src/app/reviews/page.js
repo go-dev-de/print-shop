@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import AuthNav from '@/components/AuthNav';
+import UserProfile from '@/components/UserProfile';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
@@ -492,7 +492,6 @@ export default function ReviewsPage() {
                 </Link>
               </h1>
               
-              <div className="hidden lg:block"><AuthNav /></div>
             </div>
             
             {/* Desktop Navigation */}
@@ -501,7 +500,10 @@ export default function ReviewsPage() {
               <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
               <Link href="/reviews" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Отзывы</Link>
               <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
-              <CartDropdown />
+              <div className="flex items-center space-x-3">
+                <CartDropdown />
+                <UserProfile />
+              </div>
             </nav>
             
             {/* Mobile Menu */}

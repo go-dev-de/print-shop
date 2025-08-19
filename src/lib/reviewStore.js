@@ -38,7 +38,7 @@ class ReviewStore {
     let allReviews = Array.from(this.reviews.values());
     
     // Фильтрация по статусу
-    if (status) {
+    if (status && status !== 'all') {
       allReviews = allReviews.filter(review => review.status === status);
     }
     

@@ -55,14 +55,24 @@ export async function listReviewsYdb(options = {}) {
   const { status = 'approved', limit = 50 } = options;
 
   const rows = await driver.tableClient.withSession(async (session) => {
-    const { resultSets } = await session.executeQuery(
-      'DECLARE $status AS Utf8; DECLARE $limit AS Uint64;\n'
-      + `SELECT id, user_id, author_name, author_email, rating, title, content, media_urls, status, created_at, updated_at FROM \`${db}/reviews\` WHERE status = $status ORDER BY created_at DESC LIMIT $limit;`,
-      {
+    let query, params;
+    
+    if (status === 'all') {
+      // Для админа - показываем все отзывы
+      query = 'DECLARE $limit AS Uint64;\n'
+        + `SELECT id, user_id, author_name, author_email, rating, title, content, media_urls, status, created_at, updated_at FROM \`${db}/reviews\` ORDER BY created_at DESC LIMIT $limit;`;
+      params = { '$limit': TypedValues.uint64(limit) };
+    } else {
+      // Для пользователей - фильтруем по статусу
+      query = 'DECLARE $status AS Utf8; DECLARE $limit AS Uint64;\n'
+        + `SELECT id, user_id, author_name, author_email, rating, title, content, media_urls, status, created_at, updated_at FROM \`${db}/reviews\` WHERE status = $status ORDER BY created_at DESC LIMIT $limit;`;
+      params = {
         '$status': TypedValues.utf8(status),
         '$limit': TypedValues.uint64(limit)
-      }
-    );
+      };
+    }
+    
+    const { resultSets } = await session.executeQuery(query, params);
     return resultSets?.[0]?.rows || [];
   });
 

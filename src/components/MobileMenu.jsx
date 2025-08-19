@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import CartDropdown from './CartDropdown';
-import AuthNav from './AuthNav';
+
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +12,7 @@ export default function MobileMenu() {
   const menuItems = [
     { name: 'Главная', href: '/#main' },
     { name: 'Товары', href: '/products' },
+    { name: 'Конструктор', href: '/constructor' },
     { name: 'Отзывы', href: '/reviews' },
     { name: 'О нас', href: '/#about' },
     { name: 'Корзина', href: '#', special: 'cart' }
@@ -40,10 +41,10 @@ export default function MobileMenu() {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black bg-opacity-25" onClick={toggleMenu}></div>
+          <div className="absolute inset-0 bg-black bg-opacity-50" onClick={toggleMenu}></div>
           
-          <div className="relative bg-white w-full max-w-sm h-full shadow-xl">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="relative bg-white w-full max-w-sm h-full shadow-xl border-r border-gray-200 opacity-100">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
               <h2 className="text-xl font-bold text-gray-900">PrintStyle</h2>
               <button
                 onClick={toggleMenu}
@@ -55,31 +56,32 @@ export default function MobileMenu() {
               </button>
             </div>
             
-            <nav className="px-4 py-6">
-              <ul className="space-y-4">
-                {menuItems.map((item) => (
+            <nav className="bg-white h-full">
+              <ul className="space-y-0">
+                {menuItems.map((item, index) => {
+                  const isLast = index === menuItems.length - 1;
+                  return (
                   <li key={item.name}>
                     {item.special === 'cart' ? (
-                      <div className="px-4 py-3 flex items-center justify-between">
-                        <span className="text-lg font-medium text-gray-700">Корзина</span>
+                      <div className={`px-6 py-4 flex items-center justify-between bg-white ${!isLast ? 'border-b border-gray-100' : ''}`}>
+                        <span className="text-lg font-medium text-gray-900">Корзина</span>
                         <CartDropdown />
                       </div>
                     ) : (
                       <a 
                         href={item.href}
-                        className="block px-4 py-3 text-lg font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
+                        className={`block px-6 py-4 text-lg font-medium text-gray-900 hover:bg-blue-50 hover:text-blue-600 transition-colors bg-white ${!isLast ? 'border-b border-gray-100' : ''}`}
                         onClick={toggleMenu}
                       >
                         {item.name}
                       </a>
                     )}
                   </li>
-                ))}
+                  );
+                })}
               </ul>
               
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <AuthNav />
-              </div>
+
             </nav>
           </div>
         </div>
