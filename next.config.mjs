@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  // Force clean build
+  distDir: '.next',
+  cleanDistDir: true,
 };
 
 export default nextConfig;
