@@ -10,6 +10,7 @@ export default function ProductCard({ product }) {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   
+  
   // Объединяем все изображения (для обратной совместимости)
   const allImages = images && images.length > 0 ? images : (image ? [image] : []);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -92,13 +93,23 @@ export default function ProductCard({ product }) {
       <div className="relative h-64 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
         {allImages.length > 0 ? (
           <>
-            <Image 
-              src={allImages[currentImageIndex]} 
-              alt={`${name} - изображение ${currentImageIndex + 1}`}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              width={300}
-              height={256}
-            />
+            {allImages[currentImageIndex].startsWith('data:') ? (
+              // Для base64 изображений используем обычный img тег
+              <img 
+                src={allImages[currentImageIndex]} 
+                alt={`${name} - изображение ${currentImageIndex + 1}`}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+            ) : (
+              // Для URL изображений используем Next.js Image
+              <Image 
+                src={allImages[currentImageIndex]} 
+                alt={`${name} - изображение ${currentImageIndex + 1}`}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                width={300}
+                height={256}
+              />
+            )}
             
             {/* Навигация по изображениям */}
             {allImages.length > 1 && (
