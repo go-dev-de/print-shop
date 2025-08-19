@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 export default function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -261,7 +262,7 @@ export default function CartDropdown() {
                       {/* Изображение товара */}
                       <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-medium overflow-hidden">
                         {item.image ? (
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          <Image src={item.image} alt={item.name} className="w-full h-full object-cover" width={48} height={48} />
                         ) : (
                           '👕'
                         )}

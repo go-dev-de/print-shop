@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function UserProfile() {
@@ -208,10 +209,12 @@ export default function UserProfile() {
       >
         <div className="relative">
           {getAvatarUrl(user.avatar) ? (
-            <img
+            <Image
               src={getAvatarUrl(user.avatar)}
               alt={user.name}
               className="w-9 h-9 rounded-full object-cover border-2 border-gray-200 group-hover:border-gray-300 transition-colors"
+              width={36}
+              height={36}
             />
           ) : (
             <div className="w-9 h-9 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">

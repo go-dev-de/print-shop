@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useCart } from './CartDropdown';
 
 export default function ProductCard({ product }) {
@@ -91,10 +92,12 @@ export default function ProductCard({ product }) {
       <div className="relative h-64 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
         {allImages.length > 0 ? (
           <>
-            <img 
+            <Image 
               src={allImages[currentImageIndex]} 
               alt={`${name} - изображение ${currentImageIndex + 1}`}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              width={300}
+              height={256}
             />
             
             {/* Навигация по изображениям */}

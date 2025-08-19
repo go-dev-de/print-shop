@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
 import DiscountPopup from '@/components/DiscountPopup';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -155,10 +156,12 @@ function ReviewsCarousel() {
             {reviews[currentReviewIndex]?.mediaUrls && reviews[currentReviewIndex].mediaUrls.length > 0 && (
               <div className="mt-6 flex justify-center">
                 <div className="w-48 h-32 bg-gray-100 rounded-lg overflow-hidden">
-                  <img 
+                  <Image 
                     src={reviews[currentReviewIndex].mediaUrls[0]} 
                     alt="Отзыв с фото"
                     className="w-full h-full object-cover"
+                    width={192}
+                    height={128}
                   />
                 </div>
               </div>
