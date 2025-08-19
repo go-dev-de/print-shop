@@ -1,29 +1,20 @@
 import { NextResponse } from 'next/server';
-import { listProducts, listSections } from '@/lib/catalogStore';
 import { listProductsYdb, listSectionsYdb } from '@/lib/ydb/catalogRepo';
 import { ensureTablesExist } from '@/lib/ydb/autoInit';
-import { listProductsFile, listSectionsFile } from '@/lib/fileStore';
 
 export async function GET() {
   try {
-    // Простая загрузка как у разделов
+    // Загружаем данные только из YDB
     await ensureTablesExist();
     
-    const ydbProducts = await listProductsYdb().catch(error => {
+    const allProducts = await listProductsYdb().catch(error => {
       console.warn('Failed to fetch products from YDB:', error);
       return [];
     });
-    const ydbSections = await listSectionsYdb().catch(error => {
+    const allSections = await listSectionsYdb().catch(error => {
       console.warn('Failed to fetch sections from YDB:', error);
       return [];
     });
-    
-    const inMemoryProducts = listProducts();
-    const inMemorySections = listSections();
-    
-    // Объединяем данные
-    const allProducts = [...ydbProducts, ...inMemoryProducts];
-    const allSections = [...ydbSections, ...inMemorySections];
     
     // Добавляем информацию о разделе к каждому товару
     const productsWithSections = allProducts.map(product => {

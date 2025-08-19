@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { listProductsYdb } from '@/lib/ydb/catalogRepo';
-import { listProducts } from '@/lib/catalogStore';
 
 export async function GET() {
   try {
@@ -26,16 +25,12 @@ export async function GET() {
       console.error('❌ YDB products error:', error);
     }
     
-    // Получаем данные из памяти
-    const memoryProducts = listProducts();
-    console.log('💾 Memory products count:', memoryProducts.length);
-    
     return NextResponse.json({
       ydbProducts,
-      memoryProducts,
+      memoryProducts: [], // Очищено - используем только YDB
       debug: {
         ydbCount: ydbProducts.length,
-        memoryCount: memoryProducts.length,
+        memoryCount: 0,
         timestamp: new Date().toISOString()
       }
     });

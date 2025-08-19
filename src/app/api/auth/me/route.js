@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 export async function GET() {
   const user = await getSession();
   if (!user) return NextResponse.json({ user: null });
+  
   return NextResponse.json({ user });
 }
 

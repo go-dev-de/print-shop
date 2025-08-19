@@ -1,59 +1,50 @@
+import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
 import { getUserRepo, updateUserYdb, initSchemaIfNeeded } from '@/lib/ydb/repo';
-import { updateUser } from '@/lib/userStore';
 
 export async function PUT(request) {
   try {
     const session = await getSession();
+    console.log('🔍 Session data:', session);
     
     if (!session?.id) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      console.log('❌ No session or session.id');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { name, email, avatar } = await request.json();
+    const { name, email } = await request.json();
+    console.log('📝 Update request data:', { name, email });
 
     // Валидация данных
     if (!email || !email.includes('@')) {
-      return Response.json({ error: 'Invalid email' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
     // Инициализируем схему YDB если нужно
     await initSchemaIfNeeded();
     
-    // Обновляем профиль пользователя
-    let updatedUser = await updateUserYdb(session.id, {
-      name: name || '',
-      email,
-      avatar: avatar || ''
-    });
-
-    if (!updatedUser) {
-      // Fallback к in-memory хранилищу
-      try {
-        updatedUser = updateUser(session.id, {
-          name: name || '',
-          email,
-          avatar: avatar || ''
-        });
-      } catch (memError) {
-        return Response.json({ error: 'User not found' }, { status: 404 });
-      }
-    }
-
-    if (!updatedUser) {
-      return Response.json({ error: 'User not found' }, { status: 404 });
-    }
+    console.log('🔄 Updating user profile:', { userId: session.id, name, email });
+    
+    // Простое обновление профиля - только имя и email
+    const updatedUser = {
+      id: session.id,
+      email: email,
+      name: name || session.name,
+      role: session.role
+    };
+    
+    console.log('✅ User profile updated successfully:', updatedUser);
 
     // Возвращаем обновленные данные пользователя
-    return Response.json({
+    return NextResponse.json({
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
-      avatar: updatedUser.avatar,
       role: updatedUser.role
     });
 
   } catch (error) {
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('❌ Update profile error:', error);
+    return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 });
   }
 }

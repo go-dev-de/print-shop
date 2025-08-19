@@ -28,7 +28,13 @@ export async function POST(request) {
     
     let user;
     try {
-      user = await createUser({ email, name, passwordHash, role: 'user' });
+      user = await createUser({ 
+        email, 
+        name, 
+        passwordHash, 
+        role: 'user', 
+        avatar: '1' // Дефолтная аватарка под номером 1
+      });
     } catch (ydbError) {
       console.warn('YDB create failed, using memory store:', ydbError.message);
       user = addUser({ email, name, password, role: 'user' });

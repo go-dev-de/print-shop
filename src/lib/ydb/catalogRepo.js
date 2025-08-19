@@ -127,7 +127,7 @@ export async function createProductYdb({ name, basePrice, description, section, 
   try {
     await driver.tableClient.withSession(async (session) => {
       await session.executeQuery(
-        'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $basePrice AS Double; DECLARE $description AS Utf8; DECLARE $section AS Utf8; DECLARE $images AS Utf8; DECLARE $createdAt AS Uint64; DECLARE $updatedAt AS Uint64;\n'
+        'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $basePrice AS Double; DECLARE $description AS Utf8; DECLARE $section AS Utf8; DECLARE $images AS Json; DECLARE $createdAt AS Uint64; DECLARE $updatedAt AS Uint64;\n'
         + `UPSERT INTO \`${db}/products\` (id, name, base_price, description, section, images, created_at, updated_at) VALUES ($id, $name, $basePrice, $description, $section, $images, $createdAt, $updatedAt);`,
         {
           '$id': TypedValues.utf8(id),
@@ -138,8 +138,8 @@ export async function createProductYdb({ name, basePrice, description, section, 
           '$images': (() => {
             const jsonString = json(images || []);
             console.log('🔄 YDB Images JSON conversion:', jsonString);
-            console.log('🔄 YDB Trying TypedValues.utf8 instead of .json');
-            return TypedValues.utf8(jsonString);
+            console.log('🔄 YDB Using TypedValues.json for images');
+            return TypedValues.json(jsonString);
           })(),
           '$createdAt': TypedValues.uint64(now),
           '$updatedAt': TypedValues.uint64(now),

@@ -17,8 +17,7 @@ export default function UserProfile() {
   // Форма редактирования профиля
   const [profileForm, setProfileForm] = useState({
     name: '',
-    email: '',
-    avatar: ''
+    email: ''
   });
 
   // Загрузка данных пользователя
@@ -42,8 +41,7 @@ export default function UserProfile() {
           setUser(userData);
           setProfileForm({
             name: userData?.name || '',
-            email: userData?.email || '',
-            avatar: userData?.avatar || ''
+            email: userData?.email || ''
           });
         } else {
           setUser(null);
@@ -144,7 +142,10 @@ export default function UserProfile() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(profileForm)
+        body: JSON.stringify({
+          name: profileForm.name,
+          email: profileForm.email
+        })
       });
 
       if (response.ok) {
@@ -153,7 +154,9 @@ export default function UserProfile() {
         setIsEditing(false);
         alert('Профиль успешно обновлен!');
       } else {
-        alert('Ошибка при обновлении профиля');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Profile update failed:', response.status, errorData);
+        alert(`Ошибка при обновлении профиля: ${errorData.error || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
       console.error('Profile update error:', error);
@@ -166,11 +169,7 @@ export default function UserProfile() {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const getAvatarUrl = (avatar) => {
-    if (!avatar) return null;
-    if (avatar.startsWith('http')) return avatar;
-    return `/avatars/${avatar}`;
-  };
+  // Удалена функция getAvatarUrl - больше не нужна
 
   if (loading) {
     return (
@@ -208,19 +207,9 @@ export default function UserProfile() {
         data-profile-button
       >
         <div className="relative">
-          {getAvatarUrl(user.avatar) ? (
-            <Image
-              src={getAvatarUrl(user.avatar)}
-              alt={user.name}
-              className="w-9 h-9 rounded-full object-cover border-2 border-gray-200 group-hover:border-gray-300 transition-colors"
-              width={36}
-              height={36}
-            />
-          ) : (
-            <div className="w-9 h-9 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">
-              {getInitials(user.name)}
-            </div>
-          )}
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">
+            {getInitials(user.name)}
+          </div>
           
           {/* Online indicator */}
           <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
@@ -374,49 +363,14 @@ export default function UserProfile() {
               ) : (
                 // Edit Mode
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
-                  {/* Avatar Selection */}
+                  {/* Avatar Preview */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Аватар</label>
                     <div className="flex items-center space-x-3 mb-3">
-                      {getAvatarUrl(profileForm.avatar) ? (
-                        <img
-                          src={getAvatarUrl(profileForm.avatar)}
-                          alt="Preview"
-                          className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white font-semibold border-2 border-gray-200">
-                          {getInitials(profileForm.name)}
-                        </div>
-                      )}
-                      <span className="text-sm text-gray-600">Выберите аватар из предложенных вариантов</span>
-                    </div>
-                    
-                    {/* Avatar Selection Grid */}
-                    <div className="grid grid-cols-5 gap-2">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((avatarId) => {
-                        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=avatar${avatarId}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
-                        const isSelected = profileForm.avatar === avatarUrl;
-                        
-                        return (
-                          <button
-                            key={avatarId}
-                            type="button"
-                            onClick={() => setProfileForm(prev => ({ ...prev, avatar: avatarUrl }))}
-                            className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-105 ${
-                              isSelected 
-                                ? 'border-blue-500 ring-2 ring-blue-200' 
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <img
-                              src={avatarUrl}
-                              alt={`Avatar ${avatarId}`}
-                              className="w-full h-full rounded-full object-cover"
-                            />
-                          </button>
-                        );
-                      })}
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold border-2 border-gray-200">
+                        {getInitials(profileForm.name)}
+                      </div>
+                      <span className="text-sm text-gray-600">Аватар генерируется автоматически из первых букв вашего имени</span>
                     </div>
                   </div>
 

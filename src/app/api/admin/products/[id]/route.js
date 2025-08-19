@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
-import { updateProduct, deleteProduct } from '@/lib/catalogStore';
+import { updateProductYdb, deleteProductYdb } from '@/lib/ydb/catalogRepo';
+import { ensureTablesExist } from '@/lib/ydb/autoInit';
 
 export async function PATCH(request, { params }) {
   const user = await getSession();
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
+    await ensureTablesExist();
     const patch = await request.json();
-    const updated = updateProduct(params.id, patch);
+    const updated = await updateProductYdb(params.id, patch);
     if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ product: updated });
-  } catch {
+  } catch (error) {
+    console.error('Failed to update product:', error);
     return NextResponse.json({ error: 'Bad request' }, { status: 400 });
   }
 }
@@ -18,8 +21,13 @@ export async function PATCH(request, { params }) {
 export async function DELETE(_req, { params }) {
   const user = await getSession();
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  const ok = deleteProduct(params.id);
-  if (!ok) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  return NextResponse.json({ ok: true });
+  try {
+    await ensureTablesExist();
+    await deleteProductYdb(params.id);
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error('Failed to delete product:', error);
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
 }
 

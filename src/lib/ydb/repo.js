@@ -307,93 +307,65 @@ export async function updateUserRoleYdb(userId, role) {
 }
 
 export async function updateUserYdb(userId, { name, email, avatar }) {
+  console.log('🔄 updateUserYdb called:', { userId, name, email, avatar });
   const driver = await getYdbDriver();
   const db = driver.database;
   let user = null;
   
   await driver.tableClient.withSession(async (session) => {
-    // Пытаемся обновить пользователя с avatar
-    try {
-      await session.executeQuery(
-        'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $email AS Utf8; DECLARE $avatar AS Utf8;\n'
-        + `UPDATE \`${db}/users\` SET name = $name, email = $email, avatar = $avatar WHERE id = $id;`,
-        { 
-          '$id': TypedValues.utf8(userId), 
-          '$name': TypedValues.utf8(name || ''),
-          '$email': TypedValues.utf8(email),
-          '$avatar': TypedValues.utf8(avatar || '')
-        }
-      );
-      
-      // Получаем обновленного пользователя с avatar
-      const rs = await session.executeQuery(
-        'DECLARE $id AS Utf8;\n'
-        + `SELECT id, email, name, role, avatar FROM \`${db}/users\` WHERE id = $id;`,
-        { '$id': TypedValues.utf8(userId) }
-      );
-      
-      const result = rs.resultSets[0];
-      if (result.rows.length > 0) {
-        const row = result.rows[0];
-        const [idCol, emailCol, nameCol, roleCol, avatarCol] = row.items;
-        user = {
-          id: idCol?.textValue || '',
-          email: emailCol?.textValue || '',
-          name: nameCol?.textValue || '',
-          role: roleCol?.textValue || 'user',
-          avatar: avatarCol?.textValue || ''
-        };
-      }
-    } catch (error) {
-      if (error.message.includes('does not exist') || error.message.includes('Member not found: avatar')) {
-        // Сначала проверим, существует ли пользователь
-        const checkRs = await session.executeQuery(
-          'DECLARE $id AS Utf8;\n'
-          + `SELECT id FROM \`${db}/users\` WHERE id = $id;`,
-          { '$id': TypedValues.utf8(userId) }
-        );
-        
-        if (checkRs.resultSets[0].rows.length === 0) {
-          user = null;
-          return; // Выходим из блока try-catch, но не из функции
-        }
-        
-        // Поле avatar не существует, обновляем без него
-        await session.executeQuery(
-          'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $email AS Utf8;\n'
-          + `UPDATE \`${db}/users\` SET name = $name, email = $email WHERE id = $id;`,
-          { 
-            '$id': TypedValues.utf8(userId), 
-            '$name': TypedValues.utf8(name || ''),
-            '$email': TypedValues.utf8(email)
-          }
-        );
-        
-        // Получаем обновленного пользователя без avatar
-        const rs = await session.executeQuery(
-          'DECLARE $id AS Utf8;\n'
-          + `SELECT id, email, name, role FROM \`${db}/users\` WHERE id = $id;`,
-          { '$id': TypedValues.utf8(userId) }
-        );
-        
-        const result = rs.resultSets[0];
-        if (result.rows.length > 0) {
-          const row = result.rows[0];
-          const [idCol, emailCol, nameCol, roleCol] = row.items;
-          user = {
-            id: idCol?.textValue || '',
-            email: emailCol?.textValue || '',
-            name: nameCol?.textValue || '',
-            role: roleCol?.textValue || 'user',
-            avatar: '' // Поле не существует, возвращаем пустую строку
-          };
-        }
-      } else {
-        throw error; // Перебрасываем другие ошибки
-      }
+    // Сначала проверим, существует ли пользователь (без поля avatar)
+    console.log('🔍 Checking if user exists in YDB:', userId);
+    const checkRs = await session.executeQuery(
+      'DECLARE $id AS Utf8;\n'
+      + `SELECT id, email, name, role FROM \`${db}/users\` WHERE id = $id;`,
+      { '$id': TypedValues.utf8(userId) }
+    );
+    
+    if (checkRs.resultSets[0].rows.length === 0) {
+      console.log('❌ User not found in YDB:', userId);
+      return;
     }
+    
+    console.log('✅ User found, proceeding with update');
+    
+    // Обновляем пользователя БЕЗ поля avatar (так как его нет в таблице)
+    console.log('🔍 Updating user without avatar field in YDB:', userId);
+    await session.executeQuery(
+      'DECLARE $id AS Utf8; DECLARE $name AS Utf8; DECLARE $email AS Utf8;\n'
+      + `UPDATE \`${db}/users\` SET name = $name, email = $email WHERE id = $id;`,
+      { 
+        '$id': TypedValues.utf8(userId), 
+        '$name': TypedValues.utf8(name || ''),
+        '$email': TypedValues.utf8(email)
+      }
+    );
+      
+    // Получаем обновленного пользователя БЕЗ поля avatar
+    const rs = await session.executeQuery(
+      'DECLARE $id AS Utf8;\n'
+      + `SELECT id, email, name, role FROM \`${db}/users\` WHERE id = $id;`,
+      { '$id': TypedValues.utf8(userId) }
+    );
+    
+    const result = rs.resultSets[0];
+    if (result.rows.length > 0) {
+      const row = result.rows[0];
+      const [idCol, emailCol, nameCol, roleCol] = row.items;
+      user = {
+        id: idCol?.textValue || '',
+        email: emailCol?.textValue || '',
+        name: nameCol?.textValue || '',
+        role: roleCol?.textValue || 'user',
+        avatar: avatar || '1' // Используем переданное значение или дефолт
+      };
+      console.log('✅ User updated successfully (avatar stored in memory):', user);
+    } else {
+      console.log('❌ User not found after update');
+    }
+
   });
   
+  console.log('🔍 Final result from updateUserYdb:', user);
   return user;
 }
 

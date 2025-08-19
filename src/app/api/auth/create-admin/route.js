@@ -32,18 +32,22 @@ export async function POST(request) {
     }
 
     // Create admin user
+    const crypto = await import('node:crypto');
+    const passwordHash = crypto.createHash('sha256').update(String(password)).digest('hex');
+    
     const adminUser = {
       email,
-      password,
       name: name || 'Admin',
-      role: 'admin'
+      passwordHash,
+      role: 'admin',
+      avatar: '1' // Дефолтная аватарка под номером 1
     };
 
     try {
       await createUser(adminUser);
     } catch (ydbError) {
       console.warn('YDB user creation failed, using memory store:', ydbError.message);
-      addUser(adminUser);
+      addUser({ email, password, name: adminUser.name, role: 'admin' });
     }
 
     return NextResponse.json({ 
