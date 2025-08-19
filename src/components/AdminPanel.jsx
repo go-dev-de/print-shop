@@ -483,72 +483,18 @@ export default function AdminPanel() {
     }
   };
 
-  // Products CRUD
+  // Products CRUD - упрощенная версия как у разделов
   const createProduct = async (payload) => {
     try {
-      let finalImages = [];
-      
-      // Если есть изображения (base64), пытаемся загрузить их в S3
-      console.log('🔍 DEBUG: Checking images condition:', {
-        hasImages: !!payload.images,
-        imagesLength: payload.images?.length || 0,
-        firstImageType: typeof payload.images?.[0]
-      });
-      
-      if (payload.images && payload.images.length > 0) {
-        try {
-          console.log('📤 Attempting to upload images to S3...');
-          
-          const formData = new FormData();
-          
-          // Конвертируем base64 обратно в файлы
-          for (let i = 0; i < payload.images.length; i++) {
-            const base64 = payload.images[i];
-            const response = await fetch(base64);
-            const blob = await response.blob();
-            formData.append('files', blob, `image-${i}.jpg`);
-          }
-          
-          const uploadRes = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData,
-          });
-          
-          const uploadData = await uploadRes.json();
-          if (!uploadRes.ok) throw new Error(uploadData.error || 'Ошибка загрузки изображений');
-          
-          finalImages = uploadData.urls;
-          console.log('✅ Images uploaded to S3:', finalImages);
-          
-        } catch (s3Error) {
-          console.warn('⚠️ S3 upload failed, using base64 fallback:', s3Error.message);
-          // Fallback: используем base64 изображения напрямую
-          finalImages = payload.images;
-          console.log('📦 Using base64 images as fallback');
-        }
-      }
-      
-      // Создаем товар с изображениями (S3 URLs или base64)
-      const productData = {
-        ...payload,
-        images: finalImages
-      };
-      
-      console.log('📡 DEBUG: Creating product with images:');
-      console.log('   📝 Name:', productData.name);
-      console.log('   🖼️ Images type:', finalImages.length > 0 ? (finalImages[0].startsWith('data:') ? 'base64' : 'S3 URLs') : 'none');
-      console.log('   📊 Images count:', finalImages.length);
-      
+      console.log('🛍️ Creating product:', payload.name);
       const res = await fetch('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData),
+        body: JSON.stringify(payload),
       });
-      
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Ошибка создания товара');
       setProducts(data.products || []);
-      
     } catch (e) {
       console.error('❌ Product creation error:', e);
       alert(String(e.message || e));

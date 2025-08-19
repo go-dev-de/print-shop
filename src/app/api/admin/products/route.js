@@ -52,63 +52,35 @@ export async function POST(request) {
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
-    // Ensure tables exist
-    await ensureTablesExist();
-    
-    const requestBody = await request.json();
-    const { name, basePrice, sectionId, description, image, images } = requestBody;
-    
-    // Логируем размер запроса для отладки
-    const bodySize = JSON.stringify(requestBody).length;
-    console.log('📊 DEBUG: Request body size:', bodySize, 'bytes', '~', Math.round(bodySize / 1024), 'KB');
+    const { name, basePrice, sectionId, description, image, images } = await request.json();
+    console.log('🛍️ Creating product:', { name, basePrice, sectionId, hasImages: !!(images?.length) });
     
     if (!name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
     
-    const productData = {
-      name,
-      basePrice: parseFloat(basePrice) || 0,
-      description,
-      section: sectionId,
-      images: images && images.length > 0 ? images : (image ? [image] : [])
-    };
-    
-    console.log('💾 Creating product:', productData.name, 'with', productData.images?.length || 0, 'images');
-    
-    let createdProduct = null;
-    
-    // Пытаемся сохранить в YDB
+    // Простое создание товара - как разделы
     try {
+      console.log('💾 Attempting to save product to YDB...');
       await ensureTablesExist();
-      createdProduct = await createProductYdb(productData);
-      console.log('✅ Product saved to YDB:', createdProduct.id);
+      const newProduct = await createProductYdb({ 
+        name, 
+        basePrice: parseFloat(basePrice) || 0, 
+        description, 
+        section: sectionId,
+        images: images || []
+      });
+      console.log('✅ Product saved to YDB:', newProduct.id);
+      
+      const allProducts = await listProductsYdb();
+      console.log('📋 Retrieved all products from YDB, count:', allProducts.length);
+      
+      return NextResponse.json({ product: newProduct, products: allProducts });
     } catch (ydbError) {
-      console.warn('❌ YDB save failed:', ydbError.message);
-    }
-    
-    // Всегда сохраняем в файловое хранилище как backup
-    try {
-      const fileProduct = addProductFile(productData);
-      if (!createdProduct) {
-        createdProduct = fileProduct;
-        console.log('✅ Product saved to file store:', createdProduct.id);
-      }
-    } catch (fileError) {
-      console.warn('❌ File store save failed:', fileError.message);
-    }
-    
-    // Fallback в память
-    if (!createdProduct) {
-      createdProduct = addProduct({ name, basePrice, sectionId, description, image, images });
-      console.log('✅ Product saved to memory:', createdProduct.id);
-    }
-    
-    // Получаем все товары для ответа
-    try {
-      const response = await GET();
-      const data = await response.json();
-      return NextResponse.json({ product: createdProduct, products: data.products || [] });
-    } catch (error) {
-      return NextResponse.json({ product: createdProduct, products: [createdProduct] });
+      console.error('❌ YDB product save failed:', ydbError.message);
+      console.warn('Failed to save product to YDB, falling back to in-memory:', ydbError);
+      const p = addProduct({ name, basePrice, sectionId, description, image, images });
+      const inMemoryProducts = listProducts();
+      console.log('📋 Using in-memory products, count:', inMemoryProducts.length);
+      return NextResponse.json({ product: p, products: inMemoryProducts });
     }
   } catch (error) {
     console.error('Failed to create product:', error);
