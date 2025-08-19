@@ -1,0 +1,14 @@
+{
+  "buildCommand": "pnpm run build",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "FORCE_REBUILD": "true"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ]
+}

@@ -10,7 +10,8 @@ const nextConfig = {
       },
     ],
   },
-  // Force clean build
+  // Force clean build and specify output
+  output: 'standalone',
   distDir: '.next',
   cleanDistDir: true,
   // Explicitly disable experimental features that can cause RSC issues
