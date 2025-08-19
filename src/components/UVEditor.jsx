@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 export default function UVEditor({ uploadedImage, onTextureGenerated }) {
   const canvasRef = useRef(null);
@@ -63,7 +63,7 @@ export default function UVEditor({ uploadedImage, onTextureGenerated }) {
     setIsDragging(false);
   };
 
-  const generateTexture = () => {
+  const generateTexture = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
@@ -89,7 +89,7 @@ export default function UVEditor({ uploadedImage, onTextureGenerated }) {
       };
       img.src = uploadedImage;
     }
-  };
+  }, [uploadedImage, printPosition, printScale, onTextureGenerated]);
 
   useEffect(() => {
     generateTexture();

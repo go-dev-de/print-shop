@@ -238,7 +238,7 @@ export default function AdminPanel() {
     }
   };
 
-  const loadReviews = async (page = 1, append = false) => {
+  const loadReviews = useCallback(async (page = 1, append = false) => {
     if (page === 1) setReviewsLoading(true);
     setError('');
     try {
@@ -260,7 +260,7 @@ export default function AdminPanel() {
     } finally {
       if (page === 1) setReviewsLoading(false);
     }
-  };
+  }, []);
 
   const loadMoreReviews = useCallback(() => {
     if (!reviewsLoading && reviewsHasMore) {

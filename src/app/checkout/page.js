@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import UserProfile from '@/components/UserProfile';
@@ -48,9 +48,9 @@ export default function CheckoutPage() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [loadCheckoutData]);
 
-  const loadCheckoutData = () => {
+  const loadCheckoutData = useCallback(() => {
     try {
       const savedCart = localStorage.getItem('checkout_cart');
       const savedTotal = localStorage.getItem('checkout_total');
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
       console.error('Error loading checkout data:', error);
       router.push('/');
     }
-  };
+  }, [router]);
 
   const loadUserData = async () => {
     try {

@@ -139,7 +139,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
     };
     setPrintPosition(newPos);
     onImagePositionChange?.(newPos);
-  }, [isDragging, uploadedImage, dragOffset.x, dragOffset.y]);
+  }, [isDragging, uploadedImage, dragOffset.x, dragOffset.y, onImagePositionChange, printRotation, printSize?.scale]);
 
   const handleTouchEnd = () => {
     setIsDragging(false);
