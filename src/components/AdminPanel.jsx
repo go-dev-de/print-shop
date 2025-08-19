@@ -486,9 +486,9 @@ export default function AdminPanel() {
   // Products CRUD
   const createProduct = async (payload) => {
     try {
-      let imageUrls = [];
+      let finalImages = [];
       
-      // Если есть изображения (base64), сначала загружаем их в S3
+      // Если есть изображения (base64), пытаемся загрузить их в S3
       console.log('🔍 DEBUG: Checking images condition:', {
         hasImages: !!payload.images,
         imagesLength: payload.images?.length || 0,
@@ -496,39 +496,48 @@ export default function AdminPanel() {
       });
       
       if (payload.images && payload.images.length > 0) {
-        console.log('📤 Uploading images to S3...');
-        
-        const formData = new FormData();
-        
-        // Конвертируем base64 обратно в файлы
-        for (let i = 0; i < payload.images.length; i++) {
-          const base64 = payload.images[i];
-          const response = await fetch(base64);
-          const blob = await response.blob();
-          formData.append('files', blob, `image-${i}.jpg`);
+        try {
+          console.log('📤 Attempting to upload images to S3...');
+          
+          const formData = new FormData();
+          
+          // Конвертируем base64 обратно в файлы
+          for (let i = 0; i < payload.images.length; i++) {
+            const base64 = payload.images[i];
+            const response = await fetch(base64);
+            const blob = await response.blob();
+            formData.append('files', blob, `image-${i}.jpg`);
+          }
+          
+          const uploadRes = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+          
+          const uploadData = await uploadRes.json();
+          if (!uploadRes.ok) throw new Error(uploadData.error || 'Ошибка загрузки изображений');
+          
+          finalImages = uploadData.urls;
+          console.log('✅ Images uploaded to S3:', finalImages);
+          
+        } catch (s3Error) {
+          console.warn('⚠️ S3 upload failed, using base64 fallback:', s3Error.message);
+          // Fallback: используем base64 изображения напрямую
+          finalImages = payload.images;
+          console.log('📦 Using base64 images as fallback');
         }
-        
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) throw new Error(uploadData.error || 'Ошибка загрузки изображений');
-        
-        imageUrls = uploadData.urls;
-        console.log('✅ Images uploaded:', imageUrls);
       }
       
-      // Создаем товар с URLs вместо base64
+      // Создаем товар с изображениями (S3 URLs или base64)
       const productData = {
         ...payload,
-        images: imageUrls // Заменяем base64 на URLs
+        images: finalImages
       };
       
-      console.log('📡 DEBUG: Creating product with S3 URLs:');
+      console.log('📡 DEBUG: Creating product with images:');
       console.log('   📝 Name:', productData.name);
-      console.log('   🖼️ Image URLs:', imageUrls);
+      console.log('   🖼️ Images type:', finalImages.length > 0 ? (finalImages[0].startsWith('data:') ? 'base64' : 'S3 URLs') : 'none');
+      console.log('   📊 Images count:', finalImages.length);
       
       const res = await fetch('/api/admin/products', {
         method: 'POST',
