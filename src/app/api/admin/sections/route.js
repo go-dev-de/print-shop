@@ -3,6 +3,7 @@ import { getSession } from '@/lib/session';
 import { addSection, listSections } from '@/lib/catalogStore';
 import { listSectionsYdb, createSectionYdb, deleteSectionYdb, updateSectionYdb } from '@/lib/ydb/catalogRepo';
 import { ensureTablesExist } from '@/lib/ydb/autoInit';
+import { addSectionFile, listSectionsFile, deleteSectionFile, updateSectionFile } from '@/lib/fileStore';
 
 export async function GET() {
   const user = await getSession();

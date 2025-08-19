@@ -3,29 +3,47 @@ import { getSession } from '@/lib/session';
 import { addProduct, listProducts } from '@/lib/catalogStore';
 import { listProductsYdb, createProductYdb, deleteProductYdb } from '@/lib/ydb/catalogRepo';
 import { ensureTablesExist } from '@/lib/ydb/autoInit';
+import { addProductFile, listProductsFile, deleteProductFile } from '@/lib/fileStore';
 
 export async function GET() {
   const user = await getSession();
   if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   
   try {
-    // Ensure tables exist
-    await ensureTablesExist();
-    
     // Пытаемся получить из YDB
-    const ydbProducts = await listProductsYdb();
+    let ydbProducts = [];
+    try {
+      await ensureTablesExist();
+      ydbProducts = await listProductsYdb();
+    } catch (ydbError) {
+      console.warn('YDB not available:', ydbError.message);
+    }
+    
+    // Получаем из файлового хранилища и памяти
+    const fileProducts = listProductsFile();
     const inMemoryProducts = listProducts();
     
-    // Убираем дубликаты: приоритет YDB данным
-    const ydbIds = new Set(ydbProducts.map(p => p.id));
-    const uniqueInMemoryProducts = inMemoryProducts.filter(p => !ydbIds.has(p.id));
+    // Объединяем все источники, убираем дубликаты
+    const allProductsMap = new Map();
     
-    const allProducts = [...ydbProducts, ...uniqueInMemoryProducts];
+    // Приоритет: YDB > File > Memory
+    [...inMemoryProducts, ...fileProducts, ...ydbProducts].forEach(product => {
+      if (product.id) {
+        allProductsMap.set(product.id, product);
+      }
+    });
+    
+    const allProducts = Array.from(allProductsMap.values());
+    console.log(`📊 Products loaded: YDB=${ydbProducts.length}, File=${fileProducts.length}, Memory=${inMemoryProducts.length}, Total=${allProducts.length}`);
     
     return NextResponse.json({ products: allProducts });
   } catch (error) {
-    console.error('Failed to fetch products from YDB, falling back to in-memory:', error);
-    return NextResponse.json({ products: listProducts() });
+    console.error('Failed to fetch products:', error);
+    // Последний fallback - только память и файл
+    const fileProducts = listProductsFile();
+    const inMemoryProducts = listProducts();
+    const allProducts = [...fileProducts, ...inMemoryProducts];
+    return NextResponse.json({ products: allProducts });
   }
 }
 
@@ -46,29 +64,51 @@ export async function POST(request) {
     
     if (!name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
     
+    const productData = {
+      name,
+      basePrice: parseFloat(basePrice) || 0,
+      description,
+      section: sectionId,
+      images: images && images.length > 0 ? images : (image ? [image] : [])
+    };
+    
+    console.log('💾 Creating product:', productData.name, 'with', productData.images?.length || 0, 'images');
+    
+    let createdProduct = null;
+    
     // Пытаемся сохранить в YDB
     try {
-      const productData = {
-        name,
-        basePrice: parseFloat(basePrice) || 0,
-        description,
-        section: sectionId,
-        images: images && images.length > 0 ? images : (image ? [image] : [])
-      };
-      console.log('💾 DEBUG: Creating product with data:', productData);
-      console.log('🖼️ DEBUG: Images array:', productData.images, 'Type:', typeof productData.images, 'Length:', productData.images?.length);
-      const newProduct = await createProductYdb(productData);
-      console.log('📄 DEBUG: YDB returned product:', { id: newProduct.id, images: newProduct.images });
-      console.log('✅ DEBUG: Product created in YDB:', newProduct.id);
-      const allProducts = await listProductsYdb();
-      console.log('📋 DEBUG: All products after creation:', allProducts.length);
-      return NextResponse.json({ product: newProduct, products: allProducts });
+      await ensureTablesExist();
+      createdProduct = await createProductYdb(productData);
+      console.log('✅ Product saved to YDB:', createdProduct.id);
     } catch (ydbError) {
-      console.error('❌ DEBUG: YDB product creation failed:', ydbError.message);
-      console.error('❌ DEBUG: Full YDB error:', ydbError);
-      console.warn('Failed to save product to YDB, falling back to in-memory:', ydbError);
-      const p = addProduct({ name, basePrice, sectionId, description, image, images });
-      return NextResponse.json({ product: p, products: listProducts() });
+      console.warn('❌ YDB save failed:', ydbError.message);
+    }
+    
+    // Всегда сохраняем в файловое хранилище как backup
+    try {
+      const fileProduct = addProductFile(productData);
+      if (!createdProduct) {
+        createdProduct = fileProduct;
+        console.log('✅ Product saved to file store:', createdProduct.id);
+      }
+    } catch (fileError) {
+      console.warn('❌ File store save failed:', fileError.message);
+    }
+    
+    // Fallback в память
+    if (!createdProduct) {
+      createdProduct = addProduct({ name, basePrice, sectionId, description, image, images });
+      console.log('✅ Product saved to memory:', createdProduct.id);
+    }
+    
+    // Получаем все товары для ответа
+    try {
+      const response = await GET();
+      const data = await response.json();
+      return NextResponse.json({ product: createdProduct, products: data.products || [] });
+    } catch (error) {
+      return NextResponse.json({ product: createdProduct, products: [createdProduct] });
     }
   } catch (error) {
     console.error('Failed to create product:', error);

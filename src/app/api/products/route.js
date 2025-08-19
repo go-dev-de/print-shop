@@ -2,28 +2,43 @@ import { NextResponse } from 'next/server';
 import { listProducts, listSections } from '@/lib/catalogStore';
 import { listProductsYdb, listSectionsYdb } from '@/lib/ydb/catalogRepo';
 import { ensureTablesExist } from '@/lib/ydb/autoInit';
+import { listProductsFile, listSectionsFile } from '@/lib/fileStore';
 
 export async function GET() {
   try {
-    // Ensure YDB tables exist on first run
-    await ensureTablesExist();
+    // Получаем данные из всех источников
+    let ydbProducts = [];
+    let ydbSections = [];
     
-    // Получаем данные из YDB и in-memory
-    const ydbProducts = await listProductsYdb().catch(error => {
-      console.warn('Failed to fetch products from YDB:', error);
-      return [];
-    });
-    const ydbSections = await listSectionsYdb().catch(error => {
-      console.warn('Failed to fetch sections from YDB:', error);
-      return [];
-    });
+    try {
+      await ensureTablesExist();
+      ydbProducts = await listProductsYdb();
+      ydbSections = await listSectionsYdb();
+    } catch (ydbError) {
+      console.warn('YDB not available:', ydbError.message);
+    }
     
+    const fileProducts = listProductsFile();
+    const fileSections = listSectionsFile();
     const inMemoryProducts = listProducts();
     const inMemorySections = listSections();
     
-    // Объединяем данные
-    const allProducts = [...ydbProducts, ...inMemoryProducts];
-    const allSections = [...ydbSections, ...inMemorySections];
+    // Объединяем данные с приоритетом: YDB > File > Memory
+    const productsMap = new Map();
+    const sectionsMap = new Map();
+    
+    [...inMemoryProducts, ...fileProducts, ...ydbProducts].forEach(product => {
+      if (product.id) productsMap.set(product.id, product);
+    });
+    
+    [...inMemorySections, ...fileSections, ...ydbSections].forEach(section => {
+      if (section.id) sectionsMap.set(section.id, section);
+    });
+    
+    const allProducts = Array.from(productsMap.values());
+    const allSections = Array.from(sectionsMap.values());
+    
+    console.log(`📊 Public API: Products=${allProducts.length}, Sections=${allSections.length}`);
     
     // Добавляем информацию о разделе к каждому товару
     const productsWithSections = allProducts.map(product => {
