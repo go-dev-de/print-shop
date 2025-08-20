@@ -482,13 +482,13 @@ export default function ReviewsPage() {
   return (
     <div className="min-h-screen bg-gray-800">
       {/* Header */}
-      <header className="bg-[#727272] shadow-lg sticky top-0 z-40 border-b border-gray-600">
+      <header className="bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-700">
         <div className="container">
-          <div className="flex justify-between items-center py-4 lg:py-6">
+          <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop text-white">
                 <Link href="/" className="hover:text-gray-200 transition-all duration-300">
-                  PRINT<br/>SHOP
+                  print style
                 </Link>
               </h1>
               

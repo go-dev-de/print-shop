@@ -139,13 +139,13 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-gray-800">
       {/* Header */}
-      <header className="bg-[#727272] shadow-lg sticky top-0 z-40">
+      <header className="bg-gray-900 shadow-lg sticky top-0 z-40">
         <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-3">
             <div className="flex items-center">
                              <h1 className="text-2xl logo-print-shop text-white">
                  <Link href="/" className="hover:text-gray-200 transition-colors">
-                   PRINT<br/>SHOP
+                   print style
                  </Link>
                </h1>
               

@@ -229,13 +229,13 @@ export default function Designer() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="bg-[#727272] border-b border-gray-600 sticky top-0 z-50 transition-all duration-300">
+      <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50 transition-all duration-300">
         <div className="container">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  PRINT<br/>SHOP
+                  print style
                 </Link>
               </h1>
               

@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
-/* ===== ЛОГОТИП PRINT SHOP ===== */
+/* ===== ЛОГОТИП PRINT STYLE ===== */
 .logo-print-shop {
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
   font-weight: 300; /* Light weight */
   letter-spacing: 0.3em; /* Wide spacing */
-  text-transform: uppercase;
-  line-height: 0.9; /* Tight line height */
+  text-transform: lowercase; /* Строчные буквы */
+  line-height: 1.2; /* Нормальная высота строки */
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

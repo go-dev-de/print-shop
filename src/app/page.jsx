@@ -270,13 +270,13 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="bg-[#727272] border-b border-gray-600 sticky top-0 z-50 transition-all duration-300">
+      <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50 transition-all duration-300">
         <div className="container">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  PRINT<br/>SHOP
+                  print style
                 </Link>
               </h1>
               
@@ -443,7 +443,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-lg logo-print-shop mb-4 text-white">
-                PRINT<br/>SHOP
+                print style
               </h3>
               <p className="text-gray-300">
                 Создавайте уникальные футболки <br/>
@@ -482,7 +482,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; 2024 PrintStyle. Все права защищены.</p>
+            <p>&copy; 2024 print style. Все права защищены.</p>
           </div>
         </div>
       </footer>
