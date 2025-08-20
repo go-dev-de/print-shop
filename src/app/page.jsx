@@ -327,9 +327,14 @@ export default function Home() {
         
         {/* Floating geometric elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-gray-600 rounded-xl rotate-12 animate-pulse-subtle opacity-30"></div>
-          <div className="absolute top-1/3 right-1/4 w-24 h-24 border border-gray-500 rounded-full animate-pulse-subtle opacity-20" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border border-gray-600 rotate-45 animate-pulse-subtle opacity-25" style={{animationDelay: '4s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white rounded-xl rotate-12 animate-float opacity-60"></div>
+          <div className="absolute top-1/3 right-1/4 w-24 h-24 border-2 border-white rounded-full animate-float-delay-1 opacity-50"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border-2 border-white rotate-45 animate-float-delay-2 opacity-55"></div>
+          
+          {/* Дополнительные фигуры для богатства */}
+          <div className="absolute top-1/2 left-1/6 w-16 h-16 border-2 border-white rounded-lg rotate-45 animate-float opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-2/3 right-1/6 w-12 h-12 border-2 border-white rounded-full animate-float-delay-1 opacity-45" style={{animationDelay: '3s'}}></div>
+          <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white rounded-xl rotate-12 animate-float-delay-2 opacity-35" style={{animationDelay: '5s'}}></div>
         </div>
         
         <div className="relative container text-center">
@@ -396,12 +401,7 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Elegant wave transition - плавный переход между секциями */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-16" preserveAspectRatio="none" viewBox="0 0 1200 120" style={{ transform: 'rotate(180deg)' }}>
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity="1" fill="#424242"></path>
-          </svg>
-        </div>
+
       </section>
 
       <main className="relative bg-gray-800">
