@@ -15,7 +15,7 @@ export default function CartDropdown() {
     
     // Слушаем изменения в localStorage
     const handleStorageChange = (e) => {
-      if (e.key === 'printStyle_cart') {
+      if (e.key === 'printshop_cart') {
         loadCart();
       }
     };
@@ -69,7 +69,7 @@ export default function CartDropdown() {
       }
 
       // Fallback к localStorage для неавторизованных пользователей
-      const savedCart = localStorage.getItem('printStyle_cart');
+      const savedCart = localStorage.getItem('printshop_cart');
       console.log('Загружаем корзину из localStorage:', savedCart);
       if (savedCart) {
         const parsedCart = JSON.parse(savedCart);
@@ -87,7 +87,7 @@ export default function CartDropdown() {
   const saveCart = async (items) => {
     try {
       // Сохраняем в localStorage сразу для быстрого отклика UI
-      localStorage.setItem('printStyle_cart', JSON.stringify(items));
+      localStorage.setItem('printshop_cart', JSON.stringify(items));
       setCartItems(items);
       
       // Уведомляем об обновлении корзины
@@ -348,7 +348,7 @@ export function useCart() {
 
   const loadCart = () => {
     try {
-      const savedCart = localStorage.getItem('printStyle_cart');
+      const savedCart = localStorage.getItem('printshop_cart');
       if (savedCart) {
         const parsedCart = JSON.parse(savedCart);
         setCartItems(Array.isArray(parsedCart) ? parsedCart : []);
@@ -363,7 +363,7 @@ export function useCart() {
 
   const addToCart = (product) => {
     try {
-      const savedCart = localStorage.getItem('printStyle_cart');
+      const savedCart = localStorage.getItem('printshop_cart');
       const currentCart = savedCart ? JSON.parse(savedCart) : [];
       
       const existingItem = currentCart.find(item => 
@@ -395,7 +395,7 @@ export function useCart() {
         updatedCart = [...currentCart, newItem];
       }
 
-      localStorage.setItem('printStyle_cart', JSON.stringify(updatedCart));
+      localStorage.setItem('printshop_cart', JSON.stringify(updatedCart));
       setCartItems(updatedCart);
       
       // Уведомляем об обновлении корзины

@@ -213,7 +213,7 @@ export default function Home() {
       sessionStorage.clear();
       
       // Дополнительно очищаем корзину для уверенности
-      localStorage.removeItem('printStyle_cart');
+      localStorage.removeItem('printshop_cart');
       
       // Уведомляем компоненты об очистке корзины
       window.dispatchEvent(new Event('cartUpdated'));
@@ -274,9 +274,9 @@ export default function Home() {
         <div className="container">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold tracking-tight">
+              <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  Print<span className="font-light">Style</span>
+                  PRINT<br/>SHOP
                 </Link>
               </h1>
               
@@ -442,7 +442,9 @@ export default function Home() {
         <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4 text-white">PrintStyle</h3>
+              <h3 className="text-lg logo-print-shop mb-4 text-white">
+                PRINT<br/>SHOP
+              </h3>
               <p className="text-gray-300">
                 Создавайте уникальные футболки <br/>
             с вашими дизайнами

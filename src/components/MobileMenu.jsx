@@ -45,7 +45,9 @@ export default function MobileMenu() {
           
           <div className="relative bg-gray-700 w-full max-w-sm h-full shadow-xl border-r border-gray-600 opacity-100">
             <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
-              <h2 className="text-xl font-bold text-white">PrintStyle</h2>
+              <h2 className="text-lg logo-print-shop text-white">
+                PRINT<br/>SHOP
+              </h2>
               <button
                 onClick={toggleMenu}
                 className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"

@@ -50,7 +50,7 @@ export default function ProductsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-lg sticky top-0 z-40">
+        <header className="bg-gray-50 shadow-lg sticky top-0 z-40">
           <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
@@ -143,9 +143,11 @@ export default function ProductsPage() {
         <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <h1 className="text-3xl font-bold text-white">
-                <Link href="/" className="hover:text-blue-300 transition-colors">PrintStyle</Link>
-              </h1>
+                             <h1 className="text-2xl logo-print-shop text-white">
+                 <Link href="/" className="hover:text-gray-200 transition-colors">
+                   PRINT<br/>SHOP
+                 </Link>
+               </h1>
               
               <div className="ml-6 hidden md:block"><UserProfile /></div>
             </div>

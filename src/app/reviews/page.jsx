@@ -486,9 +486,9 @@ export default function ReviewsPage() {
         <div className="container">
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
-              <h1 className="text-heading text-white">
-                <Link href="/" className="hover:text-blue-300 transition-all duration-300 transform hover:scale-105">
-                  Print<span className="text-blue-300">Style</span>
+              <h1 className="text-2xl logo-print-shop text-white">
+                <Link href="/" className="hover:text-gray-200 transition-all duration-300">
+                  PRINT<br/>SHOP
                 </Link>
               </h1>
               

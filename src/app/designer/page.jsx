@@ -233,9 +233,9 @@ export default function Designer() {
         <div className="container">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold tracking-tight">
+              <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  Print<span className="font-light">Style</span>
+                  PRINT<br/>SHOP
                 </Link>
               </h1>
               
