@@ -341,16 +341,21 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
 
             
-            {/* Main Heading - УБРАН */}
+            {/* Main Heading */}
+            <h1 className="text-4xl lg:text-6xl font-light text-white mb-8 animate-fade-in leading-tight" style={{animationDelay: '0.1s'}}>
+              Носи эмоции.<br/>
+              создавай стиль.<br/>
+              <span className="font-medium">твоя уникальность уже здесь</span>
+            </h1>
             
             {/* Subtitle */}
-            <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-12 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.1s'}}>
+            <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-12 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
               Профессиональная печать на премиальных материалах.<br/>
               Воплотите свои идеи с исключительным качеством.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.3s'}}>
               <a href="/designer" className="group inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,7 +372,7 @@ export default function Home() {
             </div>
             
             {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.3s'}}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.4s'}}>
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
