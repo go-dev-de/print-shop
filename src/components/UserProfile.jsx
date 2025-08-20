@@ -238,9 +238,9 @@ export default function UserProfile() {
 
       {/* Dropdown Menu */}
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 animate-fade-in">
+        <div className="absolute right-0 mt-2 w-72 bg-gray-700 rounded-xl shadow-xl border border-gray-600 py-2 z-50 animate-fade-in">
           {/* User Info */}
-          <div className="px-4 py-3 border-b border-gray-100">
+          <div className="px-4 py-3 border-b border-gray-600">
             <div className="flex items-center space-x-3">
               {getAvatarUrl(user.avatar) ? (
                 <img
@@ -249,15 +249,15 @@ export default function UserProfile() {
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white font-semibold">
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-800 rounded-full flex items-center justify-center text-white font-semibold">
                   {getInitials(user.name)}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">
+                <p className="text-sm font-semibold text-white truncate">
                   {user.role === 'admin' ? 'Администратор' : (user.name || 'Пользователь')}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-xs text-gray-400 truncate">
                   {user.email}
                 </p>
               </div>
@@ -271,7 +271,7 @@ export default function UserProfile() {
                 setIsModalOpen(true);
                 setIsDropdownOpen(false);
               }}
-              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3 transition-colors"
+              className="w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 flex items-center space-x-3 transition-colors"
               data-profile-button
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +283,7 @@ export default function UserProfile() {
             {user.role === 'admin' && (
               <a
                 href="/admin"
-                className="w-full px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center space-x-3 transition-colors"
+                className="w-full px-4 py-2 text-sm text-blue-400 hover:bg-gray-600 hover:text-blue-300 flex items-center space-x-3 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -292,11 +292,11 @@ export default function UserProfile() {
               </a>
             )}
 
-            <div className="border-t border-gray-100 my-1"></div>
+            <div className="border-t border-gray-600 my-1"></div>
 
             <Link
               href="/?logout=true"
-              className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-3 transition-colors"
+              className="w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-600 hover:text-red-300 flex items-center space-x-3 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -310,10 +310,10 @@ export default function UserProfile() {
       {/* Profile Settings Modal */}
       {isModalOpen && (
         <div className="absolute right-0 top-12 z-50">
-          <div ref={modalRef} className="bg-white rounded-xl w-80 max-h-[60vh] overflow-y-auto shadow-xl border border-gray-200 animate-modal-in">
+          <div ref={modalRef} className="bg-gray-700 rounded-xl w-80 max-h-[60vh] overflow-y-auto shadow-xl border border-gray-600 animate-modal-in">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+            <div className="flex items-center justify-between p-4 border-b border-gray-600">
+              <h2 className="text-lg font-semibold text-white">
                 {isEditing ? 'Редактировать профиль' : 'Мой профиль'}
               </h2>
               <button
@@ -321,7 +321,7 @@ export default function UserProfile() {
                   setIsModalOpen(false);
                   setIsEditing(false);
                 }}
-                className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 hover:bg-gray-600 rounded-lg transition-colors text-gray-300 hover:text-white"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -340,10 +340,10 @@ export default function UserProfile() {
                       <img
                         src={getAvatarUrl(user.avatar)}
                         alt={user.name}
-                        className="w-20 h-20 rounded-full object-cover border-3 border-gray-200"
+                        className="w-20 h-20 rounded-full object-cover border-3 border-gray-500"
                       />
                     ) : (
-                      <div className="w-20 h-20 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-xl font-bold border-3 border-gray-200">
+                      <div className="w-20 h-20 bg-gradient-to-br from-gray-600 to-gray-800 rounded-full flex items-center justify-center text-white text-xl font-bold border-3 border-gray-500">
                         {getInitials(user.name)}
                       </div>
                     )}
@@ -352,19 +352,19 @@ export default function UserProfile() {
                   {/* User Info */}
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
-                      <p className="text-gray-900">{user.name || 'Не указано'}</p>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Имя</label>
+                      <p className="text-white">{user.name || 'Не указано'}</p>
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                      <p className="text-gray-900">{user.email}</p>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                      <p className="text-white">{user.email}</p>
                     </div>
 
                     {user.role === 'admin' && (
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Роль</label>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Роль</label>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/50 text-blue-200 border border-blue-600">
                           Администратор
                         </span>
                       </div>
@@ -374,7 +374,7 @@ export default function UserProfile() {
                   {/* Edit Button */}
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="w-full bg-black text-white py-2.5 rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                    className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
                   >
                     Редактировать профиль
                   </button>
@@ -384,54 +384,57 @@ export default function UserProfile() {
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
                   {/* Avatar Preview */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Аватар</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Аватар</label>
                     <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold border-2 border-gray-200">
-                        {getInitials(profileForm.name)}
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold border-2 border-gray-500">
+                        {getInitials(user.name)}
                       </div>
-                      <span className="text-sm text-gray-600">Аватар генерируется автоматически из первых букв вашего имени</span>
+                      <div className="text-sm text-gray-400">
+                        <p>Загрузка аватара</p>
+                        <p className="text-xs">будет доступна позже</p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Name */}
+                  {/* Name Field */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Имя</label>
                     <input
                       type="text"
                       value={profileForm.name}
-                      onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-3 py-2 text-sm text-black placeholder-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="Ваше имя"
+                      onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                      className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 text-white bg-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
+                      placeholder="Введите ваше имя"
                     />
                   </div>
 
-                  {/* Email */}
+                  {/* Email Field */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
                     <input
                       type="email"
                       value={profileForm.email}
-                      onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full px-3 py-2 text-sm text-black placeholder-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="your@email.com"
-                      required
+                      onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                      className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 text-white bg-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
+                      placeholder="Введите ваш email"
                     />
                   </div>
 
-                  {/* Buttons */}
-                  <div className="flex space-x-3 pt-2">
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="submit"
+                      disabled={updating}
+                      className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium transition-colors"
+                    >
+                      {updating ? 'Сохранение...' : 'Сохранить'}
+                    </button>
                     <button
                       type="button"
                       onClick={() => setIsEditing(false)}
-                      className="flex-1 px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex-1 bg-gray-600 text-white py-2.5 rounded-lg hover:bg-gray-500 font-medium transition-colors"
                     >
                       Отмена
-                    </button>
-                    <button
-                      type="submit"
-                      className="flex-1 bg-black text-white py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors font-medium"
-                    >
-                      Сохранить
                     </button>
                   </div>
                 </form>

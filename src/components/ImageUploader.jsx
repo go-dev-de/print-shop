@@ -108,12 +108,12 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
   return (
     <div className="space-y-4">
       <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200 ${
+        className={`relative border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-all duration-200 ${
           uploadedImage
-            ? 'border-green-300 bg-green-50'
+            ? 'border-green-400 bg-green-900/20'
             : isDragOver
-            ? 'border-blue-400 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? 'border-blue-400 bg-blue-900/20'
+            : 'border-gray-500 hover:border-gray-400 bg-gray-700/50'
         }`}
         onClick={handleClick}
         onDrop={handleDrop}
@@ -122,60 +122,51 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       >
         {uploadedImage ? (
           <div className="space-y-4">
-            <div className="relative w-32 h-32 mx-auto">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 mx-auto">
               <Image
                 src={uploadedImage}
                 alt="Uploaded design"
                 fill
-                className="object-contain rounded"
+                sizes="(max-width: 640px) 96px, 128px"
+                className="object-cover rounded-lg"
               />
             </div>
-            <div>
-              <p className="text-green-600 font-medium">Изображение загружено!</p>
-              <p className="text-sm text-gray-700 mt-1">
-                Кликните для загрузки нового изображения
+            <div className="space-y-2">
+              <p className="text-sm sm:text-base font-medium text-green-300">
+                ✅ Изображение загружено
               </p>
+              <button
+                onClick={handleRemoveImage}
+                className="text-xs sm:text-sm text-red-400 hover:text-red-300 underline"
+              >
+                Удалить изображение
+              </button>
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveImage();
-              }}
-              className="text-red-500 hover:text-red-700 text-sm font-medium"
-            >
-              Удалить изображение
-            </button>
           </div>
         ) : (
-          <div>
-            <div className="mx-auto w-16 h-16 text-gray-600 mb-4">
+          <div className="space-y-4">
+            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 text-gray-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>
-            <p className="text-lg font-medium text-gray-800 mb-2">
-              Загрузите ваш дизайн
-            </p>
-            <p className="text-gray-700 mb-2">
-              Перетащите изображение сюда или кликните для выбора
-            </p>
-            <p className="text-sm text-gray-600">
-              Поддерживаются форматы: JPG, PNG, SVG, WebP (HEIC/HEIF конвертируются автоматически)
-            </p>
-            <p className="text-sm text-gray-600">
-              Максимальный размер: 20MB
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm sm:text-base font-medium text-gray-200">
+                Перетащите изображение сюда или кликните для выбора
+              </p>
+              <p className="text-xs sm:text-sm text-gray-400">
+                Поддерживаемые форматы: JPG, PNG, HEIC
+              </p>
+              <p className="text-xs sm:text-sm text-gray-400">
+                Максимальный размер: 20MB
+              </p>
+            </div>
           </div>
         )}
       </div>
 
       {imageError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-900/50 border border-red-500 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -183,7 +174,7 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-red-700">{imageError}</p>
+              <p className="text-sm text-red-200">{imageError}</p>
             </div>
           </div>
         </div>
@@ -198,19 +189,10 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       />
 
       {uploadedImage && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-blue-700">
-                Изображение успешно загружено! Теперь вы можете настроить его положение на футболке.
-              </p>
-            </div>
-          </div>
+        <div className="text-center">
+          <p className="text-sm text-gray-300">
+            Изображение готово к использованию в дизайне
+          </p>
         </div>
       )}
     </div>

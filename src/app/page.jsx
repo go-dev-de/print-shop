@@ -70,8 +70,8 @@ function ReviewsCarousel() {
     return (
       <section className="mt-16 mb-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600 mt-2">Загружаем отзывы...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="text-gray-400 mt-2">Загружаем отзывы...</p>
         </div>
       </section>
     );
@@ -81,8 +81,8 @@ function ReviewsCarousel() {
     return (
       <section className="mt-16 mb-8">
         <div className="text-center">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Отзывы наших клиентов</h2>
-          <p className="text-gray-600 mb-8">Пока нет отзывов, но вы можете стать первым!</p>
+          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">Отзывы наших клиентов</h2>
+          <p className="text-gray-300 mb-8">Пока нет отзывов, но вы можете стать первым!</p>
           <a 
             href="/reviews" 
             className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors"
@@ -97,8 +97,8 @@ function ReviewsCarousel() {
   return (
     <section className="mt-16 mb-8">
       <div className="text-center mb-12">
-        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Отзывы наших клиентов</h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">Отзывы наших клиентов</h2>
+        <p className="text-gray-300 max-w-2xl mx-auto">
           Узнайте, что думают о нас наши клиенты, и убедитесь в качестве наших услуг
         </p>
       </div>
@@ -109,7 +109,7 @@ function ReviewsCarousel() {
           <>
             <button 
               onClick={prevReview}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-gray-700 shadow-lg rounded-full flex items-center justify-center text-gray-300 hover:text-blue-400 hover:shadow-xl transition-all"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -118,7 +118,7 @@ function ReviewsCarousel() {
 
             <button 
               onClick={nextReview}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-gray-700 shadow-lg rounded-full flex items-center justify-center text-gray-300 hover:text-blue-400 hover:shadow-xl transition-all"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -129,33 +129,33 @@ function ReviewsCarousel() {
 
         {/* Review Content */}
         <div className="px-12">
-          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
+          <div className="bg-gray-700 rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
             <div className="text-center mb-6">
               <StarRating rating={reviews[currentReviewIndex]?.rating || 5} />
               <div className="flex items-center justify-center space-x-4 mt-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-white">
                   {reviews[currentReviewIndex]?.authorName || 'Анонимный'}
                 </h3>
-                <span className="text-gray-500">
+                <span className="text-gray-400">
                   {formatDate(reviews[currentReviewIndex]?.createdAt)}
                 </span>
               </div>
             </div>
 
             {reviews[currentReviewIndex]?.title && (
-              <h4 className="text-xl font-bold text-gray-900 mb-4 text-center">
+              <h4 className="text-xl font-bold text-white mb-4 text-center">
                 {reviews[currentReviewIndex].title}
               </h4>
             )}
 
-            <p className="text-gray-700 text-center leading-relaxed text-lg">
+            <p className="text-gray-300 text-center leading-relaxed text-lg">
               &ldquo;{reviews[currentReviewIndex]?.content || 'Отличный сервис!'}&rdquo;
             </p>
 
             {/* Media content if available */}
             {reviews[currentReviewIndex]?.mediaUrls && reviews[currentReviewIndex].mediaUrls.length > 0 && (
               <div className="mt-6 flex justify-center">
-                <div className="w-48 h-32 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="w-48 h-32 bg-gray-600 rounded-lg overflow-hidden">
                   <Image 
                     src={reviews[currentReviewIndex].mediaUrls[0]} 
                     alt="Отзыв с фото"
@@ -177,7 +177,7 @@ function ReviewsCarousel() {
                 key={index}
                 onClick={() => setCurrentReviewIndex(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentReviewIndex ? 'bg-blue-600' : 'bg-gray-300'
+                  index === currentReviewIndex ? 'bg-blue-500' : 'bg-gray-500'
                 }`}
               />
             ))}
@@ -315,51 +315,45 @@ export default function Home() {
       {/* Breadcrumbs */}
       <Breadcrumbs />
 
-      {/* Premium Hero Section */}
-      <section className="relative overflow-hidden min-h-screen flex items-center justify-center" style={{ background: 'var(--gradient-premium)' }}>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden">
         {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(15, 15, 15, 0.15) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0)`,
             backgroundSize: '20px 20px'
           }}></div>
         </div>
         
         {/* Floating geometric elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-gray-200 rounded-xl rotate-12 animate-pulse-subtle opacity-30"></div>
-          <div className="absolute top-1/3 right-1/4 w-24 h-24 border border-gray-300 rounded-full animate-pulse-subtle opacity-20" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border border-gray-200 rotate-45 animate-pulse-subtle opacity-25" style={{animationDelay: '4s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-gray-600 rounded-xl rotate-12 animate-pulse-subtle opacity-30"></div>
+          <div className="absolute top-1/3 right-1/4 w-24 h-24 border border-gray-500 rounded-full animate-pulse-subtle opacity-20" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border border-gray-600 rotate-45 animate-pulse-subtle opacity-25" style={{animationDelay: '4s'}}></div>
         </div>
         
         <div className="relative container text-center">
           <div className="max-w-4xl mx-auto">
 
             
-            {/* Main Heading */}
-            <h1 className="text-6xl lg:text-8xl font-light tracking-tight text-gray-900 mb-8 animate-fade-in" style={{animationDelay: '0.1s'}}>
-              <span className="block font-light">Создавайте</span>
-              <span className="block font-bold text-gradient bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                БЕЗУПРЕЧНО
-              </span>
-            </h1>
+            {/* Main Heading - УБРАН */}
             
             {/* Subtitle */}
-            <p className="text-xl lg:text-2xl text-gray-600 font-light leading-relaxed mb-12 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-12 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.1s'}}>
               Профессиональная печать на премиальных материалах.<br/>
               Воплотите свои идеи с исключительным качеством.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.3s'}}>
-              <a href="/designer" className="group inline-flex items-center px-8 py-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.2s'}}>
+              <a href="/designer" className="group inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </a>
               
-              <a href="/products" className="group inline-flex items-center px-8 py-4 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+              <a href="/products" className="group inline-flex items-center px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
                 <span>Посмотреть каталог</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -368,49 +362,49 @@ export default function Home() {
             </div>
             
             {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.4s'}}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.3s'}}>
               <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Быстрое производство</h3>
-                <p className="text-gray-600 text-sm">Изготовление за 2-3 дня</p>
+                <h3 className="font-semibold text-white mb-2">Быстрое производство</h3>
+                <p className="text-gray-300 text-sm">Изготовление за 2-3 дня</p>
               </div>
               
               <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Премиум качество</h3>
-                <p className="text-gray-600 text-sm">100% хлопок, стойкие краски</p>
+                <h3 className="font-semibold text-white mb-2">Премиум качество</h3>
+                <p className="text-gray-300 text-sm">100% хлопок, стойкие краски</p>
               </div>
               
               <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Индивидуальный подход</h3>
-                <p className="text-gray-600 text-sm">Персональная консультация</p>
+                <h3 className="font-semibold text-white mb-2">Индивидуальный подход</h3>
+                <p className="text-gray-300 text-sm">Персональная консультация</p>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Elegant wave transition */}
-        <div className="absolute bottom-0 left-0 right-0">
+        {/* Elegant wave transition - скрыта на мобильных */}
+        <div className="absolute bottom-0 left-0 right-0 hidden md:block">
           <svg className="w-full h-16" preserveAspectRatio="none" viewBox="0 0 1200 120" style={{ transform: 'rotate(180deg)' }}>
             <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity="1" fill="#ffffff"></path>
           </svg>
         </div>
       </section>
 
-      <main className="relative bg-white">
+      <main className="relative bg-gray-800">
         <div className="container py-16 lg:py-24">
         {/* Секция отзывов */}
         <ReviewsCarousel />

@@ -209,9 +209,9 @@ export default function CartDropdown() {
       {/* Кнопка корзины */}
       <button
         onClick={toggleDropdown}
-        className="btn btn-ghost btn-sm relative p-2 hover:bg-gray-100 transition-all duration-200"
+        className="btn btn-ghost btn-sm relative p-2 hover:bg-gray-600 transition-all duration-200 text-gray-200 hover:text-white cart-button"
       >
-        <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 11H4m3 2v6a1 1 0 001 1h10a1 1 0 001-1v-6M9 21v-2a1 1 0 011-1h4a1 1 0 011 1v2" />
         </svg>
         
@@ -225,15 +225,15 @@ export default function CartDropdown() {
 
       {/* Dropdown меню */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fade-in">
+        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-gray-700 rounded-xl shadow-2xl border border-gray-600 z-50 animate-fade-in max-h-[80vh] overflow-hidden transform -translate-x-1/2 sm:translate-x-0 cart-dropdown">
           <div className="p-4">
             {/* Заголовок */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-subheading text-gray-900">Корзина</h3>
+              <h3 className="text-lg font-semibold text-white">Корзина</h3>
               {cartItems.length > 0 && (
                 <button
                   onClick={clearCart}
-                  className="btn btn-ghost btn-sm text-red-500 hover:text-red-700"
+                  className="text-red-400 hover:text-red-300 text-sm font-medium px-2 py-1 rounded hover:bg-gray-600 transition-colors cart-button touch-manipulation"
                 >
                   Очистить
                 </button>
@@ -244,10 +244,10 @@ export default function CartDropdown() {
             {cartItems.length === 0 ? (
               <div className="text-center py-8">
                 <div className="text-gray-400 text-4xl mb-3">🛒</div>
-                <p className="text-body text-gray-500 mb-4">Корзина пуста</p>
+                <p className="text-gray-300 mb-4">Корзина пуста</p>
                 <a 
                   href="/products" 
-                  className="btn btn-primary btn-sm"
+                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                   onClick={() => setIsOpen(false)}
                 >
                   Перейти к товарам
@@ -258,9 +258,9 @@ export default function CartDropdown() {
                 {/* Список товаров */}
                 <div className="max-h-64 overflow-y-auto space-y-3 mb-4">
                   {cartItems.map((item, index) => (
-                    <div key={`cart-item-${index}-${item.id || 'no-id'}-${item.size || 'no-size'}-${item.color || 'no-color'}`} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div key={`cart-item-${index}-${item.id || 'no-id'}-${item.size || 'no-size'}-${item.color || 'no-color'}`} className="flex items-center space-x-3 p-3 bg-gray-600 rounded-lg">
                       {/* Изображение товара */}
-                      <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-medium overflow-hidden">
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-400 rounded-lg flex items-center justify-center text-gray-200 text-sm font-medium overflow-hidden flex-shrink-0">
                         {item.image ? (
                           <Image src={item.image} alt={item.name} className="w-full h-full object-cover" width={48} height={48} />
                         ) : (
@@ -270,35 +270,35 @@ export default function CartDropdown() {
 
                       {/* Информация о товаре */}
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-semibold text-gray-900 truncate">{item.name}</h4>
-                        <div className="text-xs text-gray-500">
+                        <h4 className="text-sm font-semibold text-white truncate">{item.name}</h4>
+                        <div className="text-xs text-gray-300">
                           {item.size} • {item.color}
                         </div>
-                        <div className="text-sm font-bold text-blue-600">
+                        <div className="text-sm font-bold text-blue-400">
                           {item.price} ₽ × {item.quantity}
                         </div>
                       </div>
 
                       {/* Управление количеством */}
-                      <div className="flex flex-col items-end space-y-1">
+                      <div className="flex flex-col items-end space-y-2">
                         <div className="flex items-center space-x-1">
                           <button
                             onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity - 1)}
-                            className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition-colors"
+                            className="w-8 h-8 rounded-full bg-gray-500 hover:bg-gray-400 flex items-center justify-center text-white transition-colors touch-manipulation cart-quantity-button"
                           >
                             −
                           </button>
-                          <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
+                          <span className="text-sm font-medium w-8 text-center text-white">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)}
-                            className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition-colors"
+                            className="w-8 h-8 rounded-full bg-gray-500 hover:bg-gray-400 flex items-center justify-center text-white transition-colors touch-manipulation cart-quantity-button"
                           >
                             +
                           </button>
                         </div>
                         <button
                           onClick={() => removeFromCart(item.id, item.size, item.color)}
-                          className="text-xs text-red-500 hover:text-red-700 transition-colors"
+                          className="text-xs text-red-400 hover:text-red-300 transition-colors px-2 py-1 rounded hover:bg-gray-500"
                         >
                           Удалить
                         </button>
@@ -308,17 +308,17 @@ export default function CartDropdown() {
                 </div>
 
                 {/* Итого */}
-                <div className="border-t border-gray-200 pt-4">
+                <div className="border-t border-gray-600 pt-4">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-body font-medium text-gray-900">Итого:</span>
-                    <span className="text-heading text-blue-600">{getTotalPrice()} ₽</span>
+                    <span className="text-base font-medium text-white">Итого:</span>
+                    <span className="text-lg font-bold text-blue-400">{getTotalPrice()} ₽</span>
                   </div>
 
                   {/* Кнопки */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <button
                       onClick={handleCheckout}
-                      className="btn btn-primary btn-md w-full"
+                      className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center touch-manipulation"
                     >
                       Оформить заказ
                       <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,7 +327,7 @@ export default function CartDropdown() {
                     </button>
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="btn btn-outline btn-md w-full"
+                      className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors font-medium touch-manipulation"
                     >
                       Продолжить покупки
                     </button>

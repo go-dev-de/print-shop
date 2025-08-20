@@ -47,42 +47,54 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow p-6 space-y-4">
-        <h1 className="text-2xl font-bold">Вход</h1>
-        {error && <div className="text-red-600 text-sm">{error}</div>}
-        <form onSubmit={onSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-800 p-4">
+      <div className="bg-gray-700 w-full max-w-md rounded-xl shadow-xl border border-gray-600 p-6 space-y-6">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-white mb-2">Вход</h1>
+          <p className="text-gray-300 text-sm">Войдите в свой аккаунт</p>
+        </div>
+        
+        {error && (
+          <div className="bg-red-900/50 border border-red-500 text-red-200 text-sm p-3 rounded-lg">
+            {error}
+          </div>
+        )}
+        
+        <form onSubmit={onSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-2">Email</label>
+            <label className="block text-sm font-semibold text-gray-200 mb-2">Email</label>
             <input 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               type="email" 
-              className="w-full border-2 border-gray-400 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-600 focus:outline-none" 
+              className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 text-white bg-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200" 
               placeholder="Введите ваш email"
               required 
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-2">Пароль</label>
+            <label className="block text-sm font-semibold text-gray-200 mb-2">Пароль</label>
             <input 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               type="password" 
-              className="w-full border-2 border-gray-400 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-600 focus:outline-none" 
+              className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 text-white bg-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200" 
               placeholder="Введите пароль"
               required 
             />
           </div>
           <button 
             disabled={loading} 
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-700 transition-all duration-200 text-base"
           >
             {loading ? 'Входим...' : 'Войти'}
           </button>
         </form>
-        <div className="text-sm text-gray-700">
-          Нет аккаунта? <Link className="text-blue-600 hover:underline" href="/register">Зарегистрироваться</Link>
+        
+        <div className="text-center">
+          <div className="text-sm text-gray-400">
+            Нет аккаунта? <Link className="text-blue-400 hover:text-blue-300 hover:underline font-medium" href="/register">Зарегистрироваться</Link>
+          </div>
         </div>
       </div>
     </div>

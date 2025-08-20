@@ -172,11 +172,11 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6 flex flex-col">
+      <div className="bg-gray-700 rounded-lg shadow-lg p-4 lg:p-6 flex flex-col">
         {/* Превью и управление поворотом */}
         <div className="flex-1">
-          <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">2D-превью вашей футболки</h3>
-          <div className="flex space-x-2 mb-3 lg:mb-4">
+          <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-white">2D-превью вашей футболки</h3>
+          <div className="flex flex-wrap gap-2 mb-3 lg:mb-4">
             <button 
               onClick={() => {
                 setActiveView('front');
@@ -184,8 +184,8 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
               }} 
               className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'front' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-600 text-gray-200 hover:bg-gray-500'
               }`}
             >
               Перед
@@ -197,8 +197,8 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
               }} 
               className={`px-3 lg:px-4 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors ${
                 activeView === 'back' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-600 text-gray-200 hover:bg-gray-500'
               }`}
             >
               Зад
@@ -206,7 +206,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
           </div>
         <div 
           ref={previewRef}
-          className="relative w-full h-80 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center cursor-crosshair tshirt-preview-root"
+          className="relative w-full h-64 sm:h-80 lg:h-96 bg-gray-600 rounded-lg flex items-center justify-center cursor-crosshair tshirt-preview-root"
         >
           {uploadedImage ? (
               <div 
@@ -287,11 +287,11 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                 </div>
               </div>
             ) : (
-              <div className="text-center text-gray-500">
-                <div className="w-60 h-80 lg:w-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+              <div className="text-center text-gray-400">
+                <div className="w-60 h-80 lg:w-80 lg:h-96 bg-gray-500 rounded-lg flex items-center justify-center">
                   <div>
-                    <p className="text-base lg:text-lg font-medium mb-2">Загрузите изображение</p>
-                    <p className="text-xs lg:text-sm">чтобы увидеть превью на футболке</p>
+                    <p className="text-base lg:text-lg font-medium mb-2 text-gray-200">Загрузите изображение</p>
+                    <p className="text-xs lg:text-sm text-gray-300">чтобы увидеть превью на футболке</p>
               </div>
             </div>
             </div>
@@ -300,18 +300,18 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
 
           {/* Настройки принта объединены здесь */}
       {uploadedImage && (
-            <div className="mt-6 p-4 rounded-lg bg-gray-50 border border-gray-200">
-                     <h4 className="font-semibold mb-3 text-black">Настройки принта</h4>
+            <div className="mt-6 p-4 rounded-lg bg-gray-600 border border-gray-500">
+                     <h4 className="font-semibold mb-3 text-white">Настройки принта</h4>
                             <div className="space-y-4">
                 {/* Размер принта */}
             <div>
-              <label className="block text-sm font-medium text-gray-800 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                     Размер принта: {printSize.label}
               </label>
                 </div>
                 {/* Поворот */}
                 <div className="flex items-center space-x-4">
-                  <label htmlFor="print-rotation" className="text-sm text-gray-700 font-medium">Поворот</label>
+                  <label htmlFor="print-rotation" className="text-sm text-gray-200 font-medium">Поворот</label>
               <input
                 type="range"
                     id="print-rotation"
@@ -328,7 +328,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                     }}
                     className="w-64 accent-blue-500"
                   />
-                  <span className="text-xs text-gray-600">{printRotation}&deg;</span>
+                  <span className="text-xs text-gray-300">{printRotation}&deg;</span>
             </div>
                 {/* Кнопка сброса */}
                 <div className="pt-2">
@@ -337,7 +337,7 @@ export default function TshirtPreview({ uploadedImage, selectedColor, printSize 
                       setPrintPosition({ x: 50, y: 50 }); 
                       setPrintRotation(0);
                  }}
-                 className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-black text-black"
+                 className="px-3 py-2 bg-gray-500 hover:bg-gray-400 rounded text-sm font-medium transition-colors border-2 border-gray-400 hover:border-gray-300 text-white"
                >
                     Сбросить позицию и поворот
                </button>

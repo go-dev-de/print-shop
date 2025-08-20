@@ -43,12 +43,12 @@ export default function MobileMenu() {
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black bg-opacity-50" onClick={toggleMenu}></div>
           
-          <div className="relative bg-white w-full max-w-sm h-full shadow-xl border-r border-gray-200 opacity-100">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-              <h2 className="text-xl font-bold text-gray-900">PrintStyle</h2>
+          <div className="relative bg-gray-700 w-full max-w-sm h-full shadow-xl border-r border-gray-600 opacity-100">
+            <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
+              <h2 className="text-xl font-bold text-white">PrintStyle</h2>
               <button
                 onClick={toggleMenu}
-                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"
               >
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -56,21 +56,21 @@ export default function MobileMenu() {
               </button>
             </div>
             
-            <nav className="bg-white h-full">
+            <nav className="bg-gray-700 h-full">
               <ul className="space-y-0">
                 {menuItems.map((item, index) => {
                   const isLast = index === menuItems.length - 1;
                   return (
                   <li key={item.name}>
                     {item.special === 'cart' ? (
-                      <div className={`px-6 py-4 flex items-center justify-between bg-white ${!isLast ? 'border-b border-gray-100' : ''}`}>
-                        <span className="text-lg font-medium text-gray-900">Корзина</span>
+                      <div className={`px-6 py-4 flex items-center justify-between bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}>
+                        <span className="text-lg font-medium text-white">Корзина</span>
                         <CartDropdown />
                       </div>
                     ) : (
                       <a 
                         href={item.href}
-                        className={`block px-6 py-4 text-lg font-medium text-gray-900 hover:bg-blue-50 hover:text-blue-600 transition-colors bg-white ${!isLast ? 'border-b border-gray-100' : ''}`}
+                        className={`block px-6 py-4 text-lg font-medium text-white hover:bg-gray-600 hover:text-blue-300 transition-colors bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}
                         onClick={toggleMenu}
                       >
                         {item.name}

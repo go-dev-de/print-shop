@@ -1,38 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  --background: #424242;
+  --foreground: #ffffff;
   
-  /* ===== ПРЕМИУМ ЦВЕТОВАЯ ПАЛИТРА ===== */
-  /* Элегантные основные цвета */
-  --brand-primary: #0f0f0f;        /* Глубокий черный */
-  --brand-primary-dark: #000000;   /* Абсолютный черный */
-  --brand-primary-light: #1a1a1a;  /* Мягкий серый */
-  --brand-secondary: #2563eb;      /* Элегантный синий */
-  --brand-accent: #059669;         /* Изысканный зеленый */
-  --brand-success: #059669;        /* Изумрудный */
-  --brand-warning: #d97706;        /* Благородный оранжевый */
-  --brand-error: #dc2626;          /* Элегантный красный */
+  /* ===== ТЕМНАЯ ЦВЕТОВАЯ ПАЛИТРА ===== */
+  /* Основные цвета */
+  --brand-primary: #424242;        /* Основной темный фон */
+  --brand-primary-dark: #2d2d2d;   /* Темнее основной */
+  --brand-primary-light: #5a5a5a;  /* Светлее основной */
+  --brand-secondary: #3b82f6;      /* Синий акцент */
+  --brand-accent: #10b981;         /* Зеленый акцент */
+  --brand-success: #10b981;        /* Зеленый успех */
+  --brand-warning: #f59e0b;        /* Оранжевый предупреждение */
+  --brand-error: #ef4444;          /* Красный ошибка */
   
-  /* Нейтральные цвета */
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af; /* Light gray for disabled states */
-  --gray-500: #6b7280; /* Темно-серый для placeholder */
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
+  /* Нейтральные цвета для темной темы */
+  --gray-50: #1f1f1f;
+  --gray-100: #2a2a2a;
+  --gray-200: #3a3a3a;
+  --gray-300: #4a4a4a;
+  --gray-400: #5a5a5a;
+  --gray-500: #6a6a6a;
+  --gray-600: #7a7a7a;
+  --gray-700: #8a8a8a;
+  --gray-800: #9a9a9a;
+  --gray-900: #aaaaaa;
   
-  /* Элегантные градиенты */
-  --gradient-primary: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  --gradient-accent: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  --gradient-warm: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  --gradient-cool: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  --gradient-premium: #f1f5f9;
+  /* Темные градиенты */
+  --gradient-primary: linear-gradient(135deg, #424242 0%, #2d2d2d 100%);
+  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --gradient-warm: linear-gradient(135deg, #2d2d2d 0%, #424242 100%);
+  --gradient-cool: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  --gradient-premium: #2d2d2d;
   
   /* ===== РАСШИРЕННАЯ ТИПОГРАФИЧЕСКАЯ СИСТЕМА ===== */
   /* Font Families */
@@ -618,6 +618,103 @@ h1, h2, h3, h4, h5, h6, p, span {
     grid-template-columns: 1fr 1fr 1fr !important;
     gap: 6px !important;
   }
+
+  /* Улучшенная читабельность текста на мобильных */
+  .text-sm {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+
+  .text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+
+  .text-lg {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  /* Улучшенные отступы для мобильных */
+  .p-4 {
+    padding: 1rem !important;
+  }
+
+  .p-6 {
+    padding: 1.5rem !important;
+  }
+
+  .px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  /* Улучшенные размеры кнопок для мобильных */
+  button, .btn {
+    min-height: 44px !important; /* Минимальная высота для touch */
+    min-width: 44px !important;  /* Минимальная ширина для touch */
+  }
+
+  /* Улучшенные input поля для мобильных */
+  input, select, textarea {
+    font-size: 16px !important; /* Предотвращает zoom на iOS */
+    min-height: 44px !important;
+  }
+
+  /* Улучшенные таблицы для мобильных */
+  table {
+    font-size: 0.875rem !important;
+  }
+
+  th, td {
+    padding: 0.75rem 0.5rem !important;
+  }
+
+  /* Улучшенные карточки для мобильных */
+  .card, .bg-gray-700, .bg-gray-600 {
+    border-radius: 0.75rem !important;
+    margin: 0.5rem !important;
+  }
+
+  /* Улучшенные модальные окна для мобильных */
+  .modal, [class*="modal"] {
+    margin: 1rem !important;
+    max-height: calc(100vh - 2rem) !important;
+  }
+
+  /* Улучшенная корзина для мобильных */
+  .cart-dropdown {
+    width: calc(100vw - 2rem) !important;
+    max-width: 320px !important;
+    right: 1rem !important;
+    left: 1rem !important;
+    transform: none !important;
+  }
+
+  /* Улучшенные кнопки корзины для мобильных */
+  .cart-button {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    padding: 12px !important;
+  }
+
+  .cart-quantity-button {
+    min-height: 40px !important;
+    min-width: 40px !important;
+    font-size: 18px !important;
+  }
+
+  /* Улучшенные уведомления корзины для мобильных */
+  .cart-notification {
+    right: 1rem !important;
+    left: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
 }
 
 /* Animation utilities */
@@ -658,4 +755,163 @@ h1, h2, h3, h4, h5, h6, p, span {
 
 .animate-pulse-subtle {
   animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* ===== АНИМАЦИИ КОРЗИНЫ ===== */
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.8); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ===== */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Основные контейнеры */
+.bg-white {
+  background-color: var(--gray-100) !important;
+}
+
+.bg-gray-50 {
+  background-color: var(--gray-50) !important;
+}
+
+.bg-gray-100 {
+  background-color: var(--gray-100) !important;
+}
+
+.bg-gray-200 {
+  background-color: var(--gray-200) !important;
+}
+
+/* Текст */
+.text-gray-900 {
+  color: var(--foreground) !important;
+}
+
+.text-gray-800 {
+  color: var(--gray-900) !important;
+}
+
+.text-gray-700 {
+  color: var(--gray-800) !important;
+}
+
+.text-gray-600 {
+  color: var(--gray-700) !important;
+}
+
+.text-gray-500 {
+  color: var(--gray-600) !important;
+}
+
+/* Границы */
+.border-gray-200 {
+  border-color: var(--gray-300) !important;
+}
+
+.border-gray-300 {
+  border-color: var(--gray-400) !important;
+}
+
+.border-gray-100 {
+  border-color: var(--gray-200) !important;
+}
+
+/* Дополнительные стили для темной темы */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Улучшенные focus состояния для темной темы */
+.focus\:ring-blue-500:focus {
+  --tw-ring-color: rgb(59 130 246 / 0.3) !important;
+}
+
+.focus\:ring-offset-2:focus {
+  --tw-ring-offset-width: 2px !important;
+}
+
+.focus\:ring-offset-gray-700:focus {
+  --tw-ring-offset-color: rgb(55 65 81) !important;
+}
+
+.focus\:ring-offset-gray-800:focus {
+  --tw-ring-offset-color: rgb(31 41 55) !important;
+}
+
+/* Улучшенные hover состояния */
+.hover\:bg-gray-600:hover {
+  background-color: rgb(75 85 99) !important;
+}
+
+.hover\:bg-gray-500:hover {
+  background-color: rgb(107 114 128) !important;
+}
+
+.hover\:border-gray-500:hover {
+  border-color: rgb(107 114 128) !important;
+}
+
+.hover\:border-gray-400:hover {
+  border-color: rgb(156 163 175) !important;
+}
+
+/* ===== TOUCH-FRIENDLY СТИЛИ ===== */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Улучшенные focus состояния для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:bg-gray-600:hover,
+  .hover\:bg-gray-500:hover,
+  .hover\:bg-blue-700:hover,
+  .hover\:bg-gray-500:hover {
+    background-color: inherit !important;
+  }
+  
+  .hover\:text-white:hover,
+  .hover\:text-blue-300:hover,
+  .hover\:text-red-300:hover {
+    color: inherit !important;
+  }
+  
+  /* Активные состояния для touch */
+  .touch-manipulation:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
 }
