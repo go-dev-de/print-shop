@@ -68,7 +68,7 @@ function ReviewsCarousel() {
 
   if (loading) {
     return (
-      <section className="mt-16 mb-8">
+      <section className="py-16">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
           <p className="text-gray-400 mt-2">Загружаем отзывы...</p>
@@ -79,7 +79,7 @@ function ReviewsCarousel() {
 
   if (reviews.length === 0) {
     return (
-      <section className="mt-16 mb-8">
+      <section className="py-16">
         <div className="text-center">
           <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">Отзывы наших клиентов</h2>
           <p className="text-gray-300 mb-8">Пока нет отзывов, но вы можете стать первым!</p>
@@ -95,7 +95,7 @@ function ReviewsCarousel() {
   }
 
   return (
-    <section className="mt-16 mb-8">
+    <section className="py-16">
       <div className="text-center mb-12">
         <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">Отзывы наших клиентов</h2>
         <p className="text-gray-300 max-w-2xl mx-auto">
@@ -404,13 +404,13 @@ export default function Home() {
 
       </section>
 
-      <main className="relative bg-gray-800">
-        <div className="container py-16 lg:py-24">
+      <main className="relative">
+        <div className="container">
         {/* Секция отзывов */}
         <ReviewsCarousel />
 
         {/* Call to Action секция */}
-        <section className="mt-16 mb-8 text-center">
+        <section className="text-center py-16">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
             <h3 className="text-2xl lg:text-3xl font-bold mb-4">
               Готовы создать свою уникальную футболку?
@@ -421,7 +421,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/designer" 
-                className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
               >
                 Создать дизайн
               </a>
