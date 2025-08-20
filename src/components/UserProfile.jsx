@@ -169,7 +169,18 @@ export default function UserProfile() {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  // Удалена функция getAvatarUrl - больше не нужна
+  // Функция для получения URL аватара
+  const getAvatarUrl = (avatar) => {
+    if (!avatar) return null;
+    
+    // Если это уже полный URL
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      return avatar;
+    }
+    
+    // Пока S3 не настроен, возвращаем null
+    return null;
+  };
 
   if (loading) {
     return (
@@ -207,9 +218,17 @@ export default function UserProfile() {
         data-profile-button
       >
         <div className="relative">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">
-            {getInitials(user.name)}
-          </div>
+          {getAvatarUrl(user.avatar) ? (
+            <img
+              src={getAvatarUrl(user.avatar)}
+              alt={user.name}
+              className="w-9 h-9 rounded-full object-cover border-2 border-gray-200 group-hover:border-gray-300 transition-colors"
+            />
+          ) : (
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold border-2 border-gray-200 group-hover:border-gray-300 transition-colors">
+              {getInitials(user.name)}
+            </div>
+          )}
           
           {/* Online indicator */}
           <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
