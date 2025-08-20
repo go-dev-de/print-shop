@@ -229,12 +229,12 @@ export default function Designer() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
+      <header className="bg-[#727272] border-b border-gray-600 sticky top-0 z-50 transition-all duration-300">
         <div className="container">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl font-bold tracking-tight">
-                <Link href="/" className="text-gray-900 hover:text-gray-700 transition-colors duration-200">
+                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
                   Print<span className="font-light">Style</span>
                 </Link>
               </h1>
@@ -244,19 +244,19 @@ export default function Designer() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              <Link href="/" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <Link href="/" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Главная
               </Link>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Товары
               </a>
-              <a href="/designer" className="px-4 py-2 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors rounded-lg">
+              <a href="/designer" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">
                 Дизайнер
               </a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Отзывы
               </a>
-              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 О нас
               </a>
               <div className="ml-4 flex items-center space-x-3">
@@ -275,27 +275,27 @@ export default function Designer() {
       <Breadcrumbs />
 
       {/* Designer Hero */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-700 py-16">
         <div className="container text-center">
-          <h1 className="text-4xl lg:text-5xl font-light text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-4xl lg:text-5xl font-light text-white mb-6 tracking-tight">
             Создайте свою
             <span className="block font-semibold">уникальную футболку</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
             Загрузите свой дизайн и получите качественную футболку<br/>
             с профессиональной печатью
           </p>
         </div>
       </section>
 
-      <main className="relative bg-white">
+      <main className="relative bg-gray-800">
         <div className="container py-16 lg:py-24">
         <div id="order-form" className="animate-fade-in">
         {/* Мобильная версия - одна колонка */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
           {/* 1. Загрузка принта */}
           <div className="card card-md">
-            <h3 className="text-subheading text-gray-900 mb-4">Загрузите ваш принт</h3>
+            <h3 className="text-subheading text-white mb-4">Загрузите ваш принт</h3>
             <ImageUploader 
               onImageUpload={handleImageUpload}
               onImageRemove={handleImageRemove}
@@ -303,8 +303,8 @@ export default function Designer() {
           </div>
 
           {/* 2. Выбор цвета */}
-          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-black">Выберите цвет футболки</h3>
+          <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+            <h3 className="text-lg font-semibold mb-3 text-white">Выберите цвет футболки</h3>
             <div className="grid grid-cols-2 gap-4">
               {colors.map((color) => (
                 <button
@@ -380,60 +380,60 @@ export default function Designer() {
           />
 
           {/* 6. Информация о заказе */}
-          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-black">Информация о заказе</h3>
+          <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+            <h3 className="text-lg font-semibold mb-3 text-white">Информация о заказе</h3>
             
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
-                <span className="text-black">Размер:</span>
-                <span className="font-medium text-black">{selectedSize}</span>
+                <span className="text-white">Размер:</span>
+                <span className="font-medium text-white">{selectedSize}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-black">Цвет:</span>
-                <span className="font-medium text-black">
+                <span className="text-white">Цвет:</span>
+                <span className="font-medium text-white">
                   {colors.find(c => c.name === selectedColor)?.label}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-black">Количество:</span>
+                <span className="text-white">Количество:</span>
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold text-sm"
+                    className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-white text-white font-bold text-sm"
                   >
                     -
                   </button>
-                  <span className="font-medium text-black w-8 text-center">{quantity}</span>
+                  <span className="font-medium text-white w-8 text-center">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold text-sm"
+                    className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-white text-white font-bold text-sm"
                   >
                     +
                   </button>
                 </div>
               </div>
               <div className="flex justify-between">
-                <span className="text-black">Принт:</span>
-                <span className="font-medium text-black">
+                <span className="text-white">Принт:</span>
+                <span className="font-medium text-white">
                   {uploadedImage ? 'Включен' : 'Не выбран'}
                 </span>
               </div>
               {uploadedImage && (
                 <div className="flex justify-between">
-                  <span className="text-black">Размер принта:</span>
-                  <span className="font-medium text-black">{printSizes[printSize].label}</span>
+                  <span className="text-white">Размер принта:</span>
+                  <span className="font-medium text-white">{printSizes[printSize].label}</span>
                 </div>
               )}
               {uploadedImage && (
                 <div className="flex justify-between">
-                  <span className="text-black">Масштаб принта:</span>
-                  <span className="font-medium text-black">{Math.round(imagePosition.scale * 100)}%</span>
+                  <span className="text-white">Масштаб принта:</span>
+                  <span className="font-medium text-white">{Math.round(imagePosition.scale * 100)}%</span>
                 </div>
               )}
             </div>
             
-            <div className="border-t pt-4">
-              <div className="flex justify-between text-xl font-bold text-black">
+            <div className="border-t border-gray-600 pt-4">
+              <div className="flex justify-between text-xl font-bold text-white">
                 <span>Итого:</span>
                 <span>{calculatePrice()} ₽</span>
               </div>
@@ -528,21 +528,21 @@ export default function Designer() {
 
             {/* Размер принта */}
             {uploadedImage && (
-              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Размер принта</h3>
+              <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+                <h3 className="text-lg font-semibold mb-3 text-white">Размер принта</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {printSizes.map((size, index) => (
                     <button
                       key={index}
                       onClick={() => setPrintSize(index)}
-                      className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                      className={`p-3 rounded-lg border-2 transition-colors text-white ${
                         printSize === index
-                          ? 'border-black bg-gray-100'
-                          : 'border-gray-400 hover:border-black'
+                          ? 'border-white bg-gray-600'
+                          : 'border-gray-400 hover:border-white'
                       }`}
                     >
                       <div className="text-sm font-medium">{size.label}</div>
-                      <div className="text-xs text-gray-600">+{size.price}₽</div>
+                      <div className="text-xs text-gray-300">+{size.price}₽</div>
                     </button>
                   ))}
                 </div>

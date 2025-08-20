@@ -89,27 +89,27 @@ function ReviewCard({ review }) {
   };
 
   return (
-    <div className="card card-lg max-w-2xl mx-auto animate-scale-in">
+    <div className="card card-lg max-w-2xl mx-auto animate-scale-in bg-gray-700">
       {/* Заголовок отзыва */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-subheading text-gray-900 mb-2">{review.authorName}</h3>
+          <h3 className="text-subheading text-white mb-2">{review.authorName}</h3>
           <StarRating rating={review.rating} size="md" />
         </div>
-        <div className="text-caption text-gray-500">
+        <div className="text-caption text-gray-400">
           {formatDate(review.createdAt)}
         </div>
       </div>
 
       {/* Заголовок отзыва */}
       {review.title && (
-        <h4 className="text-heading text-gray-900 mb-4">{review.title}</h4>
+        <h4 className="text-heading text-white mb-4">{review.title}</h4>
       )}
 
       {/* Медиа контент */}
       {review.mediaUrls && review.mediaUrls.length > 0 && (
         <div className="relative mb-4">
-          <div className="relative h-64 bg-gray-100 rounded-lg overflow-hidden">
+          <div className="relative h-64 bg-gray-600 rounded-lg overflow-hidden">
             {review.mediaUrls[currentMediaIndex].includes('.mp4') || 
              review.mediaUrls[currentMediaIndex].includes('.webm') || 
              review.mediaUrls[currentMediaIndex].includes('.mov') ? (
@@ -168,7 +168,7 @@ function ReviewCard({ review }) {
       )}
 
       {/* Текст отзыва */}
-      <p className="text-body text-gray-700 leading-relaxed">{review.content}</p>
+      <p className="text-body text-gray-300 leading-relaxed">{review.content}</p>
     </div>
   );
 }
@@ -277,14 +277,14 @@ function ReviewForm({ onReviewSubmit }) {
   };
 
   return (
-    <div className="card card-lg max-w-2xl mx-auto animate-fade-in">
-      <h3 className="text-heading text-gray-900 mb-8">Оставить отзыв</h3>
+    <div className="card card-lg max-w-2xl mx-auto animate-fade-in bg-gray-700">
+      <h3 className="text-heading text-white mb-8">Оставить отзыв</h3>
       
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Имя и email */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="authorName" className="form-label">
+            <label htmlFor="authorName" className="form-label text-white">
               Ваше имя <span className="text-red-500">*</span>
             </label>
             <input
@@ -294,13 +294,13 @@ function ReviewForm({ onReviewSubmit }) {
               value={formData.authorName}
               onChange={handleInputChange}
               required
-              className="form-input"
+              className="form-input bg-gray-600 border-gray-500 text-white placeholder-gray-400"
               placeholder="Введите ваше имя"
             />
           </div>
           
           <div>
-            <label htmlFor="authorEmail" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="authorEmail" className="block text-sm font-medium text-white mb-2">
               Email (необязательно)
             </label>
             <input
@@ -309,7 +309,7 @@ function ReviewForm({ onReviewSubmit }) {
               name="authorEmail"
               value={formData.authorEmail}
               onChange={handleInputChange}
-              className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:border-blue-600 focus:outline-none transition-colors"
+              className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 bg-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
               placeholder="your@email.com"
             />
           </div>
@@ -317,7 +317,7 @@ function ReviewForm({ onReviewSubmit }) {
 
         {/* Рейтинг */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Ваша оценка <span className="text-red-500">*</span>
           </label>
           <StarRating 
@@ -330,7 +330,7 @@ function ReviewForm({ onReviewSubmit }) {
 
         {/* Заголовок */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="title" className="block text-sm font-medium text-white mb-2">
             Заголовок (необязательно)
           </label>
           <input
@@ -339,14 +339,14 @@ function ReviewForm({ onReviewSubmit }) {
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:border-blue-600 focus:outline-none transition-colors"
+            className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 bg-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
             placeholder="Краткое описание вашего опыта"
           />
         </div>
 
         {/* Текст отзыва */}
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="content" className="block text-sm font-medium text-white mb-2">
             Ваш отзыв <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -356,14 +356,14 @@ function ReviewForm({ onReviewSubmit }) {
             onChange={handleInputChange}
             required
             rows={4}
-            className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:border-blue-600 focus:outline-none transition-colors resize-none"
+            className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 bg-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors resize-none"
             placeholder="Расскажите о вашем опыте использования наших услуг..."
           />
         </div>
 
         {/* Загрузка медиа */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Фото или видео (необязательно)
           </label>
           <input
@@ -371,9 +371,9 @@ function ReviewForm({ onReviewSubmit }) {
             multiple
             accept="image/*,video/*"
             onChange={handleMediaUpload}
-            className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:border-blue-600 focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer"
+            className="w-full border-2 border-gray-500 rounded-lg px-4 py-3 bg-gray-600 text-white focus:border-blue-500 focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer"
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-400 mt-1">
             Поддерживаются изображения и видео до 10MB
           </p>
           
@@ -382,7 +382,7 @@ function ReviewForm({ onReviewSubmit }) {
             <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3">
               {formData.mediaUrls.map((url, index) => (
                 <div key={index} className="relative group">
-                  <div className="h-24 bg-gray-100 rounded-lg overflow-hidden">
+                  <div className="h-24 bg-gray-600 rounded-lg overflow-hidden">
                     {url.includes('data:video') ? (
                       <video src={url} className="w-full h-full object-cover" />
                     ) : (
@@ -404,7 +404,7 @@ function ReviewForm({ onReviewSubmit }) {
 
         {/* Сообщение */}
         {message && (
-          <div className={`p-4 rounded-lg ${message.includes('успешно') || message.includes('Спасибо') ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div className={`p-4 rounded-lg ${message.includes('успешно') || message.includes('Спасибо') ? 'bg-green-900/50 text-green-200' : 'bg-red-900/50 text-red-200'}`}>
             {message}
           </div>
         )}
@@ -480,15 +480,15 @@ export default function ReviewsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-800">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-40 border-b border-gray-200">
+      <header className="bg-[#727272] shadow-lg sticky top-0 z-40 border-b border-gray-600">
         <div className="container">
           <div className="flex justify-between items-center py-4 lg:py-6">
             <div className="flex items-center space-x-8">
-              <h1 className="text-heading text-gray-900">
-                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
-                  Print<span className="text-blue-600">Style</span>
+              <h1 className="text-heading text-white">
+                <Link href="/" className="hover:text-blue-300 transition-all duration-300 transform hover:scale-105">
+                  Print<span className="text-blue-300">Style</span>
                 </Link>
               </h1>
               
@@ -496,10 +496,10 @@ export default function ReviewsPage() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
-              <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
-              <Link href="/reviews" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Отзывы</Link>
-              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
+              <Link href="/#main" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm text-white font-semibold">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">О нас</Link>
               <div className="flex items-center space-x-3">
                 <CartDropdown />
                 <UserProfile />
@@ -516,13 +516,13 @@ export default function ReviewsPage() {
       <Breadcrumbs />
 
       {/* Main Content */}
-      <main className="container py-12 lg:py-16">
+      <main className="container py-12 lg:py-16 bg-gray-800">
         {/* Page Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-hero text-gray-900 mb-6">
+          <h1 className="text-hero text-white mb-6">
             Отзывы наших клиентов
           </h1>
-          <p className="text-body text-gray-600 max-w-3xl mx-auto">
+          <p className="text-body text-gray-300 max-w-3xl mx-auto">
             Узнайте, что думают о нас наши клиенты, и поделитесь своим опытом
           </p>
         </div>
@@ -530,21 +530,21 @@ export default function ReviewsPage() {
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Загружаем отзывы...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-300">Загружаем отзывы...</p>
             </div>
           </div>
         ) : error ? (
           <div className="text-center py-12">
             <div className="text-red-500 text-xl mb-4">⚠️</div>
-            <p className="text-gray-600">Ошибка загрузки отзывов: {error}</p>
+            <p className="text-gray-300">Ошибка загрузки отзывов: {error}</p>
           </div>
         ) : (
           <>
             {/* Reviews Carousel */}
             {reviews.length > 0 ? (
               <div className="mb-16">
-                <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Отзывы клиентов</h2>
+                <h2 className="text-2xl font-bold text-center mb-8 text-white">Отзывы клиентов</h2>
                 
                 <div className="relative">
                   {/* Navigation buttons */}
@@ -552,7 +552,7 @@ export default function ReviewsPage() {
                     <>
                       <button 
                         onClick={prevReview}
-                        className="absolute left-2 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+                        className="absolute left-2 lg:left-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-700 shadow-lg rounded-full flex items-center justify-center text-gray-300 hover:text-blue-400 hover:shadow-xl transition-all"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -561,7 +561,7 @@ export default function ReviewsPage() {
 
                       <button 
                         onClick={nextReview}
-                        className="absolute right-2 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-xl transition-all"
+                        className="absolute right-2 lg:right-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-700 shadow-lg rounded-full flex items-center justify-center text-gray-300 hover:text-blue-400 hover:shadow-xl transition-all"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -583,7 +583,7 @@ export default function ReviewsPage() {
                           key={index}
                           onClick={() => setCurrentReviewIndex(index)}
                           className={`w-3 h-3 rounded-full transition-colors ${
-                            index === currentReviewIndex ? 'bg-blue-600' : 'bg-gray-300'
+                            index === currentReviewIndex ? 'bg-blue-500' : 'bg-gray-500'
                           }`}
                         />
                       ))}
@@ -594,8 +594,8 @@ export default function ReviewsPage() {
             ) : (
               <div className="text-center py-12 mb-16">
                 <div className="text-gray-400 text-6xl mb-4">💬</div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Пока нет отзывов</h3>
-                <p className="text-gray-600">Станьте первым, кто оставит отзыв о наших услугах!</p>
+                <h3 className="text-xl font-medium text-white mb-2">Пока нет отзывов</h3>
+                <p className="text-gray-300">Станьте первым, кто оставит отзыв о наших услугах!</p>
               </div>
             )}
 

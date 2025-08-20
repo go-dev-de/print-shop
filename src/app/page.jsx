@@ -270,12 +270,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
+      <header className="bg-[#727272] border-b border-gray-600 sticky top-0 z-50 transition-all duration-300">
         <div className="container">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl font-bold tracking-tight">
-                <Link href="/" className="text-gray-900 hover:text-gray-700 transition-colors duration-200">
+                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
                   Print<span className="font-light">Style</span>
                 </Link>
               </h1>
@@ -285,19 +285,19 @@ export default function Home() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              <a href="#main" className="px-4 py-2 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors rounded-lg">
+              <a href="#main" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">
                 Главная
               </a>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Товары
               </a>
-              <a href="/designer" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="/designer" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Дизайнер
               </a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Отзывы
               </a>
-              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all rounded-lg">
+              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 О нас
               </a>
               <div className="ml-4 flex items-center space-x-3">
@@ -396,10 +396,10 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Elegant wave transition - скрыта на мобильных */}
-        <div className="absolute bottom-0 left-0 right-0 hidden md:block">
+        {/* Elegant wave transition - плавный переход между секциями */}
+        <div className="absolute bottom-0 left-0 right-0">
           <svg className="w-full h-16" preserveAspectRatio="none" viewBox="0 0 1200 120" style={{ transform: 'rotate(180deg)' }}>
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity="1" fill="#ffffff"></path>
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity="1" fill="#424242"></path>
           </svg>
         </div>
       </section>
@@ -442,7 +442,7 @@ export default function Home() {
         <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4 !text-white">PrintStyle</h3>
+              <h3 className="text-xl font-bold mb-4 text-white">PrintStyle</h3>
               <p className="text-gray-300">
                 Создавайте уникальные футболки <br/>
             с вашими дизайнами
@@ -450,7 +450,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 !text-white">Услуги</h4>
+              <h4 className="font-semibold mb-4 text-white">Услуги</h4>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white">Футболки с принтом</a></li>
                 <li><a href="#" className="hover:text-white">Худи с принтом</a></li>
@@ -460,7 +460,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 !text-white">Информация</h4>
+              <h4 className="font-semibold mb-4 text-white">Информация</h4>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white">О компании</a></li>
                 <li><a href="#" className="hover:text-white">Доставка</a></li>
@@ -470,7 +470,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 !text-white">Контакты</h4>
+              <h4 className="font-semibold mb-4 text-white">Контакты</h4>
               <div className="space-y-2 text-gray-300">
                 <p>+7 (999) 123-45-67</p>
                 <p>зайчикГэнг@yandex.ru</p>

@@ -137,34 +137,25 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Заголовок */}
-      <header className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-40 border-b border-gray-200">
-        <div className="container">
-          <div className="flex justify-between items-center py-4 lg:py-6">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-heading text-gray-900">
-                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
-                  Print<span className="text-blue-600">Style</span>
-                </Link>
+    <div className="min-h-screen bg-gray-800">
+      {/* Header */}
+      <header className="bg-[#727272] shadow-lg sticky top-0 z-40">
+        <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center">
+              <h1 className="text-3xl font-bold text-white">
+                <Link href="/" className="hover:text-blue-300 transition-colors">PrintStyle</Link>
               </h1>
               
-
+              <div className="ml-6 hidden md:block"><UserProfile /></div>
             </div>
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
-              <Link href="/products" className="btn btn-ghost btn-sm text-blue-600 font-semibold">Товары</Link>
-              <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
-              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
-              <div className="flex items-center space-x-3">
-                <CartDropdown />
-                <UserProfile />
-              </div>
+            <nav className="hidden md:flex space-x-8">
+              <Link href="/#main" className="text-gray-200 hover:text-white">Главная</Link>
+              <Link href="/products" className="text-white font-medium">Товары</Link>
+              <Link href="/#reviews" className="text-gray-200 hover:text-white">Отзывы</Link>
+              <Link href="/#about" className="text-gray-200 hover:text-white">О нас</Link>
+              <Link href="/#contacts" className="text-gray-200 hover:text-white">Контакты</Link>
             </nav>
-            
-            {/* Mobile Menu */}
-            <MobileMenu />
           </div>
         </div>
       </header>
@@ -176,8 +167,8 @@ export default function ProductsPage() {
       <main className="container py-12 lg:py-16">
         {/* Заголовок страницы */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-hero text-gray-900 mb-6">Наши товары</h1>
-          <p className="text-body text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-hero text-white mb-6">Наши товары</h1>
+          <p className="text-body text-gray-300 max-w-2xl mx-auto">
             Выберите товар для персонализации. Все изделия изготавливаются под заказ с вашим уникальным дизайном.
           </p>
         </div>
@@ -232,10 +223,10 @@ export default function ProductsPage() {
         ) : (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📦</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">
+            <h3 className="text-xl font-medium text-white mb-2">
               {selectedSection === 'all' ? 'Товары не найдены' : 'В этом разделе пока нет товаров'}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-300 mb-6">
               {selectedSection === 'all' 
                 ? 'Администратор пока не добавил товары в каталог.'
                 : 'Попробуйте выбрать другой раздел или вернитесь позже.'
@@ -254,11 +245,11 @@ export default function ProductsPage() {
 
         {/* Призыв к действию */}
         {filteredProducts.length > 0 && (
-          <div className="mt-16 text-center bg-white rounded-lg p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="mt-16 text-center bg-gray-700 rounded-lg p-8 shadow-sm">
+            <h2 className="text-2xl font-bold text-white mb-4">
               Не нашли подходящий товар?
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-300 mb-6">
               Мы можем изготовить принт на любом изделии. Свяжитесь с нами для индивидуального заказа.
             </p>
             <Link
