@@ -6,7 +6,7 @@ import { useCart } from './useCart';
 
 export default function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { cartItems, loadCart, addToCart, updateQuantity, removeFromCart, getTotalItems, getTotalPrice, handleCheckout } = useCart();
+  const { cartItems, loadCart, addToCart, updateQuantity, removeFromCart, clearCart, getTotalItems, getTotalPrice, handleCheckout } = useCart();
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 

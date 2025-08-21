@@ -329,7 +329,7 @@ export default function Home() {
       <Breadcrumbs />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-20">
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -351,25 +351,25 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white/50 rounded-xl rotate-12 animate-float-across-4"></div>
         </div>
         
-        <div className="relative container text-center">
+        <div className="relative container text-center py-16">
           <div className="max-w-4xl mx-auto">
 
             
             {/* Main Heading */}
-            <h1 className="text-4xl lg:text-6xl font-light text-white mb-8 animate-fade-in leading-tight" style={{animationDelay: '0.1s'}}>
+            <h1 className="text-4xl lg:text-6xl font-light text-white mb-12 animate-fade-in leading-tight" style={{animationDelay: '0.1s'}}>
               Носи эмоции.<br/>
               создавай стиль.<br/>
               <span className="font-medium">твоя уникальность уже здесь</span>
             </h1>
             
             {/* Subtitle */}
-            <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-12 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-16 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
               Профессиональная печать на премиальных материалах.<br/>
               Воплотите свои идеи с исключительным качеством.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.3s'}}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24 animate-fade-in" style={{animationDelay: '0.3s'}}>
               <Link href="/designer" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +386,7 @@ export default function Home() {
             </div>
             
             {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.4s'}}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 animate-fade-in" style={{animationDelay: '0.4s'}}>
               <div className="text-center flex flex-col items-center">
                 <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
