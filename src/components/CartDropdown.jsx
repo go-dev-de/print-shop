@@ -226,7 +226,7 @@ export default function CartDropdown() {
       {/* Dropdown меню */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:w-96 sm:bg-gray-700 sm:rounded-xl sm:shadow-2xl sm:border sm:border-gray-600 sm:animate-fade-in sm:max-h-[80vh] sm:overflow-hidden sm:transform sm:-translate-x-1/2 sm:translate-x-0 cart-dropdown"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:w-96 sm:bg-gray-700 sm:rounded-xl sm:shadow-2xl sm:border sm:border-gray-600 sm:animate-fade-in sm:max-h-[80vh] sm:overflow-hidden sm:transform sm:-translate-x-1/2 sm:translate-x-0 cart-dropdown"
           onClick={(e) => {
             // Закрываем корзину при клике на фон (только на мобильных)
             if (e.target === e.currentTarget) {

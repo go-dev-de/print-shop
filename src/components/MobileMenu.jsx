@@ -41,12 +41,10 @@ export default function MobileMenu() {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black bg-opacity-50" onClick={toggleMenu}></div>
-          
           <div className="relative bg-gray-700 w-full max-w-sm h-full shadow-xl border-r border-gray-600 opacity-100">
             <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
               <div className="flex items-center">
-                <h1 className="text-xl text-white ">
+                <h1 className="text-xl text-white font-semibold">
                   print style
                 </h1>
               </div>
