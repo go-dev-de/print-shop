@@ -46,7 +46,7 @@ export default function MobileMenu() {
           <div className="relative bg-gray-700 w-full max-w-sm h-full shadow-xl border-r border-gray-600 opacity-100">
             <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
               <div className="flex items-center">
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-xl text-white font-semibold">
                   print style
                 </h1>
               </div>
