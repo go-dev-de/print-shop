@@ -39,55 +39,64 @@ export default function MobileMenu() {
       </div>
       
       {/* Mobile menu overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div className="relative bg-gray-700 w-full max-w-sm h-full shadow-xl border-r border-gray-600 opacity-100">
-            <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
-              <div className="flex items-center">
-                <h1 className="text-xl text-white font-semibold">
-                  print style
-                </h1>
-              </div>
-              <button
-                onClick={toggleMenu}
-                className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+      <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${
+        isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}>
+        <div 
+          className={`absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
+            isOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={toggleMenu}
+        />
+        
+        <div 
+          className={`absolute right-0 top-0 h-full w-full max-w-sm bg-gray-700 shadow-xl border-l border-gray-600 transform transition-transform duration-300 ease-in-out ${
+            isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
+            <div className="flex items-center">
+              <h1 className="text-xl text-white font-semibold">
+                print style
+              </h1>
             </div>
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
             
             <nav className="bg-gray-700 h-full">
               <ul className="space-y-0">
                 {menuItems.map((item, index) => {
                   const isLast = index === menuItems.length - 1;
                   return (
-                  <li key={item.name}>
-                    {item.special === 'cart' ? (
-                      <div className={`px-6 py-4 flex items-center justify-between bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}>
-                        <span className="text-lg font-medium text-white">Корзина</span>
-                        <CartDropdown />
-                      </div>
-                    ) : (
-                      <a 
-                        href={item.href}
-                        className={`block px-6 py-4 text-lg font-medium text-white hover:bg-gray-600 hover:text-blue-300 transition-colors bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}
-                        onClick={toggleMenu}
-                      >
-                        {item.name}
-                      </a>
-                    )}
-                  </li>
+                    <li key={item.name}>
+                      {item.special === 'cart' ? (
+                        <div className={`px-6 py-4 flex items-center justify-between bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}>
+                          <span className="text-lg font-medium text-white">Корзина</span>
+                          <CartDropdown />
+                        </div>
+                      ) : (
+                        <a 
+                          href={item.href}
+                          className={`block px-6 py-4 text-lg font-medium text-white hover:bg-gray-600 hover:text-blue-300 transition-colors bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}
+                          onClick={toggleMenu}
+                        >
+                          {item.name}
+                        </a>
+                      )}
+                    </li>
                   );
                 })}
               </ul>
-              
-
             </nav>
           </div>
         </div>
-      )}
-    </>
-  );
-}
+      </>
+    );
+  }
