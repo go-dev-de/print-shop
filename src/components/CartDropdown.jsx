@@ -117,7 +117,7 @@ export default function CartDropdown() {
   };
 
   const addToCart = (product) => {
-    console.log('Добавляем товар в корзину:', product);
+    console.log('CartDropdown: Добавляем товар в корзину:', product);
     const existingItem = cartItems.find(item => 
       item.id === product.id && 
       item.size === product.size && 
@@ -133,6 +133,7 @@ export default function CartDropdown() {
           ? { ...item, quantity: item.quantity + 1 }
           : item
       );
+      console.log('CartDropdown: Обновляем количество товара:', updatedItems);
       saveCart(updatedItems);
     } else {
       // Добавляем новый товар
@@ -146,7 +147,7 @@ export default function CartDropdown() {
         quantity: product.quantity || 1,
         addedAt: new Date().toISOString()
       };
-      console.log('Сохраняем корзину с новым товаром:', [...cartItems, newItem]);
+      console.log('CartDropdown: Сохраняем корзину с новым товаром:', [...cartItems, newItem]);
       saveCart([...cartItems, newItem]);
     }
   };
@@ -469,6 +470,32 @@ export default function CartDropdown() {
 export function useCart() {
   const [cartItems, setCartItems] = useState([]);
 
+  // Загружаем корзину при монтировании
+  useEffect(() => {
+    loadCart();
+    
+    // Слушаем изменения в localStorage
+    const handleStorageChange = (e) => {
+      if (e.key === 'printshop_cart') {
+        loadCart();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Слушаем кастомное событие обновления корзины
+    const handleCartUpdate = () => {
+      loadCart();
+    };
+    
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, []);
+
   const loadCart = () => {
     try {
       const savedCart = localStorage.getItem('printshop_cart');
@@ -486,6 +513,7 @@ export function useCart() {
 
   const addToCart = (product) => {
     try {
+      console.log('useCart: Добавляем товар в корзину:', product);
       const savedCart = localStorage.getItem('printshop_cart');
       const currentCart = savedCart ? JSON.parse(savedCart) : [];
       
@@ -518,6 +546,7 @@ export function useCart() {
         updatedCart = [...currentCart, newItem];
       }
 
+      console.log('useCart: Обновленная корзина:', updatedCart);
       localStorage.setItem('printshop_cart', JSON.stringify(updatedCart));
       setCartItems(updatedCart);
       
