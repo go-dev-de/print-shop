@@ -48,7 +48,7 @@ export default function ProductsPageContent() {
         }
         
         // Загружаем с пагинацией
-        const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=20&section=${selectedSection}`);
+        const response = await fetch(`/api/products`);
         if (!response.ok) throw new Error('Failed to fetch products');
         
         const data = await response.json();
@@ -56,8 +56,8 @@ export default function ProductsPageContent() {
         // Обновляем состояние
         setProducts(data.products || []);
         setSections(data.sections || []);
-        setTotalProducts(data.pagination?.totalProducts || 0);
-        setHasMore(data.pagination?.hasNextPage || false);
+        setTotalProducts(data.products?.length || 0);
+        setHasMore(false); // Временно отключаем пагинацию
         
         // Кэшируем результат
         setCachedData(cacheKey, data);
@@ -95,14 +95,14 @@ export default function ProductsPageContent() {
       }
       
       // Загружаем следующую страницу
-      const response = await fetch(`/api/products/paginated?page=${nextPage}&limit=20&section=${selectedSection}`);
+      const response = await fetch(`/api/products`);
       if (!response.ok) throw new Error('Failed to fetch more products');
       
       const data = await response.json();
       
       // Добавляем новые товары к существующим
       setProducts(prev => [...prev, ...(data.products || [])]);
-      setHasMore(data.pagination?.hasNextPage || false);
+      setHasMore(false); // Временно отключаем пагинацию
       setCurrentPage(nextPage);
       
       // Кэшируем результат
