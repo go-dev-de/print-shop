@@ -125,8 +125,8 @@ export function useCart() {
   const handleCheckout = () => {
     if (cartItems.length === 0) return;
     
-    // Сохраняем корзину в localStorage для checkout
     try {
+      // Сохраняем корзину в localStorage для checkout
       localStorage.setItem('checkout_cart', JSON.stringify(cartItems));
       localStorage.setItem('checkout_total', JSON.stringify(getTotalPrice()));
       

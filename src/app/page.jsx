@@ -329,9 +329,9 @@ export default function Home() {
       <Breadcrumbs />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-20">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-10">
         {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 z-0">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0)`,
             backgroundSize: '20px 20px'
@@ -339,7 +339,7 @@ export default function Home() {
         </div>
         
         {/* Floating geometric elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden z-0">
           {/* Основные фигуры с плавным перемещением по секции и мерцанием */}
           <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white/80 rounded-xl rotate-12 animate-float-across-1"></div>
           <div className="absolute top-1/3 right-1/4 w-24 h-24 border-2 border-white/70 rounded-full animate-float-across-2"></div>
@@ -351,7 +351,7 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white/50 rounded-xl rotate-12 animate-float-across-4"></div>
         </div>
         
-        <div className="relative container text-center py-16">
+        <div className="relative container text-center py-8 z-10">
           <div className="max-w-4xl mx-auto">
 
             

@@ -90,14 +90,17 @@ export default function CartDropdown() {
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:w-96 sm:bg-gray-700 sm:rounded-xl sm:shadow-2xl sm:border sm:border-gray-600 sm:animate-fade-in sm:max-h-[80vh] sm:overflow-hidden sm:transform sm:-translate-x-1/2 sm:translate-x-0 cart-dropdown"
           onClick={(e) => {
-            // Закрываем корзину при клике на фон (только на мобильных)
+            // Закрываем корзину только при клике на фон (не на содержимое)
             if (e.target === e.currentTarget) {
               setIsOpen(false);
             }
           }}
         >
           {/* Мобильная версия - полноэкранная */}
-          <div className="w-full max-w-md bg-gray-700 rounded-xl shadow-2xl border border-gray-600 max-h-[90vh] overflow-hidden sm:hidden">
+          <div 
+            className="w-full max-w-md bg-gray-700 rounded-xl shadow-2xl border border-gray-600 max-h-[90vh] overflow-hidden sm:hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-4">
               {/* Заголовок */}
               <div className="flex items-center justify-between mb-4">
@@ -209,7 +212,10 @@ export default function CartDropdown() {
           </div>
 
           {/* Десктопная версия */}
-          <div className="hidden sm:block w-80 sm:w-96 bg-gray-700 rounded-xl shadow-2xl border border-gray-600 animate-fade-in max-h-[80vh] overflow-hidden transform -translate-x-1/2 sm:translate-x-0">
+          <div 
+            className="hidden sm:block w-80 sm:w-96 bg-gray-700 rounded-xl shadow-2xl border border-gray-600 animate-fade-in max-h-[80vh] overflow-hidden transform -translate-x-1/2 sm:translate-x-0"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-4">
               {/* Заголовок */}
               <div className="flex items-center justify-between mb-4">
