@@ -43,8 +43,7 @@ export default function ProductsPage() {
     : products.filter(product => 
         product.sectionId === selectedSection || 
         product.section?.id === selectedSection ||
-        product.section === selectedSection ||
-        (selectedSection === 'general' && (product.section === 'general' || !product.section || product.section === ''))
+        product.section === selectedSection
       );
 
   if (loading) {
@@ -211,29 +210,28 @@ export default function ProductsPage() {
             <div className="flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => setSelectedSection('all')}
-                className={`btn btn-md transition-all duration-300 ${
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
                   selectedSection === 'all'
-                    ? 'btn-primary'
-                    : 'btn-outline hover:scale-105'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
                 }`}
               >
                 Все товары ({products.length})
               </button>
-              {[{ id: 'general', name: 'Общий раздел' }, ...sections].map((section, index) => {
-                        const count = products.filter(p => 
-          p.sectionId === section.id || 
-          p.section?.id === section.id ||
-          p.section === section.id ||
-          (section.id === 'general' && (p.section === 'general' || !p.section || p.section === ''))
-        ).length;
+              {sections.map((section, index) => {
+                const count = products.filter(p => 
+                  p.sectionId === section.id || 
+                  p.section?.id === section.id ||
+                  p.section === section.id
+                ).length;
                 return (
                   <button
                     key={section.id || `section-${index}`}
                     onClick={() => setSelectedSection(section.id)}
-                    className={`btn btn-md transition-all duration-300 animate-fade-in ${
+                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 animate-fade-in ${
                       selectedSection === section.id
-                        ? 'btn-primary'
-                        : 'btn-outline hover:scale-105'
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
                     }`}
                     style={{animationDelay: `${0.3 + index * 0.1}s`}}
                   >
