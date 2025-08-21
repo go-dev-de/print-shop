@@ -271,13 +271,13 @@ export default function Home() {
 
   // Функция для получения z-index hero секции
   const getHeroZIndex = () => {
-    return isMobileMenuOpen ? 10 : 1000; // Меньший z-index когда меню открыто
+    return isMobileMenuOpen ? 1 : 1; // Hero секция всегда должна быть под мобильным меню
   };
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="border-b border-gray-700 sticky top-0 z-50 transition-all duration-300" style={{backgroundColor: '#424242'}}>
+      <header className="border-b border-gray-700 sticky top-0 z-[9996] transition-all duration-300" style={{backgroundColor: '#424242'}}>
         <div className="container">
           <div className="flex justify-between items-center py-1">
             <div className="flex items-center space-x-8">
@@ -361,7 +361,7 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white/50 rounded-xl rotate-12 animate-float-across-4"></div>
         </div>
         
-        <div className="relative container text-center py-8 pointer-events-auto" style={{zIndex: 1000}}>
+        <div className="relative container text-center py-8 pointer-events-auto">
           <div className="max-w-4xl mx-auto">
 
             
@@ -379,11 +379,10 @@ export default function Home() {
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24 animate-fade-in relative z-50" style={{animationDelay: '0.3s'}}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24 animate-fade-in relative" style={{animationDelay: '0.3s'}}>
               <Link 
                 href="/designer" 
                 className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-xl pointer-events-auto cursor-pointer relative" 
-                style={{zIndex: 999}}
                 onClick={(e) => {
                   console.log('Designer button clicked');
                   // Принудительная навигация, если Link не работает
@@ -399,7 +398,6 @@ export default function Home() {
               <Link 
                 href="/products" 
                 className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 pointer-events-auto cursor-pointer relative" 
-                style={{zIndex: 999}}
                 onClick={(e) => {
                   console.log('Products button clicked');
                   // Принудительная навигация, если Link не работает
