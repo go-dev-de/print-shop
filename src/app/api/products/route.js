@@ -1,9 +1,21 @@
 import { NextResponse } from 'next/server';
 import { listProductsYdb, listSectionsYdb } from '@/lib/ydb/catalogRepo';
 import { ensureTablesExist } from '@/lib/ydb/autoInit';
+import cache from '@/lib/cache';
 
 export async function GET() {
   try {
+    // Проверяем кэш
+    const cacheKey = 'products:all';
+    const cachedData = cache.get(cacheKey);
+    
+    if (cachedData) {
+      console.log('⚡ Cache HIT for products:all');
+      return NextResponse.json(cachedData);
+    }
+    
+    console.log('🔄 Cache MISS for products:all, fetching from YDB...');
+    
     // Загружаем данные только из YDB
     await ensureTablesExist();
     
@@ -40,10 +52,17 @@ export async function GET() {
       };
     });
     
-    return NextResponse.json({ 
+    const response = { 
       products: productsWithSections,
       sections: allSections 
-    });
+    };
+    
+    // Кэшируем результат на 5 минут
+    cache.set(cacheKey, response, 5 * 60 * 1000);
+    
+    console.log(`✅ API: Returned ${productsWithSections.length} products and ${allSections.length} sections`);
+    
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

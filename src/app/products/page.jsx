@@ -16,18 +16,59 @@ export default function ProductsPage() {
   const [selectedSection, setSelectedSection] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Пагинация
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasPrevPage, setHasPrevPage] = useState(false);
+  
+  // Кэширование
+  const [cachedProducts, setCachedProducts] = useState(new Map());
 
   // Загрузка товаров
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        setLoading(true);
+        
+        // Проверяем кэш для текущей страницы и раздела
+        const cacheKey = `${selectedSection}:${currentPage}`;
+        if (cachedProducts.has(cacheKey)) {
+          console.log('📖 Using cached data for:', cacheKey);
+          const cachedData = cachedProducts.get(cacheKey);
+          setProducts(cachedData.products || []);
+          setSections(cachedData.sections || []);
+          setTotalPages(cachedData.pagination?.totalPages || 1);
+          setTotalProducts(cachedData.pagination?.totalProducts || 0);
+          setHasNextPage(cachedData.pagination?.hasNextPage || false);
+          setHasPrevPage(cachedData.pagination?.hasPrevPage || false);
+          setLoading(false);
+          return;
+        }
+        
+        // Загружаем с пагинацией
+        const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=20&section=${selectedSection}`);
         if (!response.ok) throw new Error('Failed to fetch products');
         
         const data = await response.json();
+        
+        // Обновляем состояние
         setProducts(data.products || []);
         setSections(data.sections || []);
+        setTotalPages(data.pagination?.totalPages || 1);
+        setTotalProducts(data.pagination?.totalProducts || 0);
+        setHasNextPage(data.pagination?.hasNextPage || false);
+        setHasPrevPage(data.pagination?.hasPrevPage || false);
+        
+        // Кэшируем результат
+        setCachedProducts(prev => new Map(prev).set(cacheKey, data));
+        
+        console.log(`✅ Loaded page ${currentPage} with ${data.products?.length || 0} products`);
+        
       } catch (err) {
+        console.error('Error fetching products:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -35,16 +76,34 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [currentPage, selectedSection, cachedProducts]);
 
-  // Фильтрация товаров по разделу
-  const filteredProducts = selectedSection === 'all' 
-    ? products 
-    : products.filter(product => 
-        product.sectionId === selectedSection || 
-        product.section?.id === selectedSection ||
-        product.section === selectedSection
-      );
+  // Функции навигации по страницам
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  
+  const goToNextPage = () => {
+    if (hasNextPage) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+  
+  const goToPrevPage = () => {
+    if (hasPrevPage) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+  
+  // Сброс на первую страницу при смене раздела
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedSection]);
+  
+  // Фильтрация товаров по разделу (теперь не нужна, так как фильтрация на сервере)
+  const filteredProducts = products;
 
   if (loading) {
     return (
@@ -240,40 +299,101 @@ export default function ProductsPage() {
                     : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
                 }`}
               >
-                Все товары ({products.length})
+                Все товары ({totalProducts})
               </button>
-              {sections.map((section, index) => {
-                const count = products.filter(p => 
-                  p.sectionId === section.id || 
-                  p.section?.id === section.id ||
-                  p.section === section.id
-                ).length;
-                return (
-                  <button
-                    key={section.id || `section-${index}`}
-                    onClick={() => setSelectedSection(section.id)}
-                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 animate-fade-in ${
-                      selectedSection === section.id
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
-                    }`}
-                    style={{animationDelay: `${0.3 + index * 0.1}s`}}
-                  >
-                    {section.name} ({count})
-                  </button>
-                );
-              })}
+              {sections.map((section, index) => (
+                <button
+                  key={section.id || `section-${index}`}
+                  onClick={() => setSelectedSection(section.id)}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 animate-fade-in ${
+                    selectedSection === section.id
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
+                  }`}
+                  style={{animationDelay: `${0.3 + index * 0.1}s`}}
+                >
+                  {section.name}
+                </button>
+              ))}
             </div>
           </div>
         )}
 
         {/* Сетка товаров */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
-              <ProductCard key={product.id || `product-${index}`} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((product, index) => (
+                <ProductCard key={product.id || `product-${index}`} product={product} />
+              ))}
+            </div>
+            
+            {/* Пагинация */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center space-x-2 animate-fade-in" style={{animationDelay: '0.5s'}}>
+                {/* Кнопка "Предыдущая" */}
+                <button
+                  onClick={goToPrevPage}
+                  disabled={!hasPrevPage}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                    hasPrevPage
+                      ? 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  ← Предыдущая
+                </button>
+                
+                {/* Номера страниц */}
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => goToPage(pageNum)}
+                        className={`w-10 h-10 rounded-lg font-medium transition-all duration-300 ${
+                          currentPage === pageNum
+                            ? 'bg-blue-600 text-white shadow-lg'
+                            : 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                {/* Кнопка "Следующая" */}
+                <button
+                  onClick={goToNextPage}
+                  disabled={!hasNextPage}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                    hasNextPage
+                      ? 'bg-white text-gray-800 hover:bg-blue-600 hover:text-white hover:scale-105'
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Следующая →
+                </button>
+              </div>
+            )}
+            
+            {/* Информация о страницах */}
+            <div className="mt-4 text-center text-gray-400 text-sm">
+              Страница {currentPage} из {totalPages} • Всего товаров: {totalProducts}
+            </div>
+          </>
         ) : (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📦</div>
