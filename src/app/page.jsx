@@ -382,8 +382,8 @@ export default function Home() {
             
             {/* Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-fade-in" style={{animationDelay: '0.4s'}}>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="text-center flex flex-col items-center">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -392,8 +392,8 @@ export default function Home() {
                 <p className="text-gray-300 text-sm">Изготовление за 2-3 дня</p>
               </div>
               
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="text-center flex flex-col items-center">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -402,8 +402,8 @@ export default function Home() {
                 <p className="text-gray-300 text-sm">100% хлопок, стойкие краски</p>
               </div>
               
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="text-center flex flex-col items-center">
+                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
