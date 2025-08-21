@@ -51,16 +51,16 @@ export default function MobileMenu() {
       </div>
       
       {/* Mobile menu overlay */}
-      <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${
+      <div className={`mobile-menu-overlay fixed inset-0 md:hidden transition-opacity duration-300 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
         <div 
-          className="absolute inset-0"
+          className="mobile-menu-backdrop absolute inset-0"
           onClick={toggleMenu}
         />
         
         <div 
-          className={`absolute right-0 top-0 h-full w-full max-w-sm bg-gray-700 shadow-xl border-l border-gray-600 transform transition-transform duration-300 ease-in-out ${
+          className={`mobile-menu-content absolute right-0 top-0 h-full w-full max-w-sm bg-gray-700 shadow-2xl border-l border-gray-600 transform transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

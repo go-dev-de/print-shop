@@ -345,3 +345,25 @@
 .cart-dropdown-wrapper .cart-button svg {
   @apply text-gray-100;
 }
+
+/* ===== МОБИЛЬНОЕ МЕНЮ ===== */
+.mobile-menu-overlay {
+  z-index: 9999 !important;
+}
+
+.mobile-menu-content {
+  z-index: 10000 !important;
+}
+
+/* Обеспечиваем, что мобильное меню всегда поверх всего */
+.mobile-menu-overlay,
+.mobile-menu-content {
+  position: fixed !important;
+  isolation: isolate;
+}
+
+/* Затемнение фона */
+.mobile-menu-backdrop {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(4px);
+}
