@@ -9,8 +9,11 @@ import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
 import { ProductGridSkeleton } from '@/components/LoadingSkeletons';
 import Image from 'next/image';
-import { useProductsCache } from '@/components/useProductsCache';
-import { useInfiniteScroll } from '@/components/useInfiniteScroll';
+import dynamic from 'next/dynamic';
+
+// Динамические импорты для клиентских хуков
+const useProductsCache = dynamic(() => import('@/components/useProductsCache').then(mod => ({ default: mod.useProductsCache })), { ssr: false });
+const useInfiniteScroll = dynamic(() => import('@/components/useInfiniteScroll').then(mod => ({ default: mod.useInfiniteScroll })), { ssr: false });
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -18,6 +21,7 @@ export default function ProductsPage() {
   const [selectedSection, setSelectedSection] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isClient, setIsClient] = useState(false);
   
   // Infinite scroll
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,29 +29,38 @@ export default function ProductsPage() {
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   
-  // Кэширование
-  const { getCachedData, setCachedData, hasCachedData, getCacheStats } = useProductsCache();
+  // Проверка на клиентскую среду
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
-  // Infinite scroll
-  const { lastElementCallback } = useInfiniteScroll(loadMoreProducts, hasMore, isLoadingMore);
+  // Кэширование (только на клиенте)
+  const cacheHook = useProductsCache();
+  const { getCachedData, setCachedData, hasCachedData, getCacheStats } = cacheHook || {};
+  
+  // Infinite scroll (только на клиенте)
+  const scrollHook = useInfiniteScroll(loadMoreProducts, hasMore, isLoadingMore);
+  const { lastElementCallback } = scrollHook || {};
 
   // Загрузка товаров
   useEffect(() => {
+    if (!isClient) return; // Не загружаем на сервере
+    
     const fetchProducts = async () => {
       try {
         setLoading(true);
         
         // Проверяем кэш для текущей страницы и раздела
         const cacheKey = `${selectedSection}:${currentPage}`;
-        if (hasCachedData(cacheKey)) {
+        if (hasCachedData && hasCachedData(cacheKey)) {
           console.log('📖 Using cached data for:', cacheKey);
           const cachedData = getCachedData(cacheKey);
           setProducts(cachedData.products || []);
           setSections(cachedData.sections || []);
-          setTotalPages(cachedData.pagination?.totalPages || 1);
+
           setTotalProducts(cachedData.pagination?.totalProducts || 0);
-          setHasNextPage(cachedData.pagination?.hasNextPage || false);
-          setHasPrevPage(cachedData.pagination?.hasPrevPage || false);
+          setHasMore(cachedData.pagination?.hasNextPage || false);
+
           setLoading(false);
           return;
         }
@@ -61,13 +74,13 @@ export default function ProductsPage() {
         // Обновляем состояние
         setProducts(data.products || []);
         setSections(data.sections || []);
-        setTotalPages(data.pagination?.totalPages || 1);
         setTotalProducts(data.pagination?.totalProducts || 0);
-        setHasNextPage(data.pagination?.hasNextPage || false);
-        setHasPrevPage(data.pagination?.hasPrevPage || false);
+        setHasMore(data.pagination?.hasNextPage || false);
         
         // Кэшируем результат
-        setCachedData(cacheKey, data);
+        if (setCachedData) {
+          setCachedData(cacheKey, data);
+        }
         
         console.log(`✅ Loaded page ${currentPage} with ${data.products?.length || 0} products`);
         
@@ -84,7 +97,7 @@ export default function ProductsPage() {
 
   // Функции для infinite scroll
   const loadMoreProducts = async () => {
-    if (isLoadingMore || !hasMore) return;
+    if (!isClient || isLoadingMore || !hasMore) return;
     
     try {
       setIsLoadingMore(true);
@@ -92,7 +105,7 @@ export default function ProductsPage() {
       
       // Проверяем кэш для следующей страницы
       const cacheKey = `${selectedSection}:${nextPage}`;
-      if (hasCachedData(cacheKey)) {
+      if (hasCachedData && hasCachedData(cacheKey)) {
         console.log('📖 Using cached data for next page:', cacheKey);
         const cachedData = getCachedData(cacheKey);
         setProducts(prev => [...prev, ...(cachedData.products || [])]);
@@ -113,7 +126,9 @@ export default function ProductsPage() {
       setCurrentPage(nextPage);
       
       // Кэшируем результат
-      setCachedData(cacheKey, data);
+      if (setCachedData) {
+        setCachedData(cacheKey, data);
+      }
       
       console.log(`✅ Loaded page ${nextPage} with ${data.products?.length || 0} additional products`);
       
@@ -355,7 +370,7 @@ export default function ProductsPage() {
               {filteredProducts.map((product, index) => (
                 <div
                   key={product.id || `product-${index}`}
-                  ref={index === filteredProducts.length - 1 ? lastElementCallback : null}
+                  ref={isClient && index === filteredProducts.length - 1 ? lastElementCallback : null}
                 >
                   <ProductCard product={product} />
                 </div>
@@ -363,7 +378,7 @@ export default function ProductsPage() {
             </div>
             
             {/* Infinite Scroll Loader (Fallback) */}
-            {hasMore && (
+            {isClient && hasMore && (
               <div className="mt-8 text-center animate-fade-in" style={{animationDelay: '0.5s'}}>
                 {isLoadingMore ? (
                   <div className="flex items-center justify-center space-x-3 text-gray-400">
@@ -388,18 +403,20 @@ export default function ProductsPage() {
             </div>
             
             {/* Отладочная информация о кэше */}
-            <div className="mt-2 text-center">
-              <button
-                onClick={() => {
-                  const stats = getCacheStats();
-                  console.log('📊 Cache stats:', stats);
-                  alert(`Кэш: ${stats.size} записей\nПоследнее обновление: ${stats.lastUpdate}\nВозраст: ${stats.age}с`);
-                }}
-                className="text-xs text-gray-500 hover:text-gray-300 underline"
-              >
-                Информация о кэше
-              </button>
-            </div>
+            {isClient && getCacheStats && (
+              <div className="mt-2 text-center">
+                <button
+                  onClick={() => {
+                    const stats = getCacheStats();
+                    console.log('📊 Cache stats:', stats);
+                    alert(`Кэш: ${stats.size} записей\nПоследнее обновление: ${stats.lastUpdate}\nВозраст: ${stats.age}с`);
+                  }}
+                  className="text-xs text-gray-500 hover:text-gray-300 underline"
+                >
+                  Информация о кэше
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <div className="text-center py-12">
