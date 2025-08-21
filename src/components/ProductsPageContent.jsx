@@ -28,9 +28,6 @@ export default function ProductsPageContent() {
   // Кэширование
   const { getCachedData, setCachedData, hasCachedData, getCacheStats } = useProductsCache();
   
-  // Infinite scroll
-  const { lastElementCallback } = useInfiniteScroll(loadMoreProducts, hasMore, isLoadingMore);
-
   // Загрузка товаров
   useEffect(() => {
     const fetchProducts = async () => {
@@ -126,6 +123,9 @@ export default function ProductsPageContent() {
     setProducts([]);
     setHasMore(true);
   }, [selectedSection]);
+  
+  // Infinite scroll (после объявления loadMoreProducts)
+  const { lastElementCallback } = useInfiniteScroll(loadMoreProducts, hasMore, isLoadingMore);
   
   // Фильтрация товаров по разделу (теперь не нужна, так как фильтрация на сервере)
   const filteredProducts = products;
