@@ -180,6 +180,36 @@
   animation: slide-in-right 0.6s ease-out forwards;
 }
 
+/* ===== HERO FLOATING SHAPES ===== */
+@keyframes float {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -14px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-delay-1 {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 1.2s;
+  will-change: transform;
+}
+
+.animate-float-delay-2 {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 2.4s;
+  will-change: transform;
+}
+
 /* ===== КОНТЕЙНЕР ===== */
 .container {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
