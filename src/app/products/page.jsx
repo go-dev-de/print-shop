@@ -144,7 +144,7 @@ export default function ProductsPage() {
                   <div className="hidden md:block">print style</div>
                   <div className="md:hidden">
                     <Image 
-                      src="/logo-pr-style.png" 
+                      src="/print-style-logo.png" 
                       alt="Print Style Logo" 
                       width={120} 
                       height={40}

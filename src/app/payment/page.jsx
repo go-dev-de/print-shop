@@ -64,7 +64,7 @@ function PaymentForm() {
                 <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
                 <div className="md:hidden">
                   <Image 
-                    src="/logo-pr-style.png" 
+                    src="/print-style-logo.png" 
                     alt="Print Style Logo" 
                     width={120} 
                     height={40}
