@@ -1,983 +1,245 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Подключение шрифта New Order Light */
-@font-face {
-  font-family: 'New Order Light';
-  src: url('/fonts/NewOrderLight.woff2') format('woff2'),
-       url('/fonts/NewOrderLight.woff') format('woff'),
-       url('/fonts/NewOrderLight.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Применение шрифта ко всему сайту */
-* {
-  font-family: 'New Order Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-body {
-  font-family: 'New Order Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* Убеждаемся, что все текстовые элементы используют шрифт */
-h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, label {
-  font-family: 'New Order Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+@import "tailwindcss";
 
 /* ===== ЛОГОТИП PRINT STYLE ===== */
 .logo-print-shop {
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
-  font-weight: 300; /* Light weight */
-  letter-spacing: 0.3em; /* Wide spacing */
-  text-transform: lowercase; /* Строчные буквы */
-  line-height: 1.2; /* Нормальная высота строки */
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
-:root {
-  --background: #424242;
-  --foreground: #ffffff;
-  
-  /* ===== ТЕМНАЯ ЦВЕТОВАЯ ПАЛИТРА ===== */
-  /* Основные цвета */
-  --brand-primary: #424242;        /* Основной темный фон */
-  --brand-primary-dark: #2d2d2d;   /* Темнее основной */
-  --brand-primary-light: #5a5a5a;  /* Светлее основной */
-  --brand-secondary: #3b82f6;      /* Синий акцент */
-  --brand-accent: #10b981;         /* Зеленый акцент */
-  --brand-success: #10b981;        /* Зеленый успех */
-  --brand-warning: #f59e0b;        /* Оранжевый предупреждение */
-  --brand-error: #ef4444;          /* Красный ошибка */
-  
-  /* Нейтральные цвета для темной темы */
-  --gray-50: #1f1f1f;
-  --gray-100: #2a2a2a;
-  --gray-200: #3a3a3a;
-  --gray-300: #4a4a4a;
-  --gray-400: #5a5a5a;
-  --gray-500: #6a6a6a;
-  --gray-600: #7a7a7a;
-  --gray-700: #8a8a8a;
-  --gray-800: #9a9a9a;
-  --gray-900: #aaaaaa;
-  
-  /* Темные градиенты */
-  --gradient-primary: linear-gradient(135deg, #424242 0%, #2d2d2d 100%);
-  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  --gradient-warm: linear-gradient(135deg, #2d2d2d 0%, #424242 100%);
-  --gradient-cool: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  --gradient-premium: #2d2d2d;
-  
-  /* ===== РАСШИРЕННАЯ ТИПОГРАФИЧЕСКАЯ СИСТЕМА ===== */
-  /* Font Families */
-  --font-sans: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  --font-serif: 'Georgia', 'Times New Roman', serif;
-  --font-mono: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
-  
-  /* Typography Scale (Perfect Fourth: 1.333) */
-  --text-xs: 0.75rem;      /* 12px */
-  --text-sm: 0.875rem;     /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.25rem;      /* 20px */
-  --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 1.875rem;    /* 30px */
-  --text-4xl: 2.25rem;     /* 36px */
-  --text-5xl: 3rem;        /* 48px */
-  --text-6xl: 3.75rem;     /* 60px */
-  --text-7xl: 4.5rem;      /* 72px */
-  --text-8xl: 6rem;        /* 96px */
-  --text-9xl: 8rem;        /* 128px */
-  
-  /* Font Weights */
-  --font-thin: 100;
-  --font-extralight: 200;
-  --font-light: 300;
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-  --font-bold: 700;
-  --font-extrabold: 800;
-  --font-black: 900;
-  
-  /* Line Heights */
-  --leading-none: 1;
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
-  
-  /* Letter Spacing */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0em;
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
-  --tracking-widest: 0.1em;
-  
-  /* ===== SPACING SYSTEM (8px grid) ===== */
-  --space-px: 1px;
-  --space-0: 0px;
-  --space-1: 0.25rem;    /* 4px */
-  --space-2: 0.5rem;     /* 8px */
-  --space-3: 0.75rem;    /* 12px */
-  --space-4: 1rem;       /* 16px */
-  --space-5: 1.25rem;    /* 20px */
-  --space-6: 1.5rem;     /* 24px */
-  --space-8: 2rem;       /* 32px */
-  --space-10: 2.5rem;    /* 40px */
-  --space-12: 3rem;      /* 48px */
-  --space-16: 4rem;      /* 64px */
-  --space-20: 5rem;      /* 80px */
-  --space-24: 6rem;      /* 96px */
-  --space-32: 8rem;      /* 128px */
-  
-  /* ===== РАДИУСЫ СКРУГЛЕНИЯ ===== */
-  --radius-none: 0px;
-  --radius-sm: 0.125rem;   /* 2px */
-  --radius-base: 0.25rem;  /* 4px */
-  --radius-md: 0.375rem;   /* 6px */
-  --radius-lg: 0.5rem;     /* 8px */
-  --radius-xl: 0.75rem;    /* 12px */
-  --radius-2xl: 1rem;      /* 16px */
-  --radius-3xl: 1.5rem;    /* 24px */
-  --radius-full: 9999px;
-  
-  /* ===== ТЕНИ ===== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-  
-  /* ===== Z-INDEX SCALE ===== */
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
-  --z-popover: 1060;
-  --z-tooltip: 1070;
-  --z-toast: 1080;
-  --tracking-widest: 0.1em;
+/* ===== КАРТОЧКИ ТОВАРОВ ===== */
+.product-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
 }
 
-/* ===== БАЗОВЫЕ СТИЛИ ===== */
-* {
-  box-sizing: border-box;
+.product-card:hover {
+  transform: translateY(-8px) rotateX(5deg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-html {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  color: var(--gray-900);
-  scroll-behavior: smooth;
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 1rem;
+  z-index: -1;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  font-weight: var(--font-normal);
-  line-height: var(--leading-relaxed);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+.product-card:hover::before {
+  opacity: 1;
 }
 
-/* ===== TYPOGRAPHY UTILITY CLASSES ===== */
-.text-display {
-  font-size: var(--text-7xl);
-  font-weight: var(--font-black);
-  line-height: var(--leading-none);
-  letter-spacing: var(--tracking-tight);
-}
-
-.text-hero {
-  font-size: var(--text-6xl);
-  font-weight: var(--font-extrabold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-.text-heading {
-  font-size: var(--text-4xl);
-  font-weight: var(--font-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-normal);
-}
-
-.text-subheading {
-  font-size: var(--text-2xl);
-  font-weight: var(--font-semibold);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-normal);
-}
-
-.text-body {
-  font-size: var(--text-base);
-  font-weight: var(--font-normal);
-  line-height: var(--leading-relaxed);
-  letter-spacing: var(--tracking-normal);
-}
-
-.text-caption {
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  line-height: var(--leading-normal);
-  letter-spacing: var(--tracking-wide);
-}
-
-/* ===== BUTTON SYSTEM ===== */
+/* ===== КНОПКИ ===== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-semibold);
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  border: none;
-  outline: none;
-  position: relative;
-  overflow: hidden;
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95;
 }
 
-.btn:focus-visible {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Button Sizes */
-.btn-sm {
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-sm);
-  min-height: 2rem;
-}
-
-.btn-md {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-base);
-  min-height: 2.5rem;
-}
-
-.btn-compact {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm);
-  min-height: 2rem;
-  border-radius: 0.5rem;
-  position: relative;
-  transform-origin: center;
-}
-
-/* Специальные анимации для компактных кнопок */
-.btn-compact:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow: var(--shadow-lg);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-compact:active {
-  transform: translateY(1px) scale(0.96);
-  transition-duration: 0.08s;
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-}
-
-/* Ripple эффект будет работать через Tailwind классы в HTML */
-
-.btn-compact.btn-primary:active {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-compact.btn-secondary:active {
-  background: var(--brand-primary);
-  color: white;
-  border-color: var(--brand-primary);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-lg {
-  padding: var(--space-4) var(--space-6);
-  font-size: var(--text-lg);
-  min-height: 3rem;
-}
-
-.btn-xl {
-  padding: var(--space-5) var(--space-8);
-  font-size: var(--text-xl);
-  min-height: 3.5rem;
-}
-
-/* Button Variants */
 .btn-primary {
-  background: var(--gradient-primary);
-  color: white;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--shadow-sm);
-  transition-duration: 0.1s;
-}
-
-.btn-secondary {
-  background: white;
-  color: var(--brand-primary);
-  border: 2px solid var(--brand-primary);
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-secondary:hover {
-  background: var(--brand-primary);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.btn-secondary:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--shadow-sm);
-  transition-duration: 0.1s;
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700;
 }
 
 .btn-outline {
-  background: transparent;
-  color: var(--gray-700);
-  border: 2px solid var(--gray-300);
-}
-
-.btn-outline:hover {
-  background: var(--gray-50);
-  border-color: var(--gray-400);
+  @apply border-2 border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50;
 }
 
 .btn-ghost {
-  background: transparent;
-  color: var(--gray-700);
+  @apply text-gray-600 hover:text-gray-900 hover:bg-gray-100;
 }
 
-.btn-ghost:hover {
-  background: var(--gray-100);
+.btn-sm {
+  @apply px-4 py-2 text-sm;
 }
 
-/* ===== CARD SYSTEM ===== */
+.btn-md {
+  @apply px-6 py-3 text-base;
+}
+
+.btn-lg {
+  @apply px-8 py-4 text-lg;
+}
+
+.btn-xl {
+  @apply px-10 py-5 text-xl;
+}
+
+/* ===== КАРТОЧКИ ===== */
 .card {
-  background: white;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-base);
-  border: 1px solid var(--gray-200);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  @apply bg-white rounded-xl shadow-lg border border-gray-200;
 }
 
 .card-sm {
-  padding: var(--space-4);
+  @apply p-4;
 }
 
 .card-md {
-  padding: var(--space-6);
+  @apply p-6;
 }
 
 .card-lg {
-  padding: var(--space-8);
+  @apply p-8;
 }
 
-/* ===== FORM SYSTEM ===== */
-.form-group {
-  margin-bottom: var(--space-4);
+/* ===== ФОРМЫ ===== */
+.form-input {
+  @apply w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors;
 }
 
 .form-label {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  color: var(--gray-700);
-  margin-bottom: var(--space-2);
+  @apply block text-sm font-medium text-gray-700 mb-2;
 }
 
-.form-input {
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
-  border: 2px solid var(--gray-300);
-  border-radius: var(--radius-lg);
-  font-size: var(--text-base);
-  color: var(--gray-900);
-  background: white;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-input::placeholder {
-  color: var(--gray-500); /* Более темно-серый для placeholder */
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-@keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.2s ease-out;
-}
-
-.animate-pulse-subtle {
-  animation: pulse 2s infinite;
-}
-
-/* Улучшенная анимация для геометрических фигур */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-20px) rotate(5deg);
-    opacity: 0.8;
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delay-1 {
-  animation: float 6s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-.animate-float-delay-2 {
-  animation: float 6s ease-in-out infinite;
-  animation-delay: 4s;
-}
-
-/* ===== RESPONSIVE UTILITIES ===== */
-.container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 var(--space-4);
-}
-
-@media (min-width: 640px) {
-  .container {
-    padding: 0 var(--space-6);
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    padding: 0 var(--space-8);
-  }
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  width: 100%;
-  position: relative;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: none;
-  line-height: var(--leading-normal);
-  font-feature-settings: 'rlig' 1, 'calt' 1;
-}
-
-/* Typography Hierarchy */
-h1, h2, h3, h4, h5, h6 {
-  color: #111827;
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  margin: 0;
-}
-
-h1 {
-  font-size: var(--text-5xl);
-  font-weight: 800;
-  letter-spacing: var(--tracking-tight);
-}
-
-h2 {
-  font-size: var(--text-3xl);
-  font-weight: 700;
-}
-
-h3 {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-}
-
-h4 {
-  font-size: var(--text-xl);
-  font-weight: 600;
-}
-
-h5 {
-  font-size: var(--text-lg);
-  font-weight: 500;
-}
-
-h6 {
-  font-size: var(--text-base);
-  font-weight: 500;
-}
-
-/* Text utilities */
-.text-display {
-  font-size: var(--text-6xl);
-  font-weight: 900;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
+/* ===== ТИПОГРАФИКА ===== */
 .text-hero {
-  font-size: var(--text-5xl);
-  font-weight: 800;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold;
 }
 
 .text-heading {
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
 }
 
 .text-subheading {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--leading-snug);
+  @apply text-xl md:text-2xl font-medium;
 }
 
 .text-body {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  @apply text-base md:text-lg;
 }
 
 .text-caption {
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-  color: #6b7280;
+  @apply text-sm text-gray-600;
 }
 
-/* Smooth transitions for text */
-h1, h2, h3, h4, h5, h6, p, span {
-  transition: color 0.2s ease;
-}
-
-/* Предотвращение горизонтального скролла и дёрганья */
-* {
-  overscroll-behavior-x: none;
-}
-
-/* Стабилизация для touch устройств */
-.main-container {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-}
-
-/* Мобильная оптимизация */
-@media (max-width: 640px) {
-  main {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+/* ===== АНИМАЦИИ ===== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .bg-white {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
-  
-  /* Адаптивная grid для внутреннего контента */
-  .grid-cols-2 {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
-  }
-  
-  .grid-cols-3 {
-    grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 6px !important;
-  }
-
-  /* Улучшенная читабельность текста на мобильных */
-  .text-sm {
-    font-size: 0.875rem !important;
-    line-height: 1.25rem !important;
-  }
-
-  .text-base {
-    font-size: 1rem !important;
-    line-height: 1.5rem !important;
-  }
-
-  .text-lg {
-    font-size: 1.125rem !important;
-    line-height: 1.75rem !important;
-  }
-
-  /* Улучшенные отступы для мобильных */
-  .p-4 {
-    padding: 1rem !important;
-  }
-
-  .p-6 {
-    padding: 1.5rem !important;
-  }
-
-  .px-4 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  .py-3 {
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
-  }
-
-  /* Улучшенные размеры кнопок для мобильных */
-  button, .btn {
-    min-height: 44px !important; /* Минимальная высота для touch */
-    min-width: 44px !important;  /* Минимальная ширина для touch */
-  }
-
-  /* Улучшенные input поля для мобильных */
-  input, select, textarea {
-    font-size: 16px !important; /* Предотвращает zoom на iOS */
-    min-height: 44px !important;
-  }
-
-  /* Улучшенные таблицы для мобильных */
-  table {
-    font-size: 0.875rem !important;
-  }
-
-  th, td {
-    padding: 0.75rem 0.5rem !important;
-  }
-
-  /* Улучшенные карточки для мобильных */
-  .card, .bg-gray-700, .bg-gray-600 {
-    border-radius: 0.75rem !important;
-    margin: 0.5rem !important;
-  }
-
-  /* Улучшенные модальные окна для мобильных */
-  .modal, [class*="modal"] {
-    margin: 1rem !important;
-    max-height: calc(100vh - 2rem) !important;
-  }
-
-  /* Улучшенная корзина для мобильных */
-  .cart-dropdown {
-    width: calc(100vw - 2rem) !important;
-    max-width: 320px !important;
-    right: 1rem !important;
-    left: 1rem !important;
-    transform: none !important;
-  }
-
-  /* Улучшенные кнопки корзины для мобильных */
-  .cart-button {
-    min-height: 48px !important;
-    min-width: 48px !important;
-    padding: 12px !important;
-  }
-
-  .cart-quantity-button {
-    min-height: 40px !important;
-    min-width: 40px !important;
-    font-size: 18px !important;
-  }
-
-  /* Улучшенные уведомления корзины для мобильных */
-  .cart-notification {
-    right: 1rem !important;
-    left: 1rem !important;
-    max-width: calc(100vw - 2rem) !important;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Animation utilities */
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(10px) scale(0.95); 
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
-  }
-}
-
-@keyframes modalSlideIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(-20px) scale(0.95); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.3; }
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-modal-in {
-  animation: modalSlideIn 0.3s ease-out forwards;
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 3s ease-in-out infinite;
-}
-
-/* ===== АНИМАЦИИ КОРЗИНЫ ===== */
-@keyframes scaleIn {
-  from { 
-    opacity: 0; 
-    transform: scale(0.8); 
-  }
-  to { 
-    opacity: 1; 
-    transform: scale(1); 
-  }
-}
-
-@keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
+  animation: fade-in 0.6s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.2s ease-out forwards;
+  animation: scale-in 0.5s ease-out forwards;
 }
 
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out forwards;
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s ease-out forwards;
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+.main-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* ===== СКРОЛЛБАР ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a6a9a 100%);
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .text-hero {
+    @apply text-3xl;
+  }
+  
+  .text-heading {
+    @apply text-2xl;
+  }
+  
+  .btn {
+    @apply px-4 py-2 text-sm;
+  }
 }
 
 /* ===== ТЕМНАЯ ТЕМА ===== */
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-/* Основные контейнеры */
-.bg-white {
-  background-color: var(--gray-100) !important;
-}
-
-.bg-gray-50 {
-  background-color: var(--gray-50) !important;
-}
-
-.bg-gray-100 {
-  background-color: var(--gray-100) !important;
-}
-
-.bg-gray-200 {
-  background-color: var(--gray-200) !important;
-}
-
-/* Текст */
-.text-gray-900 {
-  color: var(--foreground) !important;
-}
-
-.text-gray-800 {
-  color: var(--gray-900) !important;
-}
-
-.text-gray-700 {
-  color: var(--gray-800) !important;
-}
-
-.text-gray-600 {
-  color: var(--gray-700) !important;
-}
-
-.text-gray-500 {
-  color: var(--gray-600) !important;
-}
-
-/* Границы */
-.border-gray-200 {
-  border-color: var(--gray-300) !important;
-}
-
-.border-gray-300 {
-  border-color: var(--gray-400) !important;
-}
-
-.border-gray-100 {
-  border-color: var(--gray-200) !important;
-}
-
-/* Дополнительные стили для темной темы */
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
-}
-
-.shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Улучшенные focus состояния для темной темы */
-.focus\:ring-blue-500:focus {
-  --tw-ring-color: rgb(59 130 246 / 0.3) !important;
-}
-
-.focus\:ring-offset-2:focus {
-  --tw-ring-offset-width: 2px !important;
-}
-
-.focus\:ring-offset-gray-700:focus {
-  --tw-ring-offset-color: rgb(55 65 81) !important;
-}
-
-.focus\:ring-offset-gray-800:focus {
-  --tw-ring-offset-color: rgb(31 41 55) !important;
-}
-
-/* Улучшенные hover состояния */
-.hover\:bg-gray-600:hover {
-  background-color: rgb(75 85 99) !important;
-}
-
-.hover\:bg-gray-500:hover {
-  background-color: rgb(107 114 128) !important;
-}
-
-.hover\:border-gray-500:hover {
-  border-color: rgb(107 114 128) !important;
-}
-
-.hover\:border-gray-400:hover {
-  border-color: rgb(156 163 175) !important;
-}
-
-/* ===== TOUCH-FRIENDLY СТИЛИ ===== */
-.touch-manipulation {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Улучшенные focus состояния для touch устройств */
-@media (hover: none) and (pointer: coarse) {
-  .hover\:bg-gray-600:hover,
-  .hover\:bg-gray-500:hover,
-  .hover\:bg-blue-700:hover,
-  .hover\:bg-gray-500:hover {
-    background-color: inherit !important;
+@media (prefers-color-scheme: dark) {
+  .card {
+    @apply bg-gray-800 border-gray-700;
   }
   
-  .hover\:text-white:hover,
-  .hover\:text-blue-300:hover,
-  .hover\:text-red-300:hover {
-    color: inherit !important;
+  .form-input {
+    @apply bg-gray-700 border-gray-600 text-white;
   }
   
-  /* Активные состояния для touch */
-  .touch-manipulation:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
+  .text-caption {
+    @apply text-gray-400;
   }
 }
