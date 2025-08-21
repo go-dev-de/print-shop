@@ -429,13 +429,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-lg logo-print-shop mb-4 text-white">
-                <Image 
-                  src="/print-style-logo.png" 
-                  alt="Print Style Logo" 
-                  width={120} 
-                  height={40}
-                  className="h-8 w-auto"
-                />
+                
               </h3>
               <p className="text-gray-300">
                 Создавайте уникальные футболки <br/>

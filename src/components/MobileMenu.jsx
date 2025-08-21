@@ -1,14 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import CartDropdown from './CartDropdown';
 
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const cartButtonRef = useRef(null);
   
   const toggleMenu = () => setIsOpen(!isOpen);
+  
+  const handleCartClick = () => {
+    // Находим кнопку корзины и кликаем на неё
+    if (cartButtonRef.current) {
+      const cartButton = cartButtonRef.current.querySelector('button');
+      if (cartButton) {
+        cartButton.click();
+      }
+    }
+  };
   
   const menuItems = [
     { name: 'Главная', href: '/#main' },
@@ -53,18 +64,7 @@ export default function MobileMenu() {
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
-          <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
-            <div className="flex items-center">
-              <h1 className="text-xl text-white font-semibold">
-                <Image 
-                  src="/print-style-logo.png" 
-                  alt="Print Style Logo" 
-                  width={100} 
-                  height={35}
-                  className="h-8 w-auto"
-                />
-              </h1>
-            </div>
+          <div className="flex items-center justify-end p-4 border-b border-gray-600 bg-gray-700">
             <button
               onClick={toggleMenu}
               className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"
@@ -82,9 +82,11 @@ export default function MobileMenu() {
                   return (
                     <li key={item.name}>
                       {item.special === 'cart' ? (
-                        <div className={`px-6 py-4 flex items-center justify-between bg-gray-700 ${!isLast ? 'border-b border-gray-600' : ''}`}>
+                        <div className={`px-6 py-4 flex items-center justify-between bg-gray-700 hover:bg-gray-600 transition-colors cursor-pointer ${!isLast ? 'border-b border-gray-600' : ''}`} onClick={handleCartClick}>
                           <span className="text-lg font-medium text-white">Корзина</span>
-                          <CartDropdown />
+                          <div ref={cartButtonRef} className="cart-dropdown-wrapper">
+                            <CartDropdown />
+                          </div>
                         </div>
                       ) : (
                         <a 

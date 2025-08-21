@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useCart } from './CartDropdown';
+import { useCart } from './useCart';
 
 export default function ProductCard({ product }) {
   const { name, basePrice, description, section, image, images } = product;
@@ -219,15 +219,22 @@ export default function ProductCard({ product }) {
         
         {/* Кнопка добавления в корзину */}
         <button 
-          onClick={() => addToCart({
-            id: product.id || Date.now(),
-            name: name,
-            price: finalPrice,
-            image: allImages[0],
-            size: selectedSize,
-            color: 'белый',
-            quantity: 1
-          })}
+          onClick={() => {
+            addToCart({
+              id: product.id || Date.now(),
+              name: name,
+              price: finalPrice,
+              image: allImages[0],
+              size: selectedSize,
+              color: 'белый',
+              quantity: 1
+            });
+            
+            // Показываем уведомление
+            if (window.showCartNotification) {
+              window.showCartNotification(`${name} добавлен в корзину`);
+            }
+          }}
           className="w-full bg-black text-white font-medium py-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg group relative overflow-hidden"
         >
           <span className="relative z-10 flex items-center justify-center">

@@ -336,3 +336,12 @@
     @apply text-gray-400;
   }
 }
+
+/* Мобильное меню - более светлый значок корзины */
+.cart-dropdown-wrapper .cart-button {
+  @apply text-gray-100 hover:text-white;
+}
+
+.cart-dropdown-wrapper .cart-button svg {
+  @apply text-gray-100;
+}
