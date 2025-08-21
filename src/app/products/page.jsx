@@ -54,8 +54,19 @@ export default function ProductsPage() {
           <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
-                <h1 className="text-3xl font-bold text-white">
-                  <Link href="/" className="hover:text-blue-400 transition-colors">print style</Link>
+                <h1 className="text-3xl logo-print-shop h-full flex items-center">
+                  <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
+                    <div className="hidden md:block">print style</div>
+                    <div className="md:hidden">
+                      <Image 
+                        src="/print-style-logo.png" 
+                        alt="Print Style Logo" 
+                        width={120} 
+                        height={40}
+                        className="h-full w-auto"
+                      />
+                    </div>
+                  </Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><UserProfile /></div>
@@ -95,8 +106,19 @@ export default function ProductsPage() {
           <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
-                <h1 className="text-3xl font-bold text-white">
-                  <Link href="/" className="hover:text-blue-400 transition-colors">print style</Link>
+                <h1 className="text-3xl logo-print-shop h-full flex items-center">
+                  <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
+                    <div className="hidden md:block">print style</div>
+                    <div className="md:hidden">
+                      <Image 
+                        src="/print-style-logo.png" 
+                        alt="Print Style Logo" 
+                        width={120} 
+                        height={40}
+                        className="h-full w-auto"
+                      />
+                    </div>
+                  </Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><UserProfile /></div>

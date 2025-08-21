@@ -24,7 +24,7 @@ export default function MobileMenu() {
       <div className="md:hidden">
         <button
           onClick={toggleMenu}
-          className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-600 transition-colors"
           aria-expanded={isOpen}
           aria-label="Открыть меню"
         >
