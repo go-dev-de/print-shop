@@ -49,23 +49,23 @@ export default function ProductsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-gray-50 shadow-lg sticky top-0 z-40">
+      <div className="min-h-screen bg-gray-800">
+        <header className="shadow-lg sticky top-0 z-40" style={{backgroundColor: '#424242'}}>
           <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
+                <h1 className="text-3xl font-bold text-white">
+                  <Link href="/" className="hover:text-blue-400 transition-colors">print style</Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><UserProfile /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
-                <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
-                <Link href="/products" className="text-blue-600 font-medium">Товары</Link>
-                <Link href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</Link>
-                <Link href="/#about" className="text-gray-800 hover:text-blue-600">О нас</Link>
-                <Link href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</Link>
+                <Link href="/#main" className="text-gray-200 hover:text-blue-400">Главная</Link>
+                <Link href="/products" className="text-blue-400 font-medium">Товары</Link>
+                <Link href="/#reviews" className="text-gray-200 hover:text-blue-400">Отзывы</Link>
+                <Link href="/#about" className="text-gray-200 hover:text-blue-400">О нас</Link>
+                <Link href="/#contacts" className="text-gray-200 hover:text-blue-400">Контакты</Link>
               </nav>
             </div>
           </div>
@@ -90,23 +90,23 @@ export default function ProductsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-lg sticky top-0 z-40">
+      <div className="min-h-screen bg-gray-800">
+        <header className="shadow-lg sticky top-0 z-40" style={{backgroundColor: '#424242'}}>
           <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  <Link href="/" className="hover:text-blue-600 transition-colors">PrintStyle</Link>
+                <h1 className="text-3xl font-bold text-white">
+                  <Link href="/" className="hover:text-blue-400 transition-colors">print style</Link>
                 </h1>
                 
                 <div className="ml-6 hidden md:block"><UserProfile /></div>
               </div>
               <nav className="hidden md:flex space-x-8">
-                <Link href="/#main" className="text-gray-800 hover:text-blue-600">Главная</Link>
-                <Link href="/products" className="text-blue-600 font-medium">Товары</Link>
-                <Link href="/#reviews" className="text-gray-800 hover:text-blue-600">Отзывы</Link>
-                <Link href="/#about" className="text-gray-800 hover:text-blue-600">О нас</Link>
-                <Link href="/#contacts" className="text-gray-800 hover:text-blue-600">Контакты</Link>
+                <Link href="/#main" className="text-gray-200 hover:text-blue-400">Главная</Link>
+                <Link href="/products" className="text-blue-400 font-medium">Товары</Link>
+                <Link href="/#reviews" className="text-gray-200 hover:text-blue-400">Отзывы</Link>
+                <Link href="/#about" className="text-gray-200 hover:text-blue-400">О нас</Link>
+                <Link href="/#contacts" className="text-gray-200 hover:text-blue-400">Контакты</Link>
               </nav>
             </div>
           </div>
@@ -115,10 +115,10 @@ export default function ProductsPage() {
         {/* Основной контент */}
         <main className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-96">
-            <div className="text-center bg-white rounded-lg shadow-lg p-8">
-              <div className="text-red-500 text-6xl mb-4">⚠️</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Ошибка загрузки</h3>
-              <p className="text-gray-600 mb-4">Не удалось загрузить товары: {error}</p>
+            <div className="text-center bg-gray-700 rounded-lg shadow-lg p-8">
+              <div className="text-red-400 text-6xl mb-4">⚠️</div>
+              <h3 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h3>
+              <p className="text-gray-300 mb-4">Не удалось загрузить товары: {error}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
@@ -133,7 +133,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-800">
       {/* Header */}
       <header className="shadow-lg sticky top-0 z-40" style={{backgroundColor: '#424242'}}>
         <div className="container">
