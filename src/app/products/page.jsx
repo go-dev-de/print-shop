@@ -9,6 +9,7 @@ import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
 import { ProductGridSkeleton } from '@/components/LoadingSkeletons';
+import Image from 'next/image';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -145,7 +146,16 @@ export default function ProductsPage() {
             <div className="flex items-center">
                              <h1 className="text-2xl logo-print-shop text-white">
                  <Link href="/" className="hover:text-gray-200 transition-colors">
-                   print style
+                   <div className="hidden md:block">print style</div>
+                   <div className="md:hidden">
+                     <Image 
+                       src="/logo-pr-style.png" 
+                       alt="Print Style Logo" 
+                       width={120} 
+                       height={40}
+                       className="h-8 w-auto"
+                     />
+                   </div>
                  </Link>
                </h1>
               

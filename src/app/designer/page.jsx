@@ -235,7 +235,16 @@ export default function Designer() {
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  print style
+                  <div className="hidden md:block">print style</div>
+                  <div className="md:hidden">
+                    <Image 
+                      src="/logo-pr-style.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-8 w-auto"
+                    />
+                  </div>
                 </Link>
               </h1>
               

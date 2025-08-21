@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
@@ -488,7 +489,16 @@ export default function ReviewsPage() {
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop text-white">
                 <Link href="/" className="hover:text-gray-200 transition-all duration-300">
-                  print style
+                  <div className="hidden md:block">print style</div>
+                  <div className="md:hidden">
+                    <Image 
+                      src="/logo-pr-style.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-8 w-auto"
+                    />
+                  </div>
                 </Link>
               </h1>
               

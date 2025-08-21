@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 function PaymentForm() {
   const router = useRouter();
@@ -58,11 +59,18 @@ function PaymentForm() {
       <header className="bg-white/95 backdrop-blur-lg shadow-lg">
         <div className="container">
           <div className="flex justify-center items-center py-4 lg:py-6">
-            <h1 className="text-heading text-gray-900">
-              <Link href="/" className="hover:text-blue-600 transition-all duration-300">
+            <Link href="/">
+              <Image
+                src="/logo-pr-style.png"
+                alt="PrintStyle Logo"
+                width={150}
+                height={40}
+                className="hidden lg:block"
+              />
+              <h1 className="text-heading text-gray-900">
                 Print<span className="text-blue-600">Style</span>
-              </Link>
-            </h1>
+              </h1>
+            </Link>
           </div>
         </div>
       </header>

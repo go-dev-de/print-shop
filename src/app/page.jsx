@@ -276,7 +276,16 @@ export default function Home() {
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
-                  print style
+                  <div className="hidden md:block">print style</div>
+                  <div className="md:hidden">
+                    <Image 
+                      src="/logo-pr-style.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-8 w-auto"
+                    />
+                  </div>
                 </Link>
               </h1>
               
@@ -356,14 +365,14 @@ export default function Home() {
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.3s'}}>
-              <a href="/designer" className="group inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+              <a href="/designer" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </a>
               
-              <a href="/products" className="group inline-flex items-center px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
+              <a href="/products" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
                 <span>Посмотреть каталог</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -409,41 +418,8 @@ export default function Home() {
 
       </section>
 
-      <main className="relative">
-        <div className="container">
-        {/* Секция отзывов */}
-        <ReviewsCarousel />
-
-        {/* Call to Action секция */}
-        <section className="text-center py-16">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl lg:text-3xl font-bold mb-4">
-              Готовы создать свою уникальную футболку?
-            </h3>
-            <p className="text-lg text-blue-100 mb-6 max-w-2xl mx-auto">
-              Присоединяйтесь к тысячам довольных клиентов! Посмотрите отзывы и поделитесь своим опытом.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="/designer" 
-                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
-              >
-                Создать дизайн
-              </a>
-              <a 
-                href="/reviews" 
-                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
-              >
-                Посмотреть отзывы
-              </a>
-            </div>
-          </div>
-        </section>
-        </div>
-      </main>
-
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-16">
+      <footer className="bg-gray-900 text-white">
         <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

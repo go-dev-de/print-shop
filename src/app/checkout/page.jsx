@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
@@ -196,7 +197,16 @@ export default function CheckoutPage() {
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-gray-900">
                 <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
-                  Print<span className="text-blue-600">Style</span>
+                  <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
+                  <div className="md:hidden">
+                    <Image 
+                      src="/logo-pr-style.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-8 w-auto"
+                    />
+                  </div>
                 </Link>
               </h1>
             </div>
