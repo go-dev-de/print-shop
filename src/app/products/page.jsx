@@ -9,6 +9,7 @@ import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
 import { ProductGridSkeleton } from '@/components/LoadingSkeletons';
 import Image from 'next/image';
+import { useProductsCache } from '@/components/useProductsCache';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -25,7 +26,7 @@ export default function ProductsPage() {
   const [hasPrevPage, setHasPrevPage] = useState(false);
   
   // Кэширование
-  const [cachedProducts, setCachedProducts] = useState(new Map());
+  const { getCachedData, setCachedData, hasCachedData, getCacheStats } = useProductsCache();
 
   // Загрузка товаров
   useEffect(() => {
@@ -35,9 +36,9 @@ export default function ProductsPage() {
         
         // Проверяем кэш для текущей страницы и раздела
         const cacheKey = `${selectedSection}:${currentPage}`;
-        if (cachedProducts.has(cacheKey)) {
+        if (hasCachedData(cacheKey)) {
           console.log('📖 Using cached data for:', cacheKey);
-          const cachedData = cachedProducts.get(cacheKey);
+          const cachedData = getCachedData(cacheKey);
           setProducts(cachedData.products || []);
           setSections(cachedData.sections || []);
           setTotalPages(cachedData.pagination?.totalPages || 1);
@@ -63,7 +64,7 @@ export default function ProductsPage() {
         setHasPrevPage(data.pagination?.hasPrevPage || false);
         
         // Кэшируем результат
-        setCachedProducts(prev => new Map(prev).set(cacheKey, data));
+        setCachedData(cacheKey, data);
         
         console.log(`✅ Loaded page ${currentPage} with ${data.products?.length || 0} products`);
         
@@ -76,7 +77,7 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, [currentPage, selectedSection, cachedProducts]);
+  }, [currentPage, selectedSection, hasCachedData, getCachedData, setCachedData]);
 
   // Функции навигации по страницам
   const goToPage = (page) => {
@@ -392,6 +393,20 @@ export default function ProductsPage() {
             {/* Информация о страницах */}
             <div className="mt-4 text-center text-gray-400 text-sm">
               Страница {currentPage} из {totalPages} • Всего товаров: {totalProducts}
+            </div>
+            
+            {/* Отладочная информация о кэше */}
+            <div className="mt-2 text-center">
+              <button
+                onClick={() => {
+                  const stats = getCacheStats();
+                  console.log('📊 Cache stats:', stats);
+                  alert(`Кэш: ${stats.size} записей\nПоследнее обновление: ${stats.lastUpdate}\nВозраст: ${stats.age}с`);
+                }}
+                className="text-xs text-gray-500 hover:text-gray-300 underline"
+              >
+                Информация о кэше
+              </button>
             </div>
           </>
         ) : (
