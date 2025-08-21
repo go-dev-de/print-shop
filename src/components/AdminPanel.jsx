@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 
 const STATUS_LABELS = {
   new: 'Новый',
@@ -806,9 +807,11 @@ export default function AdminPanel() {
                   {orderDetails.payload?.image && (
                     <div className="border-2 border-gray-300 rounded-lg p-3">
                       <h5 className="font-medium text-gray-800 mb-2">Исходный принт</h5>
-                      <img 
+                      <Image 
                         src={orderDetails.payload.image} 
                         alt="Принт" 
+                        width={400}
+                        height={192}
                         className="w-full h-48 object-contain bg-gray-100 rounded"
                       />
                       {orderDetails.payload?.imagePosition && (
@@ -823,9 +826,11 @@ export default function AdminPanel() {
                   {orderDetails.payload?.previewImage && (
                     <div className="border-2 border-gray-300 rounded-lg p-3">
                       <h5 className="font-medium text-gray-800 mb-2">Превью футболки</h5>
-                      <img 
+                      <Image 
                         src={orderDetails.payload.previewImage} 
                         alt="Превью футболки" 
+                        width={400}
+                        height={192}
                         className="w-full h-48 object-contain bg-gray-100 rounded"
                       />
                     </div>
@@ -1099,10 +1104,12 @@ export default function AdminPanel() {
                       <div className="flex items-center gap-2">
                         <div className="flex -space-x-1">
                           {p.images.slice(0, 3).map((img, idx) => (
-                            <img 
-                    key={`product-${p.id || idx}-image-${idx}`}
+                            <Image 
+                              key={`product-${p.id || idx}-image-${idx}`}
                               src={img} 
                               alt={`${p.name} ${idx + 1}`} 
+                              width={24}
+                              height={24}
                               className="w-6 h-6 object-cover rounded border-2 border-white" 
                             />
                           ))}
@@ -1294,10 +1301,12 @@ export default function AdminPanel() {
                       <p className="text-xs text-gray-500 mb-2">Прикрепленные файлы:</p>
                       <div className="flex flex-wrap gap-2">
                         {review.media_urls.map((url, mediaIdx) => (
-                          <img
+                          <Image
                             key={mediaIdx}
                             src={url}
                             alt={`Медиа ${mediaIdx + 1}`}
+                            width={64}
+                            height={64}
                             className="w-16 h-16 object-cover rounded border border-gray-200"
                           />
                         ))}
@@ -1618,9 +1627,11 @@ function ProductCreateForm({ sections, onCreate }) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {images.map((img, index) => (
                   <div key={index} className="relative group">
-                    <img 
+                    <Image 
                       src={img} 
                       alt={`Изображение ${index + 1}`} 
+                      width={80}
+                      height={80}
                       className="w-full h-20 object-cover rounded-md border"
                     />
                     <button

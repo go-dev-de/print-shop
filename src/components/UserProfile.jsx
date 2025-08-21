@@ -219,9 +219,11 @@ export default function UserProfile() {
       >
         <div className="relative">
           {getAvatarUrl(user.avatar) ? (
-            <img
+            <Image
               src={getAvatarUrl(user.avatar)}
               alt={user.name}
+              width={36}
+              height={36}
               className="w-9 h-9 rounded-full object-cover border-2 border-gray-200 group-hover:border-gray-300 transition-colors"
             />
           ) : (
@@ -243,9 +245,11 @@ export default function UserProfile() {
           <div className="px-4 py-3 border-b border-gray-600">
             <div className="flex items-center space-x-3">
               {getAvatarUrl(user.avatar) ? (
-                <img
+                <Image
                   src={getAvatarUrl(user.avatar)}
                   alt={user.name}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
@@ -337,9 +341,11 @@ export default function UserProfile() {
                   {/* Avatar */}
                   <div className="flex justify-center">
                     {getAvatarUrl(user.avatar) ? (
-                      <img
+                      <Image
                         src={getAvatarUrl(user.avatar)}
                         alt={user.name}
+                        width={80}
+                        height={80}
                         className="w-20 h-20 rounded-full object-cover border-3 border-gray-500"
                       />
                     ) : (

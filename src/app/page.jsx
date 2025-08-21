@@ -276,7 +276,15 @@ export default function Home() {
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop h-full flex items-center">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
-                  <div className="hidden md:block">print style</div>
+                  <div className="hidden md:block">
+                    <Image 
+                      src="/print-style-logo.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                  </div>
                   <div className="md:hidden">
                     <Image 
                       src="/print-style-logo.png" 
@@ -293,18 +301,18 @@ export default function Home() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              <a href="#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">
+              <Link href="#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">
                 Главная
-              </a>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              </Link>
+              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Товары
-              </a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              </Link>
+              <Link href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Отзывы
-              </a>
-              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              </Link>
+              <Link href="#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 О нас
-              </a>
+              </Link>
               <div className="flex items-center space-x-3 ml-4">
                 <CartDropdown />
                 <UserProfile />
@@ -362,19 +370,19 @@ export default function Home() {
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20 animate-fade-in" style={{animationDelay: '0.3s'}}>
-              <a href="/designer" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+              <Link href="/designer" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </a>
+              </Link>
               
-              <a href="/products" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
+              <Link href="/products" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
                 <span>Посмотреть каталог</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-              </a>
+              </Link>
             </div>
             
             {/* Features */}
@@ -421,7 +429,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-lg logo-print-shop mb-4 text-white">
-                print style
+                <Image 
+                  src="/print-style-logo.png" 
+                  alt="Print Style Logo" 
+                  width={120} 
+                  height={40}
+                  className="h-8 w-auto"
+                />
               </h3>
               <p className="text-gray-300">
                 Создавайте уникальные футболки <br/>

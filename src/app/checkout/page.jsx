@@ -198,7 +198,15 @@ export default function CheckoutPage() {
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-white h-full flex items-center">
                 <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105 h-full flex items-center">
-                  <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
+                  <div className="hidden md:block">
+                    <Image 
+                      src="/print-style-logo.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                  </div>
                   <div className="md:hidden">
                     <Image 
                       src="/print-style-logo.png" 
@@ -480,7 +488,7 @@ export default function CheckoutPage() {
                     <div key={index} className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-medium">
                         {item.image ? (
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover rounded-lg" />
+                          <Image src={item.image} alt={item.name} width={48} height={48} className="w-full h-full object-cover rounded-lg" />
                         ) : (
                           '👕'
                         )}

@@ -234,7 +234,15 @@ export default function Designer() {
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop h-full flex items-center">
                 <Link href="/" className="hover:text-gray-200 transition-all duration-300 h-full flex items-center">
-                  <div className="hidden md:block">print style</div>
+                  <div className="hidden md:block">
+                    <Image 
+                      src="/print-style-logo.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                  </div>
                   <div className="md:hidden">
                     <Image 
                       src="/print-style-logo.png" 
@@ -251,11 +259,11 @@ export default function Designer() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              <a href="/#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">Главная</a>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Товары</a>
-              <a href="/designer" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">Дизайнер</a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Отзывы</a>
-              <a href="/#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">О нас</a>
+              <Link href="/#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">Главная</Link>
+              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Товары</Link>
+              <Link href="/designer" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">Дизайнер</Link>
+              <Link href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Отзывы</Link>
+              <Link href="/#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">О нас</Link>
               <div className="flex items-center space-x-3 ml-4">
                 <CartDropdown />
                 <UserProfile />

@@ -24,7 +24,7 @@ const nextConfig = {
   experimental: {
     ppr: false, // Disable Partial Pre-Rendering
   },
-  // Move serverComponentsExternalPackages to top level as per Next.js 15
+  // Server external packages for Next.js 15
   serverExternalPackages: [],
 };
 

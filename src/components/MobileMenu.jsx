@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import CartDropdown from './CartDropdown';
 
 
@@ -55,7 +56,13 @@ export default function MobileMenu() {
           <div className="flex items-center justify-between p-4 border-b border-gray-600 bg-gray-700">
             <div className="flex items-center">
               <h1 className="text-xl text-white font-semibold">
-                print style
+                <Image 
+                  src="/print-style-logo.png" 
+                  alt="Print Style Logo" 
+                  width={100} 
+                  height={35}
+                  className="h-8 w-auto"
+                />
               </h1>
             </div>
             <button

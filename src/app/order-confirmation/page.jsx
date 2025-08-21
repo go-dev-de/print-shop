@@ -40,7 +40,15 @@ function OrderConfirmationForm() {
           <div className="flex justify-center items-center py-1">
             <h1 className="text-heading text-white h-full flex items-center">
               <Link href="/" className="hover:text-blue-600 transition-all duration-300 h-full flex items-center">
-                <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
+                <div className="hidden md:block">
+                  <Image 
+                    src="/print-style-logo.png" 
+                    alt="Print Style Logo" 
+                    width={120} 
+                    height={40}
+                    className="h-full w-auto"
+                  />
+                </div>
                 <div className="md:hidden">
                   <Image 
                     src="/print-style-logo.png" 
