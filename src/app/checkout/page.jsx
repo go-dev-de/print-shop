@@ -33,25 +33,6 @@ export default function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState('pickup'); // pickup, delivery
   const [paymentMethod, setPaymentMethod] = useState('online'); // online, cash
 
-  useEffect(() => {
-    // Загружаем данные корзины
-    loadCheckoutData();
-    // Загружаем данные пользователя
-    loadUserData();
-
-    // Добавляем обработчик скролла для sticky эффекта
-    const handleScroll = () => {
-      if (orderSummaryRef.current) {
-        const rect = orderSummaryRef.current.getBoundingClientRect();
-        const headerHeight = 120; // Высота header'а
-        setIsSticky(rect.top <= headerHeight);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadCheckoutData]);
-
   const loadCheckoutData = useCallback(() => {
     try {
       const savedCart = localStorage.getItem('checkout_cart');
@@ -70,6 +51,25 @@ export default function CheckoutPage() {
       router.push('/');
     }
   }, [router]);
+
+  useEffect(() => {
+    // Загружаем данные корзины
+    loadCheckoutData();
+    // Загружаем данные пользователя
+    loadUserData();
+
+    // Добавляем обработчик скролла для sticky эффекта
+    const handleScroll = () => {
+      if (orderSummaryRef.current) {
+        const rect = orderSummaryRef.current.getBoundingClientRect();
+        const headerHeight = 120; // Высота header'а
+        setIsSticky(rect.top <= headerHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); // Убираем зависимости, так как эти функции должны выполниться только один раз при монтировании
 
   const loadUserData = async () => {
     try {
@@ -174,13 +174,13 @@ export default function CheckoutPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Корзина пуста</h1>
-          <p className="text-gray-600 mb-6">Добавьте товары в корзину для оформления заказа</p>
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <div className="text-center bg-gray-700 rounded-lg shadow-lg p-8">
+          <h1 className="text-2xl font-bold text-white mb-4">Корзина пуста</h1>
+          <p className="text-gray-300 mb-6">Добавьте товары в корзину для оформления заказа</p>
           <button 
             onClick={() => router.push('/products')}
-            className="btn btn-primary btn-lg"
+            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
           >
             Перейти к товарам
           </button>
@@ -190,7 +190,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-800">
       {/* Header */}
       <header className="shadow-lg sticky top-0 z-40 border-b border-gray-200" style={{backgroundColor: '#424242'}}>
         <div className="container">
@@ -243,10 +243,10 @@ export default function CheckoutPage() {
         <div className="max-w-4xl mx-auto">
           {/* Page Header */}
           <div className="text-center mb-12 animate-fade-in">
-            <h1 className="text-hero text-gray-900 mb-6">
+            <h1 className="text-hero text-white mb-6">
               Оформление заказа
             </h1>
-            <p className="text-body text-gray-600">
+            <p className="text-body text-gray-300">
               Заполните данные для доставки и оплаты
             </p>
           </div>
@@ -256,12 +256,12 @@ export default function CheckoutPage() {
             <div className="lg:col-span-2">
               <form onSubmit={handleSubmitOrder} className="space-y-8">
                 {/* Данные клиента */}
-                <div className="card card-lg animate-fade-in">
+                <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
                   <h2 className="text-heading text-gray-900 mb-6">Контактные данные</h2>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="form-group">
-                      <label htmlFor="name" className="form-label">
+                    <div className="mb-4">
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                         Имя <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -271,13 +271,13 @@ export default function CheckoutPage() {
                         value={customerData.name}
                         onChange={handleInputChange}
                         required
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Ваше имя"
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label htmlFor="phone" className="form-label">
+                    <div className="mb-4">
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                         Телефон <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -287,13 +287,13 @@ export default function CheckoutPage() {
                         value={customerData.phone}
                         onChange={handleInputChange}
                         required
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="+7 (999) 123-45-67"
                       />
                     </div>
 
-                    <div className="form-group md:col-span-2">
-                      <label htmlFor="email" className="form-label">
+                    <div className="mb-4 md:col-span-2">
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                         Email
                       </label>
                       <input
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
                         name="email"
                         value={customerData.email}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="your@example.com"
                       />
                     </div>
@@ -310,7 +310,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Способ получения */}
-                <div className="card card-lg animate-fade-in">
+                <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
                   <h2 className="text-heading text-gray-900 mb-6">Способ получения</h2>
                   
                   <div className="space-y-4 mb-6">
@@ -348,8 +348,8 @@ export default function CheckoutPage() {
                   {deliveryMethod === 'delivery' && (
                     <div className="space-y-4 animate-fade-in">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="form-group">
-                          <label htmlFor="city" className="form-label">
+                        <div className="mb-4">
+                          <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                             Город <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -359,13 +359,13 @@ export default function CheckoutPage() {
                             value={customerData.city}
                             onChange={handleInputChange}
                             required={deliveryMethod === 'delivery'}
-                            className="form-input"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="Ижевск"
                           />
                         </div>
 
-                        <div className="form-group">
-                          <label htmlFor="postalCode" className="form-label">
+                        <div className="mb-4">
+                          <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-2">
                             Индекс
                           </label>
                           <input
@@ -374,14 +374,14 @@ export default function CheckoutPage() {
                             name="postalCode"
                             value={customerData.postalCode}
                             onChange={handleInputChange}
-                            className="form-input"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="426000"
                           />
                         </div>
                       </div>
 
-                      <div className="form-group">
-                        <label htmlFor="address" className="form-label">
+                      <div className="mb-4">
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
                           Адрес доставки <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -391,7 +391,7 @@ export default function CheckoutPage() {
                           onChange={handleInputChange}
                           required={deliveryMethod === 'delivery'}
                           rows="3"
-                          className="form-input"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           placeholder="Улица, дом, квартира"
                         ></textarea>
                       </div>
@@ -400,7 +400,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Способ оплаты */}
-                <div className="card card-lg animate-fade-in">
+                <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
                   <h2 className="text-heading text-gray-900 mb-6">Способ оплаты</h2>
                   
                   <div className="space-y-4">
@@ -439,17 +439,17 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Комментарий */}
-                <div className="card card-lg animate-fade-in">
+                <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
                   <h2 className="text-heading text-gray-900 mb-6">Комментарий к заказу</h2>
                   
-                  <div className="form-group">
+                  <div className="mb-4">
                     <textarea
                       id="notes"
                       name="notes"
                       value={customerData.notes}
                       onChange={handleInputChange}
                       rows="4"
-                      className="form-input"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Дополнительные пожелания к заказу..."
                     ></textarea>
                   </div>
@@ -461,7 +461,7 @@ export default function CheckoutPage() {
             <div className="lg:col-span-1">
               <div 
                 ref={orderSummaryRef}
-                className={`card card-lg sticky top-24 z-30 animate-fade-in transition-all duration-500 ${
+                className={`bg-white rounded-lg shadow-lg p-6 sticky top-24 z-30 animate-fade-in transition-all duration-500 ${
                   isSticky 
                     ? 'bg-white/98 backdrop-blur-lg border-2 border-blue-200/60 shadow-2xl scale-[1.02] ring-1 ring-blue-500/20' 
                     : 'bg-white/95 backdrop-blur-sm border-2 border-white/80 shadow-xl hover:shadow-2xl'
@@ -526,12 +526,12 @@ export default function CheckoutPage() {
                 <button
                   onClick={handleSubmitOrder}
                   disabled={loading}
-                  className={`btn btn-xl w-full mt-6 transition-all duration-300 ${
+                  className={`w-full mt-6 px-6 py-4 bg-blue-600 text-white font-medium rounded-lg transition-all duration-300 ${
                     loading 
                       ? 'opacity-50 cursor-not-allowed' 
                       : isSticky 
-                        ? 'btn-primary ring-2 ring-blue-500/30 ring-offset-2 ring-offset-white transform scale-105' 
-                        : 'btn-primary'
+                        ? 'bg-blue-700 ring-2 ring-blue-500/30 ring-offset-2 ring-offset-white transform scale-105 hover:bg-blue-800' 
+                        : 'hover:bg-blue-700'
                   }`}
                 >
                   {loading ? (

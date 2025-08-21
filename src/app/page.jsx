@@ -331,7 +331,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-10">
         {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-10 z-0">
+        <div className="absolute inset-0 opacity-10 z-0 pointer-events-none">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0)`,
             backgroundSize: '20px 20px'
@@ -339,7 +339,7 @@ export default function Home() {
         </div>
         
         {/* Floating geometric elements */}
-        <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
           {/* Основные фигуры с плавным перемещением по секции и мерцанием */}
           <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white/80 rounded-xl rotate-12 animate-float-across-1"></div>
           <div className="absolute top-1/3 right-1/4 w-24 h-24 border-2 border-white/70 rounded-full animate-float-across-2"></div>
@@ -351,7 +351,7 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white/50 rounded-xl rotate-12 animate-float-across-4"></div>
         </div>
         
-        <div className="relative container text-center py-8 z-10">
+        <div className="relative container text-center py-8 pointer-events-auto" style={{zIndex: 1000}}>
           <div className="max-w-4xl mx-auto">
 
             
@@ -369,15 +369,33 @@ export default function Home() {
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24 animate-fade-in" style={{animationDelay: '0.3s'}}>
-              <Link href="/designer" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24 animate-fade-in relative z-50" style={{animationDelay: '0.3s'}}>
+              <Link 
+                href="/designer" 
+                className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-xl pointer-events-auto cursor-pointer relative" 
+                style={{zIndex: 999}}
+                onClick={(e) => {
+                  console.log('Designer button clicked');
+                  // Принудительная навигация, если Link не работает
+                  window.location.href = '/designer';
+                }}
+              >
                 <span>Начать создание</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </Link>
               
-              <Link href="/products" className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300">
+              <Link 
+                href="/products" 
+                className="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gray-700 border border-gray-600 text-gray-200 font-medium rounded-lg hover:bg-gray-600 hover:border-gray-500 transition-all duration-300 pointer-events-auto cursor-pointer relative" 
+                style={{zIndex: 999}}
+                onClick={(e) => {
+                  console.log('Products button clicked');
+                  // Принудительная навигация, если Link не работает
+                  window.location.href = '/products';
+                }}
+              >
                 <span>Посмотреть каталог</span>
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useCart } from './useCart';
 
@@ -34,7 +34,7 @@ export default function CartDropdown() {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('cartUpdated', handleCartUpdate);
     };
-  }, [loadCart]);
+  }, []); // Убираем loadCart из зависимостей
 
   // Закрытие dropdown при клике вне его
   useEffect(() => {

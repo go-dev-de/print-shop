@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function useCart() {
   const [cartItems, setCartItems] = useState([]);
@@ -31,7 +31,7 @@ export function useCart() {
     };
   }, []);
 
-  const loadCart = () => {
+  const loadCart = useCallback(() => {
     try {
       const savedCart = localStorage.getItem('printshop_cart');
       if (savedCart) {
@@ -44,9 +44,9 @@ export function useCart() {
       console.error('Ошибка загрузки корзины:', error);
       setCartItems([]);
     }
-  };
+  }, []);
 
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     try {
       console.log('useCart: Добавляем товар в корзину:', product);
       const savedCart = localStorage.getItem('printshop_cart');
@@ -95,7 +95,7 @@ export function useCart() {
     } catch (error) {
       console.error('Ошибка добавления в корзину:', error);
     }
-  };
+  }, []);
 
   const updateQuantity = (itemId, size, color, newQuantity) => {
     if (newQuantity <= 0) {
@@ -122,13 +122,16 @@ export function useCart() {
     saveCart([]);
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = useCallback(() => {
     if (cartItems.length === 0) return;
     
     try {
+      // Вычисляем общую стоимость напрямую
+      const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+      
       // Сохраняем корзину в localStorage для checkout
       localStorage.setItem('checkout_cart', JSON.stringify(cartItems));
-      localStorage.setItem('checkout_total', JSON.stringify(getTotalPrice()));
+      localStorage.setItem('checkout_total', JSON.stringify(totalPrice));
       
       // Переходим на страницу оформления заказа
       window.location.href = '/checkout';
@@ -136,7 +139,7 @@ export function useCart() {
       console.error('Error saving checkout data:', error);
       alert('Ошибка при переходе к оформлению заказа');
     }
-  };
+  }, [cartItems]);
 
   const saveCart = (items) => {
     try {
