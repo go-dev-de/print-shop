@@ -58,7 +58,7 @@ function PaymentForm() {
       {/* Header */}
       <header className="shadow-lg" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-center items-center py-3">
+          <div className="flex justify-center items-center py-1">
             <h1 className="text-heading text-white h-full flex items-center">
               <Link href="/" className="hover:text-blue-600 transition-all duration-300 h-full flex items-center">
                 <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>

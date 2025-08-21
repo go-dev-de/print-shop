@@ -137,7 +137,7 @@ export default function ProductsPage() {
       {/* Header */}
       <header className="shadow-lg sticky top-0 z-40" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-between items-center py-3">
+          <div className="flex justify-between items-center py-1">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop h-full flex items-center">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">

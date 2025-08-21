@@ -194,7 +194,7 @@ export default function CheckoutPage() {
       {/* Header */}
       <header className="shadow-lg sticky top-0 z-40 border-b border-gray-200" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-between items-center py-3">
+          <div className="flex justify-between items-center py-1">
             <div className="flex items-center space-x-8">
               <h1 className="text-heading text-white h-full flex items-center">
                 <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105 h-full flex items-center">

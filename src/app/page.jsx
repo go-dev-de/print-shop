@@ -272,7 +272,7 @@ export default function Home() {
       {/* Premium Header */}
       <header className="border-b border-gray-700 sticky top-0 z-50 transition-all duration-300" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-between items-center py-3">
+          <div className="flex justify-between items-center py-1">
             <div className="flex items-center space-x-8">
               <h1 className="text-2xl logo-print-shop h-full flex items-center">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
