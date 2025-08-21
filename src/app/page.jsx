@@ -293,16 +293,16 @@ export default function Home() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              <a href="#main" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">
+              <a href="#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">
                 Главная
               </a>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Товары
               </a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Отзывы
               </a>
-              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
+              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 О нас
               </a>
               <div className="flex items-center space-x-3 ml-4">
