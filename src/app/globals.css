@@ -367,3 +367,18 @@
   background-color: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(4px);
 }
+
+/* ===== КОРЗИНА ===== */
+.cart-dropdown {
+  z-index: 9998 !important;
+}
+
+.cart-dropdown .fixed {
+  z-index: 9998 !important;
+}
+
+/* Обеспечиваем, что корзина всегда поверх всего */
+.cart-dropdown {
+  position: fixed !important;
+  isolation: isolate;
+}
