@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
 
@@ -483,12 +482,12 @@ export default function ReviewsPage() {
   return (
     <div className="min-h-screen bg-gray-800">
       {/* Header */}
-      <header className="bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-700">
+      <header className="shadow-lg sticky top-0 z-40 border-b border-gray-700" style={{backgroundColor: '#424242'}}>
         <div className="container">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl logo-print-shop text-white">
-                <Link href="/" className="hover:text-gray-200 transition-all duration-300">
+              <h1 className="text-2xl logo-print-shop h-full flex items-center">
+                <Link href="/" className="hover:text-gray-200 transition-all duration-300 h-full flex items-center">
                   <div className="hidden md:block">print style</div>
                   <div className="md:hidden">
                     <Image 
@@ -496,7 +495,7 @@ export default function ReviewsPage() {
                       alt="Print Style Logo" 
                       width={120} 
                       height={40}
-                      className="h-8 w-auto"
+                      className="h-full w-auto"
                     />
                   </div>
                 </Link>
@@ -522,9 +521,6 @@ export default function ReviewsPage() {
         </div>
       </header>
       
-      {/* Breadcrumbs */}
-      <Breadcrumbs />
-
       {/* Main Content */}
       <main className="container py-12 lg:py-16 bg-gray-800">
         {/* Page Header */}

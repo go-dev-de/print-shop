@@ -56,21 +56,23 @@ function PaymentForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-lg shadow-lg">
+      <header className="shadow-lg" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-center items-center py-4 lg:py-6">
-            <Link href="/">
-              <Image
-                src="/logo-pr-style.png"
-                alt="PrintStyle Logo"
-                width={150}
-                height={40}
-                className="hidden lg:block"
-              />
-              <h1 className="text-heading text-gray-900">
-                Print<span className="text-blue-600">Style</span>
-              </h1>
-            </Link>
+          <div className="flex justify-center items-center py-3">
+            <h1 className="text-heading text-white h-full flex items-center">
+              <Link href="/" className="hover:text-blue-600 transition-all duration-300 h-full flex items-center">
+                <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
+                <div className="md:hidden">
+                  <Image 
+                    src="/logo-pr-style.png" 
+                    alt="Print Style Logo" 
+                    width={120} 
+                    height={40}
+                    className="h-full w-auto"
+                  />
+                </div>
+              </Link>
+            </h1>
           </div>
         </div>
       </header>

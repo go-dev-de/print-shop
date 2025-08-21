@@ -7,6 +7,7 @@ import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
+import MobileMenu from '@/components/MobileMenu'; // Added MobileMenu import
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -191,12 +192,12 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-40 border-b border-gray-200">
+      <header className="shadow-lg sticky top-0 z-40 border-b border-gray-200" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-between items-center py-4 lg:py-6">
+          <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
-              <h1 className="text-heading text-gray-900">
-                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+              <h1 className="text-heading text-white h-full flex items-center">
+                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105 h-full flex items-center">
                   <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
                   <div className="md:hidden">
                     <Image 
@@ -204,7 +205,7 @@ export default function CheckoutPage() {
                       alt="Print Style Logo" 
                       width={120} 
                       height={40}
-                      className="h-8 w-auto"
+                      className="h-full w-auto"
                     />
                   </div>
                 </Link>
@@ -213,15 +214,18 @@ export default function CheckoutPage() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/#main" className="btn btn-ghost btn-sm">Главная</Link>
-              <Link href="/products" className="btn btn-ghost btn-sm">Товары</Link>
-              <Link href="/reviews" className="btn btn-ghost btn-sm">Отзывы</Link>
-              <Link href="/#about" className="btn btn-ghost btn-sm">О нас</Link>
+              <Link href="/#main" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">О нас</Link>
               <div className="flex items-center space-x-3">
                 <CartDropdown />
                 <UserProfile />
               </div>
             </nav>
+            
+            {/* Mobile Menu */}
+            <MobileMenu />
           </div>
         </div>
       </header>

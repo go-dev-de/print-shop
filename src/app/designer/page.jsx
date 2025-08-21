@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import ImageUploader from '../../components/ImageUploader';
-import TshirtPreview from '../../components/TshirtPreview';
+import Image from 'next/image';
 import UserProfile from '@/components/UserProfile';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
+import TshirtPreview from '@/components/TshirtPreview';
+import ImageUploader from '@/components/ImageUploader';
 
 export default function Designer() {
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -228,13 +227,13 @@ export default function Designer() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
-      {/* Premium Header */}
-      <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50 transition-all duration-300">
+      {/* Header */}
+      <header className="shadow-lg sticky top-0 z-40 border-b border-gray-700" style={{backgroundColor: '#424242'}}>
         <div className="container">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl logo-print-shop">
-                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
+              <h1 className="text-2xl logo-print-shop h-full flex items-center">
+                <Link href="/" className="hover:text-gray-200 transition-all duration-300 h-full flex items-center">
                   <div className="hidden md:block">print style</div>
                   <div className="md:hidden">
                     <Image 
@@ -242,33 +241,22 @@ export default function Designer() {
                       alt="Print Style Logo" 
                       width={120} 
                       height={40}
-                      className="h-8 w-auto"
+                      className="h-full w-auto"
                     />
                   </div>
                 </Link>
               </h1>
               
-
             </div>
             
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link href="/" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Главная
-              </Link>
-              <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Товары
-              </a>
-              <a href="/designer" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">
-                Дизайнер
-              </a>
-              <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Отзывы
-              </a>
-              <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                О нас
-              </a>
-              <div className="ml-4 flex items-center space-x-3">
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/#main" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Товары</Link>
+              <Link href="/designer" className="btn btn-ghost btn-sm text-white font-semibold">Дизайнер</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">О нас</Link>
+              <div className="flex items-center space-x-3">
                 <CartDropdown />
                 <UserProfile />
               </div>
@@ -280,309 +268,89 @@ export default function Designer() {
         </div>
       </header>
       
-      {/* Breadcrumbs */}
-      <Breadcrumbs />
-
-      {/* Designer Hero */}
-      <section className="bg-gray-700 py-16">
-        <div className="container text-center">
-          <h1 className="text-4xl lg:text-5xl font-light text-white mb-6 tracking-tight">
-            Создайте свою
-            <span className="block font-semibold">уникальную футболку</span>
-          </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
-            Загрузите свой дизайн и получите качественную футболку<br/>
-            с профессиональной печатью
-          </p>
-        </div>
-      </section>
-
-      <main className="relative bg-gray-800">
-        <div className="container py-16 lg:py-24">
+      {/* Main Content */}
+      <main className="container py-12 lg:py-16 bg-gray-800">
         <div id="order-form" className="animate-fade-in">
-        {/* Мобильная версия - одна колонка */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
-          {/* 1. Загрузка принта */}
-          <div className="card card-md">
-            <h3 className="text-subheading text-white mb-4">Загрузите ваш принт</h3>
-            <ImageUploader 
-              onImageUpload={handleImageUpload}
-              onImageRemove={handleImageRemove}
-            />
-          </div>
-
-          {/* 2. Выбор цвета */}
-          <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-white">Выберите цвет футболки</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {colors.map((color) => (
-                <button
-                  key={color.name}
-                  onClick={() => setSelectedColor(color.name)}
-                  className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
-                    selectedColor === color.name
-                      ? 'border-black bg-gray-100'
-                      : 'border-gray-400 hover:border-black'
-                  }`}
-                >
-                  <div
-                    className="w-8 h-8 rounded-full border-2 border-gray-300"
-                    style={{ backgroundColor: color.hex }}
-                  ></div>
-                  <span className="font-medium">{color.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. Выбор размера */}
-          <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
-            <div className="grid grid-cols-3 gap-3">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
-                    selectedSize === size
-                      ? 'border-black bg-gray-100'
-                      : 'border-gray-400 hover:border-black'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 4. Размер принта */}
-          {uploadedImage && (
-            <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-              <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {printSizes.map((size, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setPrintSize(index)}
-                    className={`p-3 rounded-lg border-2 transition-colors text-black ${
-                      printSize === index
-                        ? 'border-black bg-gray-100'
-                        : 'border-gray-400 hover:border-black'
-                    }`}
-                  >
-                    <div className="text-sm font-medium">{size.label}</div>
-                    <div className="text-xs text-gray-600">+{size.price}₽</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 5. Превью */}
-          <TshirtPreview
-            uploadedImage={uploadedImage}
-            selectedColor={selectedColor}
-            selectedSize={selectedSize}
-            printSize={printSizes[printSize]}
-            onImagePositionChange={handleImagePositionChange}
-            onViewChange={setActiveView}
-          />
-
-          {/* 6. Информация о заказе */}
-          <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
-            <h3 className="text-lg font-semibold mb-3 text-white">Информация о заказе</h3>
-            
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between">
-                <span className="text-white">Размер:</span>
-                <span className="font-medium text-white">{selectedSize}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-white">Цвет:</span>
-                <span className="font-medium text-white">
-                  {colors.find(c => c.name === selectedColor)?.label}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-white">Количество:</span>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-white text-white font-bold text-sm"
-                  >
-                    -
-                  </button>
-                  <span className="font-medium text-white w-8 text-center">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-white text-white font-bold text-sm"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-white">Принт:</span>
-                <span className="font-medium text-white">
-                  {uploadedImage ? 'Включен' : 'Не выбран'}
-                </span>
-              </div>
-              {uploadedImage && (
-                <div className="flex justify-between">
-                  <span className="text-white">Размер принта:</span>
-                  <span className="font-medium text-white">{printSizes[printSize].label}</span>
-                </div>
-              )}
-              {uploadedImage && (
-                <div className="flex justify-between">
-                  <span className="text-white">Масштаб принта:</span>
-                  <span className="font-medium text-white">{Math.round(imagePosition.scale * 100)}%</span>
-                </div>
-              )}
-            </div>
-            
-            <div className="border-t border-gray-600 pt-4">
-              <div className="flex justify-between text-xl font-bold text-white">
-                <span>Итого:</span>
-                <span>{calculatePrice()} ₽</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Кнопка заказа */}
-          <button
-            type="button"
-            onClick={handleOrder}
-            onTouchEnd={handleOrder}
-            onPointerUp={handleOrder}
-            aria-disabled={!uploadedImage}
-            className={`group relative z-50 pointer-events-auto w-full py-4 px-6 rounded-xl text-lg font-bold transition-all duration-300 transform ${
-              uploadedImage
-                ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-            style={{ touchAction: 'manipulation' }}
-          >
-            <span className="relative z-10 flex items-center justify-center">
-              <svg className="w-6 h-6 mr-2 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              Оформить заказ
-              <svg className={`w-5 h-5 ml-2 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </span>
-            {uploadedImage && (
-              <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-            )}
-          </button>
-        </div>
-
-        {/* Десктопная версия - две колонки */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-12">
-          {/* Левая колонка - Загрузка и настройки */}
-          <div className="space-y-8">
-            {/* Загрузка изображения */}
-            <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Загрузите ваш принт</h3>
+          {/* Мобильная версия - одна колонка */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
+            {/* 1. Загрузка принта */}
+            <div className="card card-md">
+              <h3 className="text-subheading text-white mb-4">Загрузите ваш принт</h3>
               <ImageUploader 
                 onImageUpload={handleImageUpload}
                 onImageRemove={handleImageRemove}
               />
             </div>
 
-            {/* Выбор размера */}
-                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Выберите размер</h3>
-              <div className="grid grid-cols-3 gap-3">
-                {sizes.map((size) => (
-                                     <button
-                     key={size}
-                     onClick={() => setSelectedSize(size)}
-                     className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
-                       selectedSize === size
-                         ? 'border-black bg-gray-100'
-                         : 'border-gray-400 hover:border-black'
-                     }`}
-                   >
-                     {size}
-                   </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Выбор цвета */}
-                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Выберите цвет футболки</h3>
+            {/* 2. Выбор цвета */}
+            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+              <h3 className="text-lg font-semibold mb-3 text-white">Выберите цвет футболки</h3>
               <div className="grid grid-cols-2 gap-4">
                 {colors.map((color) => (
-                                     <button
-                     key={color.name}
-                     onClick={() => setSelectedColor(color.name)}
-                     className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
-                       selectedColor === color.name
-                         ? 'border-black bg-gray-100'
-                         : 'border-gray-400 hover:border-black'
-                     }`}
-                   >
-                     <div
-                       className="w-8 h-8 rounded-full border-2 border-gray-300"
-                       style={{ backgroundColor: color.hex }}
-                     ></div>
-                     <span className="font-medium">{color.label}</span>
-                   </button>
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(color.name)}
+                    className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
+                      selectedColor === color.name
+                        ? 'border-black bg-gray-100'
+                        : 'border-gray-400 hover:border-black'
+                    }`}
+                  >
+                    <div
+                      className="w-8 h-8 rounded-full border-2 border-gray-300"
+                      style={{ backgroundColor: color.hex }}
+                    ></div>
+                    <span className="font-medium">{color.label}</span>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Размер принта */}
+            {/* 3. Выбор размера */}
+            <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
+              <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
+              <div className="grid grid-cols-3 gap-3">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
+                      selectedSize === size
+                        ? 'border-black bg-gray-100'
+                        : 'border-gray-400 hover:border-black'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 4. Размер принта */}
             {uploadedImage && (
-              <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
-                <h3 className="text-lg font-semibold mb-3 text-white">Размер принта</h3>
+              <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
+                <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {printSizes.map((size, index) => (
                     <button
                       key={index}
                       onClick={() => setPrintSize(index)}
-                      className={`p-3 rounded-lg border-2 transition-colors text-white ${
+                      className={`p-3 rounded-lg border-2 transition-colors text-black ${
                         printSize === index
-                          ? 'border-white bg-gray-600'
-                          : 'border-gray-400 hover:border-white'
+                          ? 'border-black bg-gray-100'
+                          : 'border-gray-400 hover:border-black'
                       }`}
                     >
                       <div className="text-sm font-medium">{size.label}</div>
-                      <div className="text-xs text-gray-300">+{size.price}₽</div>
+                      <div className="text-xs text-gray-600">+{size.price}₽</div>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Количество */}
-                         <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                              <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Количество</h3>
-              <div className="flex items-center space-x-4">
-                                 <button
-                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                   className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
-                 >
-                   -
-                 </button>
-                 <span className="text-xl font-semibold w-12 text-center text-black">{quantity}</span>
-                 <button
-                   onClick={() => setQuantity(quantity + 1)}
-                   className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
-                 >
-                   +
-                 </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Правая колонка - Превью и заказ */}
-          <div className="space-y-8">
-            {/* Превью футболки */}
-          <TshirtPreview
+            {/* 5. Превью */}
+            <TshirtPreview
               uploadedImage={uploadedImage}
               selectedColor={selectedColor}
               selectedSize={selectedSize}
@@ -591,55 +359,69 @@ export default function Designer() {
               onViewChange={setActiveView}
             />
 
-            {/* Информация о заказе */}
-            <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                             <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Информация о заказе</h3>
+            {/* 6. Информация о заказе */}
+            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+              <h3 className="text-lg font-semibold mb-3 text-white">Информация о заказе</h3>
               
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-black">Размер:</span>
-                  <span className="font-medium text-black">{selectedSize}</span>
+                  <span className="text-white">Размер:</span>
+                  <span className="font-medium text-white">{selectedSize}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-black">Цвет:</span>
-                  <span className="font-medium text-black">
+                  <span className="text-white">Цвет:</span>
+                  <span className="font-medium text-white">
                     {colors.find(c => c.name === selectedColor)?.label}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-black">Количество:</span>
-                  <span className="font-medium text-black">{quantity} шт.</span>
+                  <span className="text-white">Количество:</span>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold"
+                    >
+                      -
+                    </button>
+                    <span className="text-white font-medium min-w-[2rem] text-center">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-black">Принт:</span>
-                  <span className="font-medium text-black">
+                  <span className="text-white">Принт:</span>
+                  <span className="font-medium text-white">
                     {uploadedImage ? 'Включен' : 'Не выбран'}
                   </span>
                 </div>
                 {uploadedImage && (
                   <div className="flex justify-between">
-                    <span className="text-black">Масштаб принта:</span>
-                    <span className="font-medium text-black">{Math.round(imagePosition.scale * 100)}%</span>
+                    <span className="text-white">Масштаб принта:</span>
+                    <span className="font-medium text-white">{Math.round(imagePosition.scale * 100)}%</span>
                   </div>
                 )}
               </div>
               
-              <div className="border-t pt-4">
-                                 <div className="flex justify-between text-xl font-bold text-black">
-                   <span>Итого:</span>
-                   <span>{calculatePrice()} ₽</span>
-                 </div>
+              <div className="border-t border-gray-600 pt-4">
+                <div className="flex justify-between text-xl font-bold text-white">
+                  <span>Итого:</span>
+                  <span>{calculatePrice()} ₽</span>
+                </div>
               </div>
             </div>
 
-            {/* Кнопка заказа */}
+            {/* 7. Кнопка заказа */}
             <button
               type="button"
               onClick={handleOrder}
               onTouchEnd={handleOrder}
               onPointerUp={handleOrder}
               aria-disabled={!uploadedImage}
-              className={`group relative z-50 pointer-events-auto w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl text-lg lg:text-xl font-bold transition-all duration-300 transform ${
+              className={`group relative z-50 pointer-events-auto w-full py-4 px-6 rounded-xl text-lg font-bold transition-all duration-300 transform ${
                 uploadedImage
                   ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -660,8 +442,190 @@ export default function Designer() {
               )}
             </button>
           </div>
-        </div>
-        </div>
+
+          {/* Десктопная версия - две колонки */}
+          <div className="hidden lg:grid grid-cols-1 xl:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '0.3s'}}>
+            {/* Левая колонка - Форма */}
+            <div className="space-y-8">
+              {/* Загрузка принта */}
+              <div className="card card-lg">
+                <h3 className="text-heading text-white mb-6">Загрузите ваш принт</h3>
+                <ImageUploader 
+                  onImageUpload={handleImageUpload}
+                  onImageRemove={handleImageRemove}
+                />
+              </div>
+
+              {/* Выбор цвета */}
+              <div className="card card-lg">
+                <h3 className="text-heading text-white mb-6">Выберите цвет футболки</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {colors.map((color) => (
+                    <button
+                      key={color.name}
+                      onClick={() => setSelectedColor(color.name)}
+                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
+                        selectedColor === color.name
+                          ? 'border-black bg-gray-100'
+                          : 'border-gray-400 hover:border-black'
+                      }`}
+                    >
+                      <div
+                        className="w-8 h-8 rounded-full border-2 border-gray-300"
+                        style={{ backgroundColor: color.hex }}
+                      ></div>
+                      <span className="font-medium">{color.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Выбор размера */}
+              <div className="card card-lg">
+                <h3 className="text-heading text-white mb-6">Выберите размер</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  {sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
+                        selectedSize === size
+                          ? 'border-black bg-gray-100'
+                          : 'border-gray-400 hover:border-black'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Размер принта */}
+              {uploadedImage && (
+                <div className="card card-lg">
+                  <h3 className="text-heading text-white mb-6">Размер принта</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {printSizes.map((size, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setPrintSize(index)}
+                        className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                          printSize === index
+                            ? 'border-black bg-gray-100'
+                            : 'border-gray-400 hover:border-black'
+                        }`}
+                      >
+                        <div className="text-sm font-medium">{size.label}</div>
+                        <div className="text-xs text-gray-600">+{size.price}₽</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Количество */}
+              <div className="card card-lg">
+                <h3 className="text-heading text-white mb-6">Количество</h3>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
+                  >
+                    -
+                  </button>
+                  <span className="text-black font-medium min-w-[3rem] text-center text-lg">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Правая колонка - Превью и заказ */}
+            <div className="space-y-8">
+              {/* Превью футболки */}
+              <TshirtPreview
+                uploadedImage={uploadedImage}
+                selectedColor={selectedColor}
+                selectedSize={selectedSize}
+                printSize={printSizes[printSize]}
+                onImagePositionChange={handleImagePositionChange}
+                onViewChange={setActiveView}
+              />
+
+              {/* Информация о заказе */}
+              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
+                <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Информация о заказе</h3>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between">
+                    <span className="text-black">Размер:</span>
+                    <span className="font-medium text-black">{selectedSize}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black">Цвет:</span>
+                    <span className="font-medium text-black">
+                      {colors.find(c => c.name === selectedColor)?.label}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black">Количество:</span>
+                    <span className="font-medium text-black">{quantity} шт.</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black">Принт:</span>
+                    <span className="font-medium text-black">
+                      {uploadedImage ? 'Включен' : 'Не выбран'}
+                    </span>
+                  </div>
+                  {uploadedImage && (
+                    <div className="flex justify-between">
+                      <span className="text-black">Масштаб принта:</span>
+                      <span className="font-medium text-black">{Math.round(imagePosition.scale * 100)}%</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="border-t pt-4">
+                  <div className="flex justify-between text-xl font-bold text-black">
+                    <span>Итого:</span>
+                    <span>{calculatePrice()} ₽</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Кнопка заказа */}
+              <button
+                type="button"
+                onClick={handleOrder}
+                onTouchEnd={handleOrder}
+                onPointerUp={handleOrder}
+                aria-disabled={!uploadedImage}
+                className={`group relative z-50 pointer-events-auto w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl text-lg lg:text-xl font-bold transition-all duration-300 transform ${
+                  uploadedImage
+                    ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+                style={{ touchAction: 'manipulation' }}
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  <svg className="w-6 h-6 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  Оформить заказ
+                  <svg className={`w-6 h-6 ml-3 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+                {uploadedImage && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </main>
       

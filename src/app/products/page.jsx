@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import UserProfile from '@/components/UserProfile';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import MobileMenu from '@/components/MobileMenu';
 import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
@@ -71,8 +70,6 @@ export default function ProductsPage() {
             </div>
           </div>
         </header>
-        {/* Breadcrumbs */}
-        <Breadcrumbs />
         
         {/* Основной контент */}
         <main className="max-w-6xl mx-auto px-4 py-8">
@@ -114,8 +111,6 @@ export default function ProductsPage() {
             </div>
           </div>
         </header>
-        {/* Breadcrumbs */}
-        <Breadcrumbs />
         
         {/* Основной контент */}
         <main className="max-w-6xl mx-auto px-4 py-8">
@@ -138,43 +133,46 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gray-900 shadow-lg sticky top-0 z-40">
-        <div className="max-w-sm mx-auto px-4 sm:max-w-7xl sm:px-6 lg:px-8">
+      <header className="shadow-lg sticky top-0 z-40" style={{backgroundColor: '#424242'}}>
+        <div className="container">
           <div className="flex justify-between items-center py-3">
-            <div className="flex items-center">
-                             <h1 className="text-2xl logo-print-shop text-white">
-                 <Link href="/" className="hover:text-gray-200 transition-colors">
-                   <div className="hidden md:block">print style</div>
-                   <div className="md:hidden">
-                     <Image 
-                       src="/logo-pr-style.png" 
-                       alt="Print Style Logo" 
-                       width={120} 
-                       height={40}
-                       className="h-8 w-auto"
-                     />
-                   </div>
-                 </Link>
-               </h1>
-              
-              <div className="ml-6 hidden md:block"><UserProfile /></div>
+            <div className="flex items-center space-x-8">
+              <h1 className="text-2xl logo-print-shop h-full flex items-center">
+                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
+                  <div className="hidden md:block">print style</div>
+                  <div className="md:hidden">
+                    <Image 
+                      src="/logo-pr-style.png" 
+                      alt="Print Style Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                  </div>
+                </Link>
+              </h1>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/#main" className="text-gray-200 hover:text-white">Главная</Link>
-              <Link href="/products" className="text-white font-medium">Товары</Link>
-              <Link href="/#reviews" className="text-gray-200 hover:text-white">Отзывы</Link>
-              <Link href="/#about" className="text-gray-200 hover:text-white">О нас</Link>
-              <Link href="/#contacts" className="text-gray-200 hover:text-white">Контакты</Link>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/#main" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Главная</Link>
+              <Link href="/products" className="btn btn-ghost btn-sm text-white font-semibold">Товары</Link>
+              <Link href="/reviews" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Отзывы</Link>
+              <Link href="/#about" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">О нас</Link>
+              <div className="flex items-center space-x-3">
+                <CartDropdown />
+                <UserProfile />
+              </div>
             </nav>
+            
+            {/* Mobile Menu */}
+            <MobileMenu />
           </div>
         </div>
       </header>
       
-      {/* Breadcrumbs */}
-      <Breadcrumbs />
-
       {/* Основной контент */}
       <main className="container py-12 lg:py-16">
         {/* Заголовок страницы */}

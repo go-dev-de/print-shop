@@ -35,11 +35,11 @@ function OrderConfirmationForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-lg shadow-lg">
+      <header className="shadow-lg" style={{backgroundColor: '#424242'}}>
         <div className="container">
-          <div className="flex justify-center items-center py-4 lg:py-6">
-            <h1 className="text-heading text-gray-900">
-              <Link href="/" className="hover:text-blue-600 transition-all duration-300">
+          <div className="flex justify-center items-center py-3">
+            <h1 className="text-heading text-white h-full flex items-center">
+              <Link href="/" className="hover:text-blue-600 transition-all duration-300 h-full flex items-center">
                 <div className="hidden md:block">Print<span className="text-blue-600">Style</span></div>
                 <div className="md:hidden">
                   <Image 
@@ -47,7 +47,7 @@ function OrderConfirmationForm() {
                     alt="Print Style Logo" 
                     width={120} 
                     height={40}
-                    className="h-8 w-auto"
+                    className="h-full w-auto"
                   />
                 </div>
               </Link>

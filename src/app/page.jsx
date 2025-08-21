@@ -270,12 +270,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50 transition-all duration-300">
+      <header className="border-b border-gray-700 sticky top-0 z-50 transition-all duration-300" style={{backgroundColor: '#424242'}}>
         <div className="container">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl logo-print-shop">
-                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200">
+              <h1 className="text-2xl logo-print-shop h-full flex items-center">
+                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
                   <div className="hidden md:block">print style</div>
                   <div className="md:hidden">
                     <Image 
@@ -283,13 +283,12 @@ export default function Home() {
                       alt="Print Style Logo" 
                       width={120} 
                       height={40}
-                      className="h-8 w-auto"
+                      className="h-full w-auto"
                     />
                   </div>
                 </Link>
               </h1>
               
-
             </div>
             
             {/* Desktop Navigation */}
@@ -300,16 +299,13 @@ export default function Home() {
               <a href="/products" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Товары
               </a>
-              <a href="/designer" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Дизайнер
-              </a>
               <a href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 Отзывы
               </a>
               <a href="#about" className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
                 О нас
               </a>
-              <div className="ml-4 flex items-center space-x-3">
+              <div className="flex items-center space-x-3 ml-4">
                 <CartDropdown />
                 <UserProfile />
               </div>
