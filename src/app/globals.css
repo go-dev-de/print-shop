@@ -210,6 +210,69 @@
   will-change: transform;
 }
 
+/* Across-section trajectories */
+@keyframes float-across-1 {
+  0% { translate: 0 0; }
+  20% { translate: 20vw -8vh; }
+  40% { translate: -10vw 6vh; }
+  60% { translate: 25vw 10vh; }
+  80% { translate: -15vw -6vh; }
+  100% { translate: 0 0; }
+}
+
+@keyframes float-across-2 {
+  0% { translate: 0 0; }
+  25% { translate: -22vw 10vh; }
+  50% { translate: 14vw -8vh; }
+  75% { translate: -10vw -4vh; }
+  100% { translate: 0 0; }
+}
+
+@keyframes float-across-3 {
+  0% { translate: 0 0; }
+  20% { translate: 18vw 6vh; }
+  40% { translate: -20vw -10vh; }
+  60% { translate: 8vw 12vh; }
+  80% { translate: -12vw 4vh; }
+  100% { translate: 0 0; }
+}
+
+@keyframes float-across-4 {
+  0% { translate: 0 0; }
+  30% { translate: 10vw -12vh; }
+  55% { translate: -16vw 8vh; }
+  80% { translate: 22vw 4vh; }
+  100% { translate: 0 0; }
+}
+
+@keyframes fade-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.75; }
+}
+
+.animate-float-across-1 {
+  animation: float-across-1 38s ease-in-out infinite, fade-pulse 7s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-float-across-2 {
+  animation: float-across-2 42s ease-in-out infinite, fade-pulse 7s ease-in-out infinite;
+  animation-delay: 0s, 1.2s;
+  will-change: transform, opacity;
+}
+
+.animate-float-across-3 {
+  animation: float-across-3 46s ease-in-out infinite, fade-pulse 7s ease-in-out infinite;
+  animation-delay: 0s, 2.4s;
+  will-change: transform, opacity;
+}
+
+.animate-float-across-4 {
+  animation: float-across-4 50s ease-in-out infinite, fade-pulse 7s ease-in-out infinite;
+  animation-delay: 0s, 3.6s;
+  will-change: transform, opacity;
+}
+
 /* ===== КОНТЕЙНЕР ===== */
 .container {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;

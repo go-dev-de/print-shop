@@ -332,14 +332,15 @@ export default function Home() {
         
         {/* Floating geometric elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white rounded-xl rotate-12 animate-float opacity-60"></div>
-          <div className="absolute top-1/3 right-1/4 w-24 h-24 border-2 border-white rounded-full animate-float-delay-1 opacity-50"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border-2 border-white rotate-45 animate-float-delay-2 opacity-55"></div>
-          
+          {/* Основные фигуры с плавным перемещением по секции и мерцанием */}
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white/80 rounded-xl rotate-12 animate-float-across-1"></div>
+          <div className="absolute top-1/3 right-1/4 w-24 h-24 border-2 border-white/70 rounded-full animate-float-across-2"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-20 h-20 border-2 border-white/70 rotate-45 animate-float-across-3"></div>
+
           {/* Дополнительные фигуры для богатства */}
-          <div className="absolute top-1/2 left-1/6 w-16 h-16 border-2 border-white rounded-lg rotate-45 animate-float opacity-40" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-2/3 right-1/6 w-12 h-12 border-2 border-white rounded-full animate-float-delay-1 opacity-45" style={{animationDelay: '3s'}}></div>
-          <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white rounded-xl rotate-12 animate-float-delay-2 opacity-35" style={{animationDelay: '5s'}}></div>
+          <div className="absolute top-1/2 left-10 w-16 h-16 border-2 border-white/60 rounded-lg rotate-45 animate-float-across-2"></div>
+          <div className="absolute top-2/3 right-10 w-12 h-12 border-2 border-white/60 rounded-full animate-float-across-3"></div>
+          <div className="absolute bottom-1/4 right-1/3 w-28 h-28 border-2 border-white/50 rounded-xl rotate-12 animate-float-across-4"></div>
         </div>
         
         <div className="relative container text-center">
