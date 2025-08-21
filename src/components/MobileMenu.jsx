@@ -1,15 +1,29 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import CartDropdown from './CartDropdown';
 
 
-export default function MobileMenu() {
+export default function MobileMenu({ onMenuToggle }) {
   const [isOpen, setIsOpen] = useState(false);
   const cartButtonRef = useRef(null);
   
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => {
+    const newState = !isOpen;
+    setIsOpen(newState);
+    // Уведомляем родительский компонент об изменении состояния
+    if (onMenuToggle) {
+      onMenuToggle(newState);
+    }
+  };
+  
+  // Уведомляем родительский компонент при изменении состояния
+  useEffect(() => {
+    if (onMenuToggle) {
+      onMenuToggle(isOpen);
+    }
+  }, [isOpen, onMenuToggle]);
   
   const handleCartClick = () => {
     // Находим кнопку корзины и кликаем на неё
@@ -51,7 +65,7 @@ export default function MobileMenu() {
       </div>
       
       {/* Mobile menu overlay */}
-      <div className={`mobile-menu-overlay fixed inset-0 md:hidden transition-opacity duration-300 ${
+      <div className={`mobile-menu-overlay fixed inset-0 md:hidden transition-opacity duration-300 z-[9998] ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
         <div 
@@ -60,7 +74,7 @@ export default function MobileMenu() {
         />
         
         <div 
-          className={`mobile-menu-content absolute right-0 top-0 h-full w-full max-w-sm bg-gray-700 shadow-2xl border-l border-gray-600 transform transition-transform duration-300 ease-in-out ${
+          className={`mobile-menu-content absolute right-0 top-0 h-full w-full max-w-sm bg-gray-700 shadow-2xl border-l border-gray-600 transform transition-transform duration-300 ease-in-out z-[9999] ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

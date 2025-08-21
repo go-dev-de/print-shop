@@ -267,6 +267,13 @@ export default function Home() {
     }
   }, []);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Функция для получения z-index hero секции
+  const getHeroZIndex = () => {
+    return isMobileMenuOpen ? 10 : 1000; // Меньший z-index когда меню открыто
+  };
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
@@ -329,7 +336,10 @@ export default function Home() {
       <Breadcrumbs />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-10">
+      <section 
+        className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 overflow-hidden py-10"
+        style={{ zIndex: getHeroZIndex() }}
+      >
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-10 z-0 pointer-events-none">
           <div className="absolute inset-0" style={{
