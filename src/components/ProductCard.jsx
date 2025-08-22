@@ -277,11 +277,6 @@ export default function ProductCard({ product }) {
               color: 'белый',
               quantity: 1
             });
-            
-            // Показываем уведомление
-            if (window.showCartNotification) {
-              window.showCartNotification(`${name} добавлен в корзину`);
-            }
           }}
           className="w-full bg-black text-white font-medium py-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg group relative overflow-hidden"
         >
