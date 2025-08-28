@@ -1,13 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
-import UserProfile from '@/components/UserProfile';
-import CartDropdown from '@/components/CartDropdown';
-import CartNotification from '@/components/CartNotification';
-import MobileMenu from '@/components/MobileMenu'; // Added MobileMenu import
+import Header from '@/components/Header';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -33,8 +29,51 @@ export default function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState('pickup'); // pickup, delivery
   const [paymentMethod, setPaymentMethod] = useState('online'); // online, cash
 
-  const loadCheckoutData = useCallback(() => {
+  const loadCheckoutData = () => {
     try {
+      // Сначала проверяем данные из дизайнера
+      const designerOrder = localStorage.getItem('designer_order');
+      console.log('🛒 Загружаем данные checkout, designer_order:', designerOrder ? 'Есть' : 'Нет');
+      
+      if (designerOrder) {
+        const order = JSON.parse(designerOrder);
+        console.log('🎨 Данные дизайнера загружены:', {
+          hasImage: !!order.image,
+          hasPreviewImage: !!order.previewImage,
+          hasImagePosition: !!order.imagePosition,
+          imageSize: order.image?.length || 0,
+          previewSize: order.previewImage?.length || 0
+        });
+        
+        // Преобразуем данные дизайнера в формат корзины
+        const cartItem = {
+          id: 'custom-tshirt',
+          name: 'Футболка с принтом',
+          price: order.totalPrice,
+          image: order.image,
+          size: order.size,
+          color: order.color,
+          quantity: order.quantity,
+          // Добавляем данные о принте
+          printSize: order.printSizeLabel,
+          printPrice: order.printPricePerUnit,
+          imagePosition: order.imagePosition, // Позиционирование принта
+          imageSide: order.imageSide,
+          previewImage: order.previewImage
+        };
+        
+        console.log('🛍️ Cart item создан:', {
+          hasImage: !!cartItem.image,
+          hasPreviewImage: !!cartItem.previewImage,
+          hasImagePosition: !!cartItem.imagePosition
+        });
+        
+        setCartItems([cartItem]);
+        setTotalPrice(order.totalPrice);
+        return;
+      }
+      
+      // Если нет данных дизайнера, загружаем из корзины
       const savedCart = localStorage.getItem('checkout_cart');
       const savedTotal = localStorage.getItem('checkout_total');
       
@@ -50,7 +89,7 @@ export default function CheckoutPage() {
       console.error('Error loading checkout data:', error);
       router.push('/');
     }
-  }, [router]);
+  };
 
   useEffect(() => {
     // Загружаем данные корзины
@@ -135,6 +174,34 @@ export default function CheckoutPage() {
         status: 'pending'
       };
 
+      // Если есть заказ из дизайнера, добавляем позиционирование принта
+      const designerOrder = localStorage.getItem('designer_order');
+      if (designerOrder) {
+        const designerData = JSON.parse(designerOrder);
+        orderData.imagePosition = designerData.imagePosition; // Позиционирование принта
+        orderData.imageSide = designerData.imageSide; // Сторона принта (перед/зад)
+        orderData.printSize = designerData.printSizeLabel; // Размер принта
+        orderData.printPrice = designerData.printPricePerUnit; // Цена принта
+        orderData.image = designerData.image; // Оригинальный принт
+        orderData.previewImage = designerData.previewImage; // Превью футболки с принтом
+        
+        console.log('🎨 Данные дизайнера добавлены в заказ:', {
+          hasImage: !!orderData.image,
+          hasPreviewImage: !!orderData.previewImage,
+          imagePosition: orderData.imagePosition,
+          imageSize: orderData.image?.length || 0,
+          previewSize: orderData.previewImage?.length || 0
+        });
+      }
+      
+      console.log('📤 Отправляем в API orderData:', {
+        hasImage: !!orderData.image,
+        hasPreviewImage: !!orderData.previewImage,
+        hasImagePosition: !!orderData.imagePosition,
+        payloadKeys: Object.keys(orderData)
+      });
+
+      console.log('🚀 Отправляем запрос в API...');
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
@@ -143,13 +210,21 @@ export default function CheckoutPage() {
         body: JSON.stringify(orderData),
       });
 
+      console.log('📡 Получен ответ от API:', {
+        status: response.status,
+        ok: response.ok,
+        statusText: response.statusText
+      });
+
       const result = await response.json();
+      console.log('📥 Результат API:', result);
 
       if (response.ok) {
         // Очищаем корзину
         localStorage.removeItem('checkout_cart');
         localStorage.removeItem('checkout_total');
         localStorage.removeItem('printStyle_cart');
+        localStorage.removeItem('designer_order'); // Очищаем заказ из дизайнера
         
         // Уведомляем об обновлении корзины
         window.dispatchEvent(new CustomEvent('cartUpdated'));
@@ -192,51 +267,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gray-800">
       {/* Header */}
-      <header className="shadow-lg sticky top-0 z-40 border-b border-gray-200" style={{backgroundColor: '#424242'}}>
-        <div className="container">
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-heading text-white h-full flex items-center">
-                <Link href="/" className="hover:text-blue-600 transition-all duration-300 transform hover:scale-105 h-full flex items-center">
-                  <div className="hidden md:block">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                  <div className="md:hidden">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                </Link>
-              </h1>
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/#main" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Главная</Link>
-              <Link href="/products" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Товары</Link>
-              <Link href="/reviews" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">Отзывы</Link>
-              <Link href="/#about" className="btn btn-ghost btn-sm text-gray-200 hover:text-white">О нас</Link>
-              <div className="flex items-center space-x-3">
-                <CartDropdown />
-                <UserProfile />
-              </div>
-            </nav>
-            
-            {/* Mobile Menu */}
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="container py-12 lg:py-16">
@@ -488,7 +519,7 @@ export default function CheckoutPage() {
                     <div key={index} className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-medium">
                         {item.image ? (
-                          <Image src={item.image} alt={item.name} width={48} height={48} className="w-full h-full object-cover rounded-lg" />
+                          <img src={item.image} alt={item.name} width={48} height={48} className="w-full h-full object-cover rounded-lg" />
                         ) : (
                           '👕'
                         )}
@@ -561,7 +592,7 @@ export default function CheckoutPage() {
         </div>
       </main>
 
-      <CartNotification />
+      {/* CartNotification is removed as per the edit hint */}
     </div>
   );
 }

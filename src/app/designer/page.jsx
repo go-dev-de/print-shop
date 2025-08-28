@@ -1,25 +1,22 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import UserProfile from '@/components/UserProfile';
-import MobileMenu from '@/components/MobileMenu';
-import CartDropdown from '@/components/CartDropdown';
-import CartNotification from '@/components/CartNotification';
-import TshirtPreview from '@/components/TshirtPreview';
+import { useState, useEffect } from 'react';
+import { toPng } from 'html-to-image';
 import ImageUploader from '@/components/ImageUploader';
+import TshirtPreview from '@/components/TshirtPreview';
+import CartNotification from '@/components/CartNotification';
+import Header from '@/components/Header';
 
 export default function Designer() {
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('white');
+  const [selectedSize, setSelectedSize] = useState('M');
   const [quantity, setQuantity] = useState(1);
-  const [imagePosition, setImagePosition] = useState({ x: 50, y: 50, scale: 1 });
 
   const [printSize, setPrintSize] = useState(0); // Индекс выбранного размера принта
   const [activeView, setActiveView] = useState('front');
   const [selectedProductPrice, setSelectedProductPrice] = useState(null); // Цена выбранного товара
+  const [printPosition, setPrintPosition] = useState({ x: 50, y: 50, scale: 1, rotation: 0 }); // Позиционирование принта
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = [
@@ -41,13 +38,12 @@ export default function Designer() {
     setUploadedImage(imageData);
   };
 
-  const handleImageRemove = () => {
-    setUploadedImage(null);
-    setImagePosition({ x: 50, y: 50, scale: 1 });
+  const handlePrintPositionChange = (newPosition) => {
+    setPrintPosition(newPosition);
   };
 
-  const handleImagePositionChange = (position) => {
-    setImagePosition(position);
+  const handleImageRemove = () => {
+    setUploadedImage(null);
   };
 
   // Оценка размера dataURL в байтах
@@ -181,14 +177,182 @@ export default function Designer() {
     // Пытаемся сделать скриншот превью с принтом
     let previewImageDataUrl = null;
     try {
-      const { toJpeg } = await import('html-to-image');
-      const previewElement = document.querySelector('.tshirt-preview-root');
+      const { toPng } = await import('html-to-image');
+      
+      // Ищем элемент превью разными способами
+      let previewElement = document.querySelector('[data-testid="tshirt-preview"]');
+      console.log('🔍 Ищем элемент [data-testid="tshirt-preview"]:', previewElement);
+      
+      if (!previewElement) {
+        // Попробуем найти по классу
+        previewElement = document.querySelector('.tshirt-preview-root');
+        console.log('🔍 Ищем элемент .tshirt-preview-root:', previewElement);
+      }
+      
+      if (!previewElement) {
+        // Попробуем найти по классу
+        previewElement = document.querySelector('.tshirt-preview');
+        console.log('🔍 Ищем элемент .tshirt-preview:', previewElement);
+      }
+      
+      if (!previewElement) {
+        // Попробуем найти по ID
+        previewElement = document.getElementById('tshirt-preview');
+        console.log('🔍 Ищем элемент #tshirt-preview:', previewElement);
+      }
+      
+      if (!previewElement) {
+        // Попробуем найти по классу preview-area напрямую
+        previewElement = document.querySelector('.preview-area');
+        console.log('🔍 Ищем элемент .preview-area напрямую:', previewElement);
+      }
+      
+      // Если элемент найден, попробуем найти более конкретный элемент для скриншота
       if (previewElement) {
-        // JPEG меньше весит, что повышает шанс успешной отправки в Telegram
-        previewImageDataUrl = await toJpeg(previewElement, { cacheBust: true, pixelRatio: 1.5, quality: 0.85 });
+        // Ищем элемент с классом preview-area, который содержит футболку и принт
+        const specificElement = previewElement.querySelector('.preview-area');
+        if (specificElement) {
+          previewElement = specificElement;
+          console.log('🎯 Найден конкретный элемент .preview-area для скриншота');
+        }
+      }
+      
+      // Выведем все элементы с похожими классами
+      const allElements = document.querySelectorAll('*');
+      const tshirtElements = Array.from(allElements).filter(el => {
+        try {
+          return el.className && typeof el.className === 'string' && el.className.includes('tshirt');
+        } catch (e) {
+          return false;
+        }
+      });
+      console.log('🔍 Все элементы с "tshirt" в классе:', tshirtElements);
+      
+      // Также выведем все элементы с data-testid
+      const testIdElements = Array.from(allElements).filter(el => 
+        el.getAttribute('data-testid')
+      );
+      console.log('🔍 Все элементы с data-testid:', testIdElements.map(el => ({
+        tagName: el.tagName,
+        className: typeof el.className === 'string' ? el.className : 'N/A',
+        dataTestid: el.getAttribute('data-testid')
+      })));
+      
+      if (previewElement) {
+        console.log('🎯 Элемент превью найден:', {
+          tagName: previewElement.tagName,
+          className: previewElement.className,
+          id: previewElement.id,
+          dataTestid: previewElement.getAttribute('data-testid'),
+          offsetWidth: previewElement.offsetWidth,
+          offsetHeight: previewElement.offsetHeight,
+          children: previewElement.children.length
+        });
+        
+        // Проверим содержимое элемента
+        console.log('🔍 HTML содержимое элемента:', previewElement.innerHTML.substring(0, 300) + '...');
+        
+        // Проверим стили элемента
+        const computedStyle = window.getComputedStyle(previewElement);
+        console.log('🎨 Стили элемента:', {
+          display: computedStyle.display,
+          visibility: computedStyle.visibility,
+          opacity: computedStyle.opacity,
+          width: computedStyle.width,
+          height: computedStyle.height
+        });
+        
+        // Логируем текущее позиционирование принта
+        console.log('📍 Текущее позиционирование принта:', {
+          x: printPosition.x,
+          y: printPosition.y,
+          scale: printPosition.scale,
+          rotation: printPosition.rotation
+        });
+        
+        // Логируем размеры контейнера для превью
+        console.log('📏 Размеры контейнера для превью:', {
+          offsetWidth: previewElement.offsetWidth,
+          offsetHeight: previewElement.offsetHeight,
+          clientWidth: previewElement.clientWidth,
+          clientHeight: previewElement.clientHeight,
+          scrollWidth: previewElement.scrollWidth,
+          scrollHeight: previewElement.scrollHeight
+        });
+        
+        // Находим .tshirt-container для сравнения размеров
+        const tshirtContainer = previewElement.querySelector('.tshirt-container');
+        if (tshirtContainer) {
+          console.log('👕 Размеры .tshirt-container:', {
+            offsetWidth: tshirtContainer.offsetWidth,
+            offsetHeight: tshirtContainer.offsetHeight,
+            clientWidth: tshirtContainer.clientWidth,
+            clientHeight: tshirtContainer.clientHeight
+          });
+          
+          // Вычисляем коэффициент масштабирования
+          const scaleX = previewElement.offsetWidth / tshirtContainer.offsetWidth;
+          const scaleY = previewElement.offsetHeight / tshirtContainer.offsetHeight;
+          console.log('📐 Коэффициенты масштабирования:', { scaleX, scaleY });
+        }
+        
+        try {
+          console.log('🚀 Начинаем создание превью...');
+          console.log('📊 Параметры для toPng:', {
+            element: previewElement,
+            width: previewElement.offsetWidth,
+            height: previewElement.offsetHeight,
+            cacheBust: true,
+            pixelRatio: 1.5
+          });
+          
+          // PNG для лучшего качества
+          previewImageDataUrl = await toPng(previewElement, { 
+            cacheBust: true, 
+            pixelRatio: 1.5
+          });
+          console.log('✅ Превью создано, размер:', previewImageDataUrl?.length || 0);
+        } catch (error) {
+          console.error('❌ Ошибка при создании превью:', error);
+          console.error('🔍 Детали ошибки:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+          });
+          
+          // Попробуем альтернативный способ
+          console.log('🔄 Пробуем альтернативный способ...');
+          try {
+            const alternativeElement = previewElement.querySelector('.tshirt-container');
+            if (alternativeElement) {
+              console.log('🎯 Пробуем создать превью из .tshirt-container');
+              console.log('📊 Размеры .tshirt-container:', {
+                width: alternativeElement.offsetWidth,
+                height: alternativeElement.offsetHeight
+              });
+              const alternativePreview = await toPng(alternativeElement, {
+                cacheBust: true,
+                pixelRatio: 1.5
+              });
+              console.log('✅ Альтернативное превью создано!');
+              previewImageDataUrl = alternativePreview;
+            } else {
+              console.log('❌ Элемент .tshirt-container не найден внутри .preview-area');
+            }
+          } catch (altError) {
+            console.error('❌ Альтернативный способ тоже не сработал:', altError);
+            console.error('🔍 Детали альтернативной ошибки:', {
+              message: altError.message,
+              stack: altError.stack,
+              name: altError.name
+            });
+          }
+        }
+      } else {
+        console.warn('❌ Элемент превью не найден ни одним способом');
       }
     } catch (e) {
-      console.warn('Не удалось создать изображение превью:', e);
+      console.error('❌ Ошибка создания превью:', e);
     }
     
     // Сжимать исходник, если он слишком большой для передачи на бэкенд
@@ -204,7 +368,7 @@ export default function Designer() {
 
     const orderData = {
       image: imageForOrder,
-      imagePosition: imagePosition,
+      imagePosition: printPosition, // Используем реальное позиционирование принта
       imageSide: activeView,
       size: selectedSize,
       color: selectedColor,
@@ -218,114 +382,89 @@ export default function Designer() {
       totalPrice: calculatePrice(),
     };
     
-    // Сохраняем данные заказа в localStorage
-    localStorage.setItem('printShopOrder', JSON.stringify(orderData));
+    console.log('📦 Данные заказа:', {
+      hasImage: !!orderData.image,
+      hasPreviewImage: !!orderData.previewImage,
+      imagePosition: orderData.imagePosition,
+      imageSize: orderData.image?.length || 0,
+      previewSize: orderData.previewImage?.length || 0
+    });
     
-    // Перенаправляем на страницу оформления заказа
-    window.location.href = '/order';
+    // Сохраняем данные заказа в localStorage
+    localStorage.setItem('designer_order', JSON.stringify(orderData));
+    console.log('💾 Сохранено в localStorage:', {
+      key: 'designer_order',
+      hasImage: !!orderData.image,
+      hasPreviewImage: !!orderData.previewImage,
+      imageSize: orderData.image?.length || 0,
+      previewSize: orderData.previewImage?.length || 0
+    });
+    
+    // Проверяем, что сохранилось
+    const saved = localStorage.getItem('designer_order');
+    console.log('🔍 Проверяем сохраненное:', saved ? 'Есть данные' : 'Нет данных');
+    
+    // Перенаправляем на страницу оформления заказа (как кнопка из корзины)
+    window.location.href = '/checkout';
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
+    <div className="min-h-screen bg-white overflow-x-hidden w-full main-container designer-page" style={{ touchAction: 'pan-y', maxWidth: '100vw', width: '100%' }}>
       {/* Header */}
-      <header className="shadow-lg sticky top-0 z-40 border-b border-gray-700" style={{backgroundColor: '#424242'}}>
-        <div className="container">
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-2xl logo-print-shop h-full flex items-center">
-                <Link href="/" className="hover:text-gray-200 transition-all duration-300 h-full flex items-center">
-                  <div className="hidden md:block">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                  <div className="md:hidden">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                </Link>
-              </h1>
-              
-            </div>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link href="/#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">Главная</Link>
-              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Товары</Link>
-              <Link href="/designer" className="px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors rounded-lg">Дизайнер</Link>
-              <Link href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">Отзывы</Link>
-              <Link href="/#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">О нас</Link>
-              <div className="flex items-center space-x-3 ml-4">
-                <CartDropdown />
-                <UserProfile />
-              </div>
-            </nav>
-            
-            {/* Mobile Menu */}
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+      <Header />
       
       {/* Main Content */}
-      <main className="container py-12 lg:py-16 bg-gray-800">
-        <div id="order-form" className="animate-fade-in">
+      <main className="container py-12 lg:py-16 bg-gray-800 overflow-hidden w-full max-w-full" style={{ maxWidth: '100vw', width: '100%' }}>
+        <div id="order-form" className="animate-fade-in w-full max-w-full overflow-hidden">
           {/* Мобильная версия - одна колонка */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4 sm:gap-6 animate-fade-in px-2 sm:px-0 w-full max-w-full" style={{animationDelay: '0.2s'}}>
             {/* 1. Загрузка принта */}
-            <div className="card card-md">
+            <div className="card card-md w-full max-w-full overflow-hidden">
               <h3 className="text-subheading text-white mb-4">Загрузите ваш принт</h3>
+              <div className="w-full max-w-full">
               <ImageUploader 
                 onImageUpload={handleImageUpload}
                 onImageRemove={handleImageRemove}
               />
+              </div>
             </div>
 
             {/* 2. Выбор цвета */}
-            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5 w-full max-w-full overflow-hidden">
               <h3 className="text-lg font-semibold mb-3 text-white">Выберите цвет футболки</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 w-full max-w-full">
                 {colors.map((color) => (
                   <button
                     key={color.name}
                     onClick={() => setSelectedColor(color.name)}
-                    className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
+                    className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-white w-full max-w-full ${
                       selectedColor === color.name
-                        ? 'border-black bg-gray-100'
-                        : 'border-gray-400 hover:border-black'
+                        ? 'border-white bg-gray-600'
+                        : 'border-gray-400 hover:border-white'
                     }`}
                   >
                     <div
-                      className="w-8 h-8 rounded-full border-2 border-gray-300"
+                      className="w-8 h-8 rounded-full border-2 border-gray-300 flex-shrink-0"
                       style={{ backgroundColor: color.hex }}
                     ></div>
-                    <span className="font-medium">{color.label}</span>
+                    <span className="font-medium truncate">{color.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* 3. Выбор размера */}
-            <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-              <h3 className="text-lg font-semibold mb-3 text-black">Выберите размер</h3>
-              <div className="grid grid-cols-3 gap-3">
+            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5 w-full max-w-full overflow-hidden">
+              <h3 className="text-lg font-semibold mb-3 text-white">Выберите размер</h3>
+              <div className="grid grid-cols-3 gap-3 w-full max-w-full">
                 {sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
+                    className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-white w-full max-w-full ${
                       selectedSize === size
-                        ? 'border-black bg-gray-100'
-                        : 'border-gray-400 hover:border-black'
+                        ? 'border-white bg-gray-600'
+                        : 'border-gray-400 hover:border-white'
                     }`}
                   >
                     {size}
@@ -336,86 +475,89 @@ export default function Designer() {
 
             {/* 4. Размер принта */}
             {uploadedImage && (
-              <div className="bg-white rounded-lg shadow-lg p-2 sm:p-5">
-                <h3 className="text-lg font-semibold mb-3 text-black">Размер принта</h3>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5 w-full max-w-full overflow-hidden">
+                <h3 className="text-lg font-semibold mb-3 text-white">Размер принта</h3>
+                <div className="grid grid-cols-2 gap-3 w-full max-w-full">
                   {printSizes.map((size, index) => (
                     <button
                       key={index}
                       onClick={() => setPrintSize(index)}
-                      className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                      className={`p-3 rounded-lg border-2 transition-colors text-white w-full max-w-full ${
                         printSize === index
-                          ? 'border-black bg-gray-100'
-                          : 'border-gray-400 hover:border-black'
+                          ? 'border-white bg-gray-600'
+                          : 'border-gray-400 hover:border-white'
                       }`}
                     >
                       <div className="text-sm font-medium">{size.label}</div>
-                      <div className="text-xs text-gray-600">+{size.price}₽</div>
+                      <div className="text-xs text-gray-300">+{size.price}₽</div>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* 5. Превью */}
-            <TshirtPreview
-              uploadedImage={uploadedImage}
-              selectedColor={selectedColor}
-              selectedSize={selectedSize}
-              printSize={printSizes[printSize]}
-              onImagePositionChange={handleImagePositionChange}
-              onViewChange={setActiveView}
-            />
+                        {/* 5. Превью */}
+            <div className="w-full max-w-full overflow-hidden">
+              <TshirtPreview
+                uploadedImage={uploadedImage}
+                selectedColor={selectedColor}
+                selectedSize={selectedSize}
+                printSize={printSizes[printSize]}
+                onViewChange={setActiveView}
+                activeView={activeView}
+                onPrintPositionChange={handlePrintPositionChange}
+              />
+            </div>
 
             {/* 6. Информация о заказе */}
-            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5">
+            <div className="bg-gray-700 rounded-lg shadow-lg p-2 sm:p-5 w-full max-w-full overflow-hidden">
               <h3 className="text-lg font-semibold mb-3 text-white">Информация о заказе</h3>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between">
+              <div className="space-y-3 mb-6 w-full max-w-full">
+                <div className="flex justify-between w-full max-w-full">
                   <span className="text-white">Размер:</span>
                   <span className="font-medium text-white">{selectedSize}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between w-full max-w-full">
                   <span className="text-white">Цвет:</span>
                   <span className="font-medium text-white">
                     {colors.find(c => c.name === selectedColor)?.label}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between w-full max-w-full">
                   <span className="text-white">Количество:</span>
                   <div className="flex items-center space-x-3">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold"
+                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold flex-shrink-0"
                     >
                       -
                     </button>
                     <span className="text-white font-medium min-w-[2rem] text-center">{quantity}</span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold"
+                      className="w-8 h-8 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white font-bold flex-shrink-0"
                     >
                       +
                     </button>
                   </div>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between w-full max-w-full">
                   <span className="text-white">Принт:</span>
                   <span className="font-medium text-white">
                     {uploadedImage ? 'Включен' : 'Не выбран'}
                   </span>
                 </div>
                 {uploadedImage && (
-                  <div className="flex justify-between">
+                  <div className="flex justify-between w-full max-w-full">
                     <span className="text-white">Масштаб принта:</span>
-                    <span className="font-medium text-white">{Math.round(imagePosition.scale * 100)}%</span>
+                    <span className="font-medium text-white">100%</span>
                   </div>
                 )}
               </div>
               
-              <div className="border-t border-gray-600 pt-4">
-                <div className="flex justify-between text-xl font-bold text-white">
+              <div className="border-t border-gray-600 pt-4 w-full max-w-full">
+                <div className="flex justify-between text-xl font-bold text-white w-full max-w-full">
                   <span>Итого:</span>
                   <span>{calculatePrice()} ₽</span>
                 </div>
@@ -429,19 +571,19 @@ export default function Designer() {
               onTouchEnd={handleOrder}
               onPointerUp={handleOrder}
               aria-disabled={!uploadedImage}
-              className={`group relative z-50 pointer-events-auto w-full py-4 px-6 rounded-xl text-lg font-bold transition-all duration-300 transform ${
-                uploadedImage
-                  ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
+                              className={`group relative z-50 pointer-events-auto w-full max-w-full py-4 px-6 rounded-xl text-lg font-bold transition-all duration-300 ${
+                  uploadedImage
+                    ? 'bg-gray-600 hover:bg-gray-500 text-white shadow-lg'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               style={{ touchAction: 'manipulation' }}
             >
-              <span className="relative z-10 flex items-center justify-center">
-                <svg className="w-6 h-6 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="relative z-10 flex items-center justify-center w-full max-w-full">
+                <svg className="w-6 h-6 mr-3 group-hover:animate-bounce flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                Оформить заказ
-                <svg className={`w-6 h-6 ml-3 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="truncate">Оформить заказ</span>
+                <svg className={`w-6 h-6 ml-3 transition-transform duration-300 flex-shrink-0 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
@@ -452,53 +594,55 @@ export default function Designer() {
           </div>
 
           {/* Десктопная версия - две колонки */}
-          <div className="hidden lg:grid grid-cols-1 xl:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '0.3s'}}>
+          <div className="hidden lg:grid grid-cols-1 xl:grid-cols-2 gap-8 animate-fade-in w-full max-w-full" style={{animationDelay: '0.3s'}}>
             {/* Левая колонка - Форма */}
-            <div className="space-y-8">
+            <div className="space-y-8 w-full max-w-full">
               {/* Загрузка принта */}
-              <div className="card card-lg">
+              <div className="card card-lg w-full max-w-full overflow-hidden">
                 <h3 className="text-heading text-white mb-6">Загрузите ваш принт</h3>
+                <div className="w-full max-w-full">
                 <ImageUploader 
                   onImageUpload={handleImageUpload}
                   onImageRemove={handleImageRemove}
                 />
+                </div>
               </div>
 
               {/* Выбор цвета */}
-              <div className="card card-lg">
+              <div className="card card-lg w-full max-w-full overflow-hidden">
                 <h3 className="text-heading text-white mb-6">Выберите цвет футболки</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 w-full max-w-full">
                   {colors.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color.name)}
-                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-black ${
+                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors text-white w-full max-w-full ${
                         selectedColor === color.name
-                          ? 'border-black bg-gray-100'
-                          : 'border-gray-400 hover:border-black'
+                          ? 'border-white bg-gray-600'
+                          : 'border-gray-400 hover:border-white'
                       }`}
                     >
                       <div
-                        className="w-8 h-8 rounded-full border-2 border-gray-300"
+                        className="w-8 h-8 rounded-full border-2 border-gray-300 flex-shrink-0"
                         style={{ backgroundColor: color.hex }}
                       ></div>
-                      <span className="font-medium">{color.label}</span>
+                      <span className="font-medium truncate">{color.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Выбор размера */}
-              <div className="card card-lg">
+              <div className="card card-lg w-full max-w-full overflow-hidden">
                 <h3 className="text-heading text-white mb-6">Выберите размер</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3 w-full max-w-full">
                   {sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black ${
+                      className={`py-3 px-4 rounded-lg border-2 font-medium transition-colors text-black w-full max-w-full ${
                         selectedSize === size
-                          ? 'border-black bg-gray-100'
+                          ? 'border-black bg-gray-600'
                           : 'border-gray-400 hover:border-black'
                       }`}
                     >
@@ -510,16 +654,16 @@ export default function Designer() {
 
               {/* Размер принта */}
               {uploadedImage && (
-                <div className="card card-lg">
+                <div className="card card-lg w-full max-w-full overflow-hidden">
                   <h3 className="text-heading text-white mb-6">Размер принта</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 w-full max-w-full">
                     {printSizes.map((size, index) => (
                       <button
                         key={index}
                         onClick={() => setPrintSize(index)}
-                        className={`p-3 rounded-lg border-2 transition-colors text-black ${
+                        className={`p-3 rounded-lg border-2 transition-colors text-black w-full max-w-full ${
                           printSize === index
-                            ? 'border-black bg-gray-100'
+                            ? 'border-black bg-gray-600'
                             : 'border-gray-400 hover:border-black'
                         }`}
                       >
@@ -532,19 +676,19 @@ export default function Designer() {
               )}
 
               {/* Количество */}
-              <div className="card card-lg">
+              <div className="card card-lg w-full max-w-full overflow-hidden">
                 <h3 className="text-heading text-white mb-6">Количество</h3>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 w-full max-w-full">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
+                    className="w-10 h-10 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-black text-white font-bold flex-shrink-0"
                   >
                     -
                   </button>
                   <span className="text-black font-medium min-w-[3rem] text-center text-lg">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center border-2 border-gray-400 hover:border-black text-black font-bold"
+                    className="w-10 h-10 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center border-2 border-gray-400 hover:border-black text-white font-bold flex-shrink-0"
                   >
                     +
                   </button>
@@ -553,52 +697,55 @@ export default function Designer() {
             </div>
 
             {/* Правая колонка - Превью и заказ */}
-            <div className="space-y-8">
-              {/* Превью футболки */}
-              <TshirtPreview
-                uploadedImage={uploadedImage}
-                selectedColor={selectedColor}
-                selectedSize={selectedSize}
-                printSize={printSizes[printSize]}
-                onImagePositionChange={handleImagePositionChange}
-                onViewChange={setActiveView}
-              />
+            <div className="space-y-8 w-full max-w-full">
+                            {/* Превью футболки */}
+              <div className="w-full max-w-full overflow-hidden">
+                <TshirtPreview
+                  uploadedImage={uploadedImage}
+                  selectedColor={selectedColor}
+                  selectedSize={selectedSize}
+                  printSize={printSizes[printSize]}
+                  onViewChange={setActiveView}
+                  activeView={activeView}
+                  onPrintPositionChange={handlePrintPositionChange}
+                />
+              </div>
 
               {/* Информация о заказе */}
-              <div className="bg-white rounded-lg shadow-lg p-4 lg:p-6">
-                <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-black">Информация о заказе</h3>
+              <div className="bg-gray-700 rounded-lg shadow-lg p-4 lg:p-6 w-full max-w-full overflow-hidden">
+                <h3 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-white">Информация о заказе</h3>
                 
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-black">Размер:</span>
-                    <span className="font-medium text-black">{selectedSize}</span>
+                <div className="space-y-3 mb-6 w-full max-w-full">
+                  <div className="flex justify-between w-full max-w-full">
+                    <span className="text-white">Размер:</span>
+                    <span className="font-medium text-white">{selectedSize}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-black">Цвет:</span>
-                    <span className="font-medium text-black">
+                  <div className="flex justify-between w-full max-w-full">
+                    <span className="text-white">Цвет:</span>
+                    <span className="font-medium text-white">
                       {colors.find(c => c.name === selectedColor)?.label}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-black">Количество:</span>
-                    <span className="font-medium text-black">{quantity} шт.</span>
+                  <div className="flex justify-between w-full max-w-full">
+                    <span className="text-white">Количество:</span>
+                    <span className="font-medium text-white">{quantity} шт.</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-black">Принт:</span>
-                    <span className="font-medium text-black">
+                  <div className="flex justify-between w-full max-w-full">
+                    <span className="text-white">Принт:</span>
+                    <span className="font-medium text-white">
                       {uploadedImage ? 'Включен' : 'Не выбран'}
                     </span>
                   </div>
                   {uploadedImage && (
-                    <div className="flex justify-between">
-                      <span className="text-black">Масштаб принта:</span>
-                      <span className="font-medium text-black">{Math.round(imagePosition.scale * 100)}%</span>
+                    <div className="flex justify-between w-full max-w-full">
+                      <span className="text-white">Масштаб принта:</span>
+                      <span className="font-medium text-white">100%</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="border-t pt-4">
-                  <div className="flex justify-between text-xl font-bold text-black">
+                <div className="border-t border-gray-600 pt-4 w-full max-w-full">
+                  <div className="flex justify-between text-xl font-bold text-white w-full max-w-full">
                     <span>Итого:</span>
                     <span>{calculatePrice()} ₽</span>
                   </div>
@@ -612,19 +759,19 @@ export default function Designer() {
                 onTouchEnd={handleOrder}
                 onPointerUp={handleOrder}
                 aria-disabled={!uploadedImage}
-                className={`group relative z-50 pointer-events-auto w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl text-lg lg:text-xl font-bold transition-all duration-300 transform ${
+                className={`group relative z-50 pointer-events-auto w-full max-w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl text-lg lg:text-xl font-bold transition-all duration-300 transform ${
                   uploadedImage
                     ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
                 style={{ touchAction: 'manipulation' }}
               >
-                <span className="relative z-10 flex items-center justify-center">
-                  <svg className="w-6 h-6 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="relative z-10 flex items-center justify-center w-full max-w-full">
+                  <svg className="w-6 h-6 mr-3 group-hover:animate-bounce flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
-                  Оформить заказ
-                  <svg className={`w-6 h-6 ml-3 transition-transform duration-300 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="truncate">Оформить заказ</span>
+                  <svg className={`w-6 h-6 ml-3 transition-transform duration-300 flex-shrink-0 ${uploadedImage ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
@@ -638,7 +785,9 @@ export default function Designer() {
       </main>
       
       {/* Уведомления о добавлении в корзину */}
+      <div className="w-full max-w-full overflow-hidden">
       <CartNotification />
+      </div>
     </div>
   );
 }

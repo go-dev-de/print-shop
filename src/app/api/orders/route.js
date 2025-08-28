@@ -41,6 +41,25 @@ export async function POST(request) {
         payload: orderData,
         totalPrice
       };
+      
+      console.log('📦 Создание заказа в YDB:', {
+        hasImage: !!orderData.image,
+        hasPreviewImage: !!orderData.previewImage,
+        hasImagePosition: !!orderData.imagePosition,
+        payloadKeys: Object.keys(orderData)
+      });
+      
+      // Детальное логирование previewImage
+      if (orderData.previewImage) {
+        console.log('🖼️ previewImage найден:', {
+          type: typeof orderData.previewImage,
+          length: orderData.previewImage.length,
+          startsWith: orderData.previewImage.substring(0, 50) + '...'
+        });
+      } else {
+        console.log('❌ previewImage отсутствует в orderData');
+      }
+      
       stored = await createOrderYdb(orderPayload);
     } catch (ydbError) {
       console.warn('YDB order failed, using memory store:', ydbError.message);

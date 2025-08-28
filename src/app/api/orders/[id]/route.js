@@ -1,50 +1,77 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
-import { getOrderById, updateOrderStatus, deleteOrder } from '@/lib/orderStore';
-import { initSchemaIfNeeded, getOrderByIdYdb, updateOrderStatusYdb, deleteOrderYdb } from '@/lib/ydb/repo';
+import { getOrderByIdYdb, updateOrderStatusYdb, deleteOrderYdb } from '@/lib/ydb/repo';
 
-export async function GET(_req, { params }) {
-  const { id } = await params;
-  const user = await getSession();
-  if (!user || user.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+export async function GET(request, { params }) {
+  try {
+    const { id } = params;
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID заказа не указан' }, { status: 400 });
+    }
+
+    const order = await getOrderByIdYdb(id);
+    
+    if (!order) {
+      return NextResponse.json({ error: 'Заказ не найден' }, { status: 404 });
+    }
+
+    return NextResponse.json({ order });
+  } catch (error) {
+    console.error('❌ Error getting order by ID:', error);
+    return NextResponse.json(
+      { error: 'Внутренняя ошибка сервера' }, 
+      { status: 500 }
+    );
   }
-  await initSchemaIfNeeded();
-  const order = await getOrderByIdYdb(id);
-  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  return NextResponse.json({ order });
 }
 
 export async function PATCH(request, { params }) {
-  const { id } = await params;
-  const user = await getSession();
-  if (!user || user.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
   try {
-    const body = await request.json();
-    const { status } = body || {};
-    if (!status) return NextResponse.json({ error: 'Status required' }, { status: 400 });
-    await initSchemaIfNeeded();
+    const { id } = params;
+    const { status } = await request.json();
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID заказа не указан' }, { status: 400 });
+    }
+
+    if (!status) {
+      return NextResponse.json({ error: 'Статус не указан' }, { status: 400 });
+    }
+
+    // Обновляем статус заказа в YDB
     await updateOrderStatusYdb(id, status);
-    const updated = await getOrderByIdYdb(id);
-    if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    return NextResponse.json({ order: updated });
-  } catch (e) {
-    return NextResponse.json({ error: 'Bad request' }, { status: 400 });
+    
+    // Получаем обновленный заказ
+    const updatedOrder = await getOrderByIdYdb(id);
+    
+    return NextResponse.json({ order: updatedOrder });
+  } catch (error) {
+    console.error('❌ Error updating order status:', error);
+    return NextResponse.json(
+      { error: 'Внутренняя ошибка сервера' }, 
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(_request, { params }) {
-  const { id } = await params;
-  const user = await getSession();
-  if (!user || user.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = params;
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID заказа не указан' }, { status: 400 });
+    }
+
+    // Удаляем заказ из YDB
+    await deleteOrderYdb(id);
+    
+    return NextResponse.json({ message: 'Заказ успешно удален' });
+  } catch (error) {
+    console.error('❌ Error deleting order:', error);
+    return NextResponse.json(
+      { error: 'Внутренняя ошибка сервера' }, 
+      { status: 500 }
+    );
   }
-  await initSchemaIfNeeded();
-  await deleteOrderYdb(id);
-  const ok = true;
-  if (!ok) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  return NextResponse.json({ ok: true });
 }
 

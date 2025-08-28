@@ -2,8 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import Header from '@/components/Header';
 
 function PaymentForm() {
   const router = useRouter();
@@ -56,34 +55,7 @@ function PaymentForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="shadow-lg" style={{backgroundColor: '#424242'}}>
-        <div className="container">
-          <div className="flex justify-center items-center py-1">
-            <h1 className="text-heading text-white h-full flex items-center">
-              <Link href="/" className="hover:text-blue-600 transition-all duration-300 h-full flex items-center">
-                <div className="hidden md:block">
-                  <Image 
-                    src="/print-style-logo.png" 
-                    alt="Print Style Logo" 
-                    width={120} 
-                    height={40}
-                    className="h-full w-auto"
-                  />
-                </div>
-                <div className="md:hidden">
-                  <Image 
-                    src="/print-style-logo.png" 
-                    alt="Print Style Logo" 
-                    width={120} 
-                    height={40}
-                    className="h-full w-auto"
-                  />
-                </div>
-              </Link>
-            </h1>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="container py-12 lg:py-16">

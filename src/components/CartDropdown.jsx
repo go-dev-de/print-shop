@@ -6,9 +6,12 @@ import { useCart } from './useCart';
 
 export default function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownDirection, setDropdownDirection] = useState('right'); // 'left' или 'right'
+  const [dropdownPosition, setDropdownPosition] = useState('bottom'); // 'top' или 'bottom'
   const { cartItems, loadCart, addToCart, updateQuantity, removeFromCart, clearCart, getTotalItems, getTotalPrice, handleCheckout } = useCart();
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
 
   // Загрузка корзины из localStorage при монтировании
   useEffect(() => {
@@ -36,6 +39,124 @@ export default function CartDropdown() {
     };
   }, []); // Убираем loadCart из зависимостей
 
+  // Определяем направление открытия dropdown
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const dropdownWidth = 384; // w-96 = 24rem = 384px
+      const dropdownHeight = Math.min(640, viewportHeight * 0.8);
+      
+      // Проверяем, есть ли место справа
+      const hasSpaceRight = buttonRect.right + dropdownWidth <= viewportWidth;
+      // Проверяем, есть ли место слева
+      const hasSpaceLeft = buttonRect.left - dropdownWidth >= 0;
+      // Проверяем, есть ли место снизу
+      const hasSpaceBottom = buttonRect.bottom + dropdownHeight + 8 <= viewportHeight;
+      // Проверяем, есть ли место сверху
+      const hasSpaceTop = buttonRect.top - dropdownHeight - 8 >= 0;
+      
+      // Определяем горизонтальное направление
+      if (!hasSpaceRight && hasSpaceLeft) {
+        setDropdownDirection('left');
+      } else if (hasSpaceRight) {
+        setDropdownDirection('right');
+      } else {
+        setDropdownDirection('right');
+      }
+      
+      // Определяем вертикальное направление
+      if (!hasSpaceBottom && hasSpaceTop) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
+  }, [isOpen]);
+
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    const handleResize = () => {
+      if (isOpen && buttonRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const dropdownWidth = 384;
+        const dropdownHeight = Math.min(640, viewportHeight * 0.8);
+        
+        // Проверяем, есть ли место справа
+        const hasSpaceRight = buttonRect.right + dropdownWidth <= viewportWidth;
+        // Проверяем, есть ли место слева
+        const hasSpaceLeft = buttonRect.left - dropdownWidth >= 0;
+        // Проверяем, есть ли место снизу
+        const hasSpaceBottom = buttonRect.bottom + dropdownHeight + 8 <= viewportHeight;
+        // Проверяем, есть ли место сверху
+        const hasSpaceTop = buttonRect.top - dropdownHeight - 8 >= 0;
+        
+        if (!hasSpaceRight && hasSpaceLeft) {
+          setDropdownDirection('left');
+        } else if (hasSpaceRight) {
+          setDropdownDirection('right');
+        } else {
+          setDropdownDirection('right');
+        }
+
+        // Определяем вертикальное направление
+        if (!hasSpaceBottom && hasSpaceTop) {
+          setDropdownPosition('top');
+        } else {
+          setDropdownPosition('bottom');
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+
+  // Функция для получения стилей позиционирования
+  const getDropdownStyles = () => {
+    if (!buttonRef.current) return {};
+    
+    const buttonRect = buttonRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const dropdownWidth = 384;
+    const dropdownHeight = Math.min(640, viewportHeight * 0.8);
+    
+    // Определяем вертикальную позицию
+    let topPosition;
+    if (dropdownPosition === 'top') {
+      topPosition = buttonRect.top - dropdownHeight - 8; // 8px отступ
+    } else {
+      topPosition = buttonRect.bottom + 8; // mt-2 = 8px
+    }
+    
+    // Ограничиваем позицию в пределах экрана
+    topPosition = Math.max(0, Math.min(topPosition, viewportHeight - dropdownHeight - 16));
+    
+    if (dropdownDirection === 'left') {
+      // Открываем влево
+      return {
+        right: '0',
+        top: `${topPosition}px`,
+        transform: 'translateX(0)',
+        maxHeight: `${dropdownHeight}px`
+      };
+    } else {
+      // Открываем вправо, но проверяем, не выходит ли за правую границу
+      const leftPosition = Math.max(0, Math.min(buttonRect.left, viewportWidth - dropdownWidth));
+      
+      return {
+        left: `${leftPosition}px`,
+        top: `${topPosition}px`,
+        transform: 'none',
+        maxHeight: `${dropdownHeight}px`
+      };
+    }
+  };
+
   // Закрытие dropdown при клике вне его
   useEffect(() => {
     function handleClickOutside(event) {
@@ -58,8 +179,9 @@ export default function CartDropdown() {
     <div className="relative" ref={dropdownRef}>
       {/* Кнопка корзины */}
       <button
+        ref={buttonRef}
         onClick={toggleDropdown}
-        className="btn btn-ghost btn-sm relative p-2 hover:bg-gray-600 transition-all duration-200 text-gray-200 hover:text-white cart-button"
+        className="relative p-2 hover:bg-gray-600 transition-all duration-200 text-gray-100 hover:text-white rounded-lg cart-button"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 11H4m3 2v6a1 1 0 001 1h10a1 1 0 001-1v-6M9 21v-2a1 1 0 011-1h4a1 1 0 011 1v2" />
@@ -203,7 +325,12 @@ export default function CartDropdown() {
 
           {/* Десктопная версия */}
           <div 
-            className="hidden sm:block absolute right-0 top-full mt-2 w-80 sm:w-96 bg-gray-700 rounded-xl shadow-2xl border border-gray-600 animate-fade-in max-h-[80vh] overflow-hidden z-[9999]"
+            className={`hidden sm:block absolute w-80 sm:w-96 bg-gray-700 rounded-xl shadow-2xl border border-gray-600 max-h-[80vh] overflow-hidden z-[9999] cart-dropdown ${
+              dropdownPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
+            }`}
+            data-direction={dropdownDirection}
+            data-position={dropdownPosition}
+            style={getDropdownStyles()}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4">

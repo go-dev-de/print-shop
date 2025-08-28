@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import UserProfile from '@/components/UserProfile';
 import DiscountPopup from '@/components/DiscountPopup';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import MobileMenu from '@/components/MobileMenu';
-import CartDropdown from '@/components/CartDropdown';
 import CartNotification from '@/components/CartNotification';
+import Header from '@/components/Header';
 
 
 // Компонент карусели отзывов для главной страницы
@@ -277,60 +275,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full main-container" style={{ touchAction: 'pan-y' }}>
       {/* Premium Header */}
-      <header className="border-b border-gray-700 sticky top-0 z-[9996] transition-all duration-300" style={{backgroundColor: '#424242'}}>
-        <div className="container">
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-2xl logo-print-shop h-full flex items-center">
-                <Link href="/" className="text-white hover:text-gray-200 transition-colors duration-200 h-full flex items-center">
-                  <div className="hidden md:block">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                  <div className="md:hidden">
-                    <Image 
-                      src="/print-style-logo.png" 
-                      alt="Print Style Logo" 
-                      width={120} 
-                      height={40}
-                      className="h-full w-auto"
-                    />
-                  </div>
-                </Link>
-              </h1>
-              
-            </div>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link href="#main" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white transition-colors rounded-lg">
-                Главная
-              </Link>
-              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Товары
-              </Link>
-              <Link href="/reviews" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                Отзывы
-              </Link>
-              <Link href="#about" className="px-4 py-2 text-sm font-medium text-gray-100 hover:text-white hover:bg-gray-600 transition-all rounded-lg">
-                О нас
-              </Link>
-              <div className="flex items-center space-x-3 ml-4">
-                <CartDropdown />
-                <UserProfile />
-              </div>
-            </nav>
-            
-            {/* Mobile Menu */}
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+      <Header />
       
       {/* Breadcrumbs */}
       <Breadcrumbs />
@@ -375,7 +320,7 @@ export default function Home() {
             {/* Subtitle */}
             <p className="text-xl lg:text-2xl text-gray-300 font-light leading-relaxed mb-16 max-w-3xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
               Профессиональная печать на премиальных материалах.<br/>
-              Воплотите свои идеи с исключительным качеством.
+              Воплотите свои идеи с нами!.
             </p>
             
             {/* CTA Buttons */}
@@ -458,18 +403,18 @@ export default function Home() {
                 
               </h3>
               <p className="text-gray-300">
-                Создавайте уникальные футболки <br/>
-            с вашими дизайнами
+                Создавай уникальные вещи  <br/>
+            с твоим дизайном
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4 text-white">Услуги</h4>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white">Футболки с принтом</a></li>
-                <li><a href="#" className="hover:text-white">Худи с принтом</a></li>
-                <li><a href="#" className="hover:text-white">Кепки с принтом</a></li>
-                <li><a href="#" className="hover:text-white">Оптовые заказы</a></li>
+                <li><p className="hover:text-white">Футболки с принтом</p></li>
+                <li><p  className="hover:text-white">Худи с принтом</p></li>
+                <li><p className="hover:text-white">Кепки с принтом</p></li>
+                <li><p  className="hover:text-white">Оптовые заказы</p></li>
               </ul>
             </div>
             
@@ -486,15 +431,14 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4 text-white">Контакты</h4>
               <div className="space-y-2 text-gray-300">
-                <p>+7 (999) 123-45-67</p>
-                <p>зайчикГэнг@yandex.ru</p>
-                <p>Ижевск, ул. Примерная, 123</p>
+                <p>+7 (995) 308-66-28</p>
+                <p>evgeniaberezina0102@gmail.com</p>
               </div>
             </div>
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; 2024 print style. Все права защищены.</p>
+            <p>&copy; 2025 print style.</p>
           </div>
         </div>
       </footer>

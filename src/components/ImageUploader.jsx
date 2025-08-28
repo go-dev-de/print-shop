@@ -106,9 +106,9 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full image-uploader">
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-all duration-200 ${
+        className={`relative border-2 border-dashed rounded-lg p-4 sm:p-6 lg:p-8 text-center cursor-pointer transition-all duration-200 w-full max-w-full overflow-hidden image-uploader ${
           uploadedImage
             ? 'border-green-400 bg-green-900/20'
             : isDragOver
@@ -121,43 +121,43 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
         onDragLeave={handleDragLeave}
       >
         {uploadedImage ? (
-          <div className="space-y-4">
-            <div className="relative w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+          <div className="space-y-4 w-full max-w-full">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 mx-auto">
               <Image
                 src={uploadedImage}
                 alt="Uploaded design"
                 fill
-                sizes="(max-width: 640px) 96px, 128px"
+                sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, 128px"
                 className="object-cover rounded-lg"
               />
             </div>
-            <div className="space-y-2">
-              <p className="text-sm sm:text-base font-medium text-green-300">
+            <div className="space-y-2 w-full max-w-full">
+              <p className="text-xs sm:text-sm lg:text-base font-medium text-green-300 px-2">
                 ✅ Изображение загружено
               </p>
               <button
                 onClick={handleRemoveImage}
-                className="text-xs sm:text-sm text-red-400 hover:text-red-300 underline"
+                className="text-xs text-red-400 hover:text-red-300 underline px-2"
               >
                 Удалить изображение
               </button>
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
-            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 text-gray-400">
+          <div className="space-y-4 w-full max-w-full">
+            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-gray-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm sm:text-base font-medium text-gray-200">
+            <div className="space-y-2 w-full max-w-full">
+              <p className="text-xs sm:text-sm lg:text-base font-medium text-gray-200 px-2">
                 Перетащите изображение сюда или кликните для выбора
               </p>
-              <p className="text-xs sm:text-sm text-gray-400">
+              <p className="text-xs text-gray-400 px-2">
                 Поддерживаемые форматы: JPG, PNG, HEIC
               </p>
-              <p className="text-xs sm:text-sm text-gray-400">
+              <p className="text-xs text-gray-400 px-2">
                 Максимальный размер: 20MB
               </p>
             </div>
@@ -166,15 +166,15 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       </div>
 
       {imageError && (
-        <div className="bg-red-900/50 border border-red-500 rounded-lg p-4">
+        <div className="bg-red-900/50 border border-red-500 rounded-lg p-3 sm:p-4 w-full max-w-full">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-red-200">{imageError}</p>
+              <p className="text-xs sm:text-sm text-red-200">{imageError}</p>
             </div>
           </div>
         </div>
@@ -189,8 +189,8 @@ export default function ImageUploader({ onImageUpload, onImageRemove }) {
       />
 
       {uploadedImage && (
-        <div className="text-center">
-          <p className="text-sm text-gray-300">
+        <div className="text-center w-full max-w-full px-2">
+          <p className="text-xs sm:text-sm text-gray-300">
             Изображение готово к использованию в дизайне
           </p>
         </div>

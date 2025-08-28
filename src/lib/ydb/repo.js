@@ -173,18 +173,31 @@ export async function listOrdersYdb() {
     const rs = resultSets?.[0];
     return rs?.rows || [];
   });
-  return rows.map((row) => {
-    const [idCol, userIdCol, statusCol, payloadCol, totalCol, createdCol, updatedCol] = row.items;
-    
-    // Извлекаем JSON payload из YDB
-    let payloadStr = payloadCol?.jsonValue || payloadCol?.textValue || payloadCol?.utf8Value || '{}';
-    let payload;
-    try {
-      payload = JSON.parse(payloadStr);
-    } catch (e) {
-      console.error('❌ Failed to parse payload JSON:', payloadStr, e);
-      payload = {};
-    }
+      return rows.map((row) => {
+      const [idCol, userIdCol, statusCol, payloadCol, totalCol, createdCol, updatedCol] = row.items;
+      
+      // Логируем значения дат для отладки
+      console.log('🔍 Отладка дат заказа:', {
+        id: idCol?.textValue,
+        createdCol: createdCol,
+        createdColType: typeof createdCol,
+        createdColValue: createdCol?.uint64Value,
+        createdColLow: createdCol?.uint64Value?.low,
+        updatedCol: updatedCol,
+        updatedColType: typeof updatedCol,
+        updatedColValue: updatedCol?.uint64Value,
+        updatedColLow: updatedCol?.uint64Value?.low
+      });
+      
+      // Извлекаем JSON payload из YDB
+      let payloadStr = payloadCol?.jsonValue || payloadCol?.textValue || payloadCol?.utf8Value || '{}';
+      let payload;
+      try {
+        payload = JSON.parse(payloadStr);
+      } catch (e) {
+        console.error('❌ Failed to parse payload JSON:', payloadStr, e);
+        payload = {};
+      }
     
     // Создаем базовую структуру заказа
     const order = {
@@ -192,8 +205,8 @@ export async function listOrdersYdb() {
       userId: userIdCol?.textValue || '',
       status: statusCol?.textValue || 'new',
       totalPrice: Number(totalCol?.int64Value?.low || 0),
-      createdAt: Number(createdCol?.uint64Value?.low || 0),
-      updatedAt: Number(updatedCol?.uint64Value?.low || 0),
+      createdAt: Number(createdCol?.uint64Value?.low || createdCol?.uint64Value || Date.now()),
+      updatedAt: Number(updatedCol?.uint64Value?.low || updatedCol?.uint64Value || Date.now()),
       
       // Добавляем payload полностью
       payload: payload,
@@ -204,6 +217,12 @@ export async function listOrdersYdb() {
       color: payload.color,
       quantity: payload.quantity,
       image: payload.image,
+      
+      // Извлекаем данные о принте (для заказов из дизайнера)
+      imagePosition: payload.imagePosition, // Позиционирование принта {x, y, scale, rotation}
+      imageSide: payload.imageSide, // Сторона принта (перед/зад)
+      printSize: payload.printSize, // Размер принта
+      printPrice: payload.printPrice, // Цена принта
       
       // Извлекаем данные клиента
       customerInfo: payload.customerInfo,
@@ -235,15 +254,26 @@ export async function updateOrderStatusYdb(id, status) {
 export async function deleteOrderYdb(id) {
   const driver = await getYdbDriver();
   const db = driver.database;
-  await driver.tableClient.withSession(async (session) => {
-    await session.executeQuery(
-      'DECLARE $id AS Utf8;\n'
-      + `DELETE FROM \`${db}/orders\` WHERE id = $id;`,
-      { '$id': TypedValues.utf8(id) }
-    );
-  });
-  return true;
+  
+  try {
+    await driver.tableClient.withSession(async (session) => {
+      await session.executeQuery(
+        'DECLARE $id AS Utf8;\n'
+        + `DELETE FROM \`${db}/orders\` WHERE id = $id;`,
+        {
+          '$id': TypedValues.utf8(id),
+        }
+      );
+    });
+    console.log('✅ Заказ успешно удален из YDB:', id);
+    return true;
+  } catch (error) {
+    console.error('❌ Ошибка удаления заказа из YDB:', error);
+    throw error;
+  }
 }
+
+
 
 export async function getOrderByIdYdb(id) {
   const driver = await getYdbDriver();
@@ -259,15 +289,50 @@ export async function getOrderByIdYdb(id) {
     return rs.rows[0];
   });
   if (!row) return null;
+  
   const [idCol, userIdCol, statusCol, payloadCol, totalCol, createdCol, updatedCol] = row.items;
+  
+  // Логируем значения для отладки
+  console.log('🔍 getOrderByIdYdb отладка:', {
+    id: idCol?.textValue,
+    payloadCol: payloadCol,
+    payloadColType: typeof payloadCol,
+    payloadColJsonValue: payloadCol?.jsonValue,
+    createdCol: createdCol,
+    createdColType: typeof createdCol,
+    createdColValue: createdCol?.uint64Value,
+    createdColLow: createdCol?.uint64Value?.low,
+    totalCol: totalCol,
+    totalColType: typeof totalCol,
+    totalColValue: totalCol?.int64Value,
+    totalColLow: totalCol?.int64Value?.low
+  });
+  
+  // Извлекаем payload
+  let payload = {};
+  try {
+    if (payloadCol?.jsonValue) {
+      payload = JSON.parse(payloadCol.jsonValue);
+    } else if (payloadCol?.textValue) {
+      payload = JSON.parse(payloadCol.textValue);
+    }
+  } catch (e) {
+    console.error('❌ Failed to parse payload JSON in getOrderByIdYdb:', e);
+    payload = {};
+  }
+  
+  // Извлекаем даты с fallback
+  const createdAt = Number(createdCol?.uint64Value?.low || createdCol?.uint64Value || Date.now());
+  const updatedAt = Number(updatedCol?.uint64Value?.low || updatedCol?.uint64Value || Date.now());
+  
   return {
-            id: idCol?.textValue || '',
-        userId: userIdCol?.textValue || '',
-            status: statusCol?.textValue || 'new',
-    ...JSON.parse(payloadCol?.jsonValue || '{}'),
-    totalPrice: Number(totalCol?.int64Value?.low || 0),
-    createdAt: Number(createdCol?.uint64Value?.low || 0),
-    updatedAt: Number(updatedCol?.uint64Value?.low || 0),
+    id: idCol?.textValue || '',
+    userId: userIdCol?.textValue || '',
+    status: statusCol?.textValue || 'new',
+    payload: payload,
+    totalPrice: Number(totalCol?.int64Value?.low || totalCol?.int64Value || 0),
+    createdAt: createdAt,
+    updatedAt: updatedAt,
   };
 }
 
